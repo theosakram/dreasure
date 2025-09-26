@@ -1,6 +1,5 @@
 "use client";
 
-import { supabase } from "@/supabase";
 import { Form } from "@/components/custom/Form";
 import { loginSchema } from "@/utils/forms/login/loginSchema";
 import {
@@ -30,31 +29,77 @@ import {
 import { z } from "zod";
 import { FormField } from "@/components/custom/FormFIeld";
 import { PasswordFormInput } from "@/components/custom/PasswordFormInput";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { login } from "@/supabase/actions";
+import { supabaseClient } from "@/supabase/client";
+import { useEffect, useState } from "react";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const supabase = supabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const returnTo = searchParams.get("returnTo") || "/dashboard";
+        router.replace(returnTo);
+        return;
+      }
+
+      setIsLoading(false);
+    };
+
+    checkUser();
+  }, [router, searchParams]);
 
   const handleLogin = async (values: LoginFormValues) => {
-    const { error, data } = await supabase.auth.signInWithPassword({
+    const returnTo = searchParams.get("returnTo") || "/dashboard";
+
+    await login({
       email: values.email,
       password: values.password,
+      returnTo,
     });
-
-    if (data) {
-      router.push("/");
-    }
-
-    if (error) {
-      console.error("Login error:", error.message);
-    }
   };
 
   const handleSocialLogin = (provider: string) => {
     console.log(`Login with ${provider}`);
   };
+
+  if (isLoading) {
+    return (
+      <Box
+        minH="100vh"
+        bg="linear-gradient(135deg, blue.500 0%, purple.600 100%)"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <VStack gap={3}>
+          <Box
+            w={8}
+            h={8}
+            border="2px solid"
+            borderColor="whiteAlpha.300"
+            borderTopColor="white"
+            borderRadius="full"
+            animation="spin 1s linear infinite"
+          />
+          <Text color="white" textStyle="sm">
+            Checking authentication...
+          </Text>
+        </VStack>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -152,7 +197,7 @@ export default function LoginPage() {
 
             <Form<LoginFormValues>
               schema={loginSchema}
-              onSubmit={(e, f) => handleLogin(e).then(() => f.reset())}
+              onSubmit={handleLogin}
               initialValues={{ email: "", password: "" }}
             >
               {({ handleSubmit, submitting }) => (

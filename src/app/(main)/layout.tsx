@@ -17,6 +17,7 @@ import {
   RiUserLine,
   RiLogoutBoxLine,
 } from "react-icons/ri";
+import { logout } from "@/supabase/actions";
 
 export const metadata: Metadata = {
   title: "Dashboard - Dreasure",
@@ -90,12 +91,19 @@ export default function MainLayout({
 
           <Separator />
 
-          <Button variant="ghost" justifyContent="flex-start" w="full">
-            <Icon>
-              <RiLogoutBoxLine />
-            </Icon>
-            Logout
-          </Button>
+          <form action={logout}>
+            <Button
+              variant="ghost"
+              justifyContent="flex-start"
+              w="full"
+              type="submit"
+            >
+              <Icon>
+                <RiLogoutBoxLine />
+              </Icon>
+              Logout
+            </Button>
+          </form>
         </Stack>
       </Box>
 
@@ -125,7 +133,7 @@ export default function MainLayout({
           textAlign="center"
         >
           <Text textStyle="sm" color="fg.muted">
-            © 2025 Dreasure. Built with Next.js and Chakra UI v3
+            © 2025 Dreasure. Built with Next.js, Chakra UI v3 and Supabase.
           </Text>
         </Box>
       </Flex>
