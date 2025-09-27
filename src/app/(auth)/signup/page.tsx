@@ -7,7 +7,7 @@ export default function SignUpPage() {
   return (
     <Box
       minH="100vh"
-      bg="linear-gradient(135deg, green.500 0%, teal.600 100%)"
+      bg="linear-gradient(135deg, brand.600 0%, brand.800 100%)"
       display="flex"
       alignItems="center"
       justifyContent="center"
@@ -27,7 +27,7 @@ export default function SignUpPage() {
             <Text color="fg.muted">
               This would be your signup form using the same auth layout
             </Text>
-            <Button asChild colorPalette="green">
+            <Button asChild colorPalette="brand">
               <Link href="/login">Back to Login</Link>
             </Button>
           </Stack>

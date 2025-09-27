@@ -11,10 +11,10 @@ export default function Home() {
               Welcome to Dreasure
             </Heading>
             <Stack gap={4}>
-              <Button asChild colorPalette="blue" size="lg">
+              <Button asChild colorPalette="brand" size="lg">
                 <Link href="/login">Go to Login (Auth Layout)</Link>
               </Button>
-              <Button asChild colorPalette="green" size="lg" variant="outline">
+              <Button asChild colorPalette="brand" size="lg" variant="outline">
                 <Link href="/signup">Go to Signup (Auth Layout)</Link>
               </Button>
               <Button asChild colorPalette="purple" size="lg" variant="outline">

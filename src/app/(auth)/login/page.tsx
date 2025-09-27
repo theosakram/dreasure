@@ -78,7 +78,7 @@ export default function LoginPage() {
     return (
       <Box
         minH="100vh"
-        bg="linear-gradient(135deg, blue.500 0%, purple.600 100%)"
+        bg="linear-gradient(135deg, brand.600 0%, brand.800 100%)"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -120,7 +120,7 @@ export default function LoginPage() {
       >
         {/* Header Section */}
         <Box
-          bg="linear-gradient(135deg, blue.600 0%, purple.700 100%)"
+          bg="linear-gradient(135deg, brand.700 0%, brand.800 100%)"
           p={8}
           textAlign="center"
           color="white"
@@ -236,9 +236,9 @@ export default function LoginPage() {
                       <Link
                         href="#"
                         textStyle="sm"
-                        color="blue.500"
+                        color="brand.solid"
                         fontWeight="medium"
-                        _hover={{ color: "blue.600" }}
+                        _hover={{ color: "brand.600" }}
                       >
                         Forgot password?
                       </Link>
@@ -246,7 +246,7 @@ export default function LoginPage() {
 
                     <Button
                       size="lg"
-                      colorPalette="blue"
+                      colorPalette="brand"
                       onClick={handleSubmit}
                       loading={submitting}
                       loadingText="Signing in..."
@@ -263,9 +263,9 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="#"
-                color="blue.500"
+                color="brand.solid"
                 fontWeight="medium"
-                _hover={{ color: "blue.600" }}
+                _hover={{ color: "brand.600" }}
               >
                 Sign up here
               </Link>
