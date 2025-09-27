@@ -30,9 +30,9 @@ import { z } from "zod";
 import { FormField } from "@/components/custom/FormFIeld";
 import { PasswordFormInput } from "@/components/custom/PasswordFormInput";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { login } from "@/supabase/actions";
 import { supabaseClient } from "@/supabase/client";
-import { useEffect, useState } from "react";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        const returnTo = searchParams.get("returnTo") || "/dashboard";
+        const returnTo = searchParams.get("returnTo") || "/cash";
         router.replace(returnTo);
         return;
       }
@@ -61,7 +61,7 @@ export default function LoginPage() {
   }, [router, searchParams]);
 
   const handleLogin = async (values: LoginFormValues) => {
-    const returnTo = searchParams.get("returnTo") || "/dashboard";
+    const returnTo = searchParams.get("returnTo") || "/cash";
 
     await login({
       email: values.email,

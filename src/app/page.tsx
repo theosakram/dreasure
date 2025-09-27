@@ -18,7 +18,7 @@ export default function Home() {
                 <Link href="/signup">Go to Signup (Auth Layout)</Link>
               </Button>
               <Button asChild colorPalette="purple" size="lg" variant="outline">
-                <Link href="/dashboard">Go to Dashboard (Main Layout)</Link>
+                <Link href="/cash">Go to Cash (Main Layout)</Link>
               </Button>
             </Stack>
           </Stack>

@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
-import { RiDashboardLine, RiUserLine } from "react-icons/ri";
+import { FaSyncAlt, FaWallet } from "react-icons/fa";
+import { RiUserLine } from "react-icons/ri";
 
 export type NavigationItem = {
   href: string;
@@ -9,9 +10,14 @@ export type NavigationItem = {
 
 export const navigationItems: NavigationItem[] = [
   {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: RiDashboardLine,
+    href: "/cash",
+    label: "Uang Kas",
+    icon: FaWallet,
+  },
+  {
+    href: "/revolving",
+    label: "Uang Bergulir",
+    icon: FaSyncAlt,
   },
   {
     href: "/members",

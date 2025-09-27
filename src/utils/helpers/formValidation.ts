@@ -7,9 +7,9 @@ export const formValidation = <T>(schema: ZodType<T>, values: Partial<T>) => {
 
   const result = schema.safeParse(values);
   if (!result.success) {
-    // if (process.env.NODE_ENV !== "production") {
-    //   console.error("Validation errors:", result.error.issues);
-    // }
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Validation errors:", result.error.issues);
+    }
 
     return result.error.issues.reduce((acc, issue) => {
       const fieldName = issue.path.join(".");

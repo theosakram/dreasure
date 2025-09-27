@@ -15,7 +15,10 @@ export async function login(payload: SupabaseLogin) {
   }
 
   revalidatePath("/", "layout");
-  redirect(payload.returnTo || "/dashboard");
+  const returnTo = payload.returnTo
+    ? decodeURIComponent(payload.returnTo)
+    : "/cash";
+  redirect(returnTo);
 }
 
 export async function signup(payload: SupabaseSignUp) {

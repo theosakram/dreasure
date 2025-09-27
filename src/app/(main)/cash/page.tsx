@@ -3,9 +3,12 @@
 import { AddTransactionModal } from "@/components/containers/AddTransactionModal";
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
 import { TableContainer } from "@/components/containers/TableContainers";
-import { TimeFilter } from "@/components/custom/TimeFilter";
+import { Form } from "@/components/custom/Form";
+import { FormField } from "@/components/custom/FormFIeld";
+import { TimeFilter, TimeFilterOption } from "@/components/custom/TimeFilter";
 import { useGetTransactions } from "@/features/transactions/transactionHooks";
 import { Transaction } from "@/features/transactions/transactionTypes";
+import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
 import {
   Box,
   Portal,
@@ -14,91 +17,26 @@ import {
   Text,
   Popover,
   Badge,
+  Input,
+  Button,
+  InputGroup,
+  Icon,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { LuSearch, LuX } from "react-icons/lu";
 
 export default function DashboardPage() {
-  const [timeFilter, setTimeFilter] = useState<
-    "today" | "week" | "month" | "all"
-  >("all");
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] =
     useState(false);
 
-  const { data, isLoading, error } = useGetTransactions();
-
-  const handleAddTransaction = () => {
-    console.log("Add new transaction");
-    // TODO: Implement add transaction functionality
-  };
-
-  // Filter data based on time period
-  const getFilteredData = () => {
-    if (timeFilter === "all") return data || [];
-
-    const now = new Date();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    );
-    const startOfWeek = new Date(startOfToday);
-    startOfWeek.setDate(startOfToday.getDate() - 7);
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    let cutoffDate: Date;
-    switch (timeFilter) {
-      case "today":
-        cutoffDate = startOfToday;
-        break;
-      case "week":
-        cutoffDate = startOfWeek;
-        break;
-      case "month":
-        cutoffDate = startOfMonth;
-        break;
-      default:
-        return data || [];
-    }
-
-    if (data) {
-      return data?.filter((transaction) => {
-        const transactionDate = new Date(
-          transaction.created_at || transaction.id,
-        );
-        return transactionDate >= cutoffDate;
-      });
-    }
-
-    return [];
-  };
-
-  const filteredData = getFilteredData();
-
-  // Helper function to get time filter label
-  const getTimeFilterLabel = (filter: typeof timeFilter) => {
-    const labels = {
-      today: "Hari Ini",
-      week: "7 Hari Terakhir",
-      month: "Bulan Ini",
-      all: "Sepanjang Waktu",
-    };
-    return labels[filter];
-  };
+  const { data, isLoading, error, isRefetching } = useGetTransactions();
 
   const columnHelper = createColumnHelper<Transaction>();
   const columns = [
-    columnHelper.accessor("id", {
-      header: "ID",
-      size: 80,
-      cell: (info) => (
-        <Text fontFamily="mono" fontSize="sm" color="fg.muted">
-          #{String(info.getValue()).slice(-6)}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor("user", {
+    columnHelper.accessor("userProfile", {
       header: "Anggota",
       size: 100,
       cell: (info) => {
@@ -123,26 +61,6 @@ export default function DashboardPage() {
         );
       },
     }),
-    columnHelper.accessor("user.position", {
-      header: "Jabatan",
-      size: 80,
-      cell: (info) => {
-        const position = info.getValue();
-        if (!position) {
-          return (
-            <Text fontSize="sm" color="fg.muted">
-              -
-            </Text>
-          );
-        }
-
-        return (
-          <Text fontSize="sm" fontWeight="medium">
-            {position}
-          </Text>
-        );
-      },
-    }),
     columnHelper.accessor("created_at", {
       header: "Tanggal Transaksi",
       size: 80,
@@ -154,7 +72,7 @@ export default function DashboardPage() {
     }),
     columnHelper.accessor("description", {
       header: "Catatan",
-      size: 200,
+      size: 150,
       cell: (info) => {
         const description = info.getValue() || "No description";
         const maxLength = 50;
@@ -240,41 +158,73 @@ export default function DashboardPage() {
     }),
   ];
 
+  const { shallowPush } = useShallowPush({ type: "replace" });
+  const searchParams = useSearchParams();
+  const filter =
+    (searchParams.get("filter") as TimeFilterOption["value"]) || "all";
+  const q = searchParams.get("q") || "";
+
   return (
     <Stack gap={6}>
       <MoneyFlowContainer />
-      <TimeFilter value={timeFilter} onChange={setTimeFilter} />
+      <TimeFilter value={filter} onChange={(e) => shallowPush({ filter: e })} />
+
+      <Form initialValues={{ q }} onSubmit={(e) => shallowPush({ q: e.q })}>
+        {({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <Box w="fit-content">
+              <FormField<string> name="q">
+                {({ input }) => (
+                  <InputGroup
+                    flex="1"
+                    startElement={<LuSearch />}
+                    endElement={
+                      q && (
+                        <Icon
+                          as={LuX}
+                          _hover={{ bg: "bg.muted", borderRadius: "full" }}
+                          cursor="pointer"
+                          onClick={() => shallowPush({ q: "" })}
+                        />
+                      )
+                    }
+                  >
+                    <Input
+                      placeholder="Cari nama..."
+                      {...input}
+                      bg="bg.panel"
+                    />
+                  </InputGroup>
+                )}
+              </FormField>
+            </Box>
+            <Button type="submit" display="none">
+              Submit
+            </Button>
+          </form>
+        )}
+      </Form>
 
       <TableContainer<Transaction>
-        data={filteredData}
+        data={data}
         columns={columns}
-        isLoading={isLoading}
+        isLoading={isLoading || isRefetching}
         isError={!!error}
         title="Transaksi Terbaru"
-        subtitle={`${filteredData.length} transaksi${
-          timeFilter !== "all"
-            ? ` di ${getTimeFilterLabel(timeFilter).toLowerCase()}`
-            : ""
-        }`}
+        subtitle={`${data?.length} transaksi`}
         addButtonLabel="Tambah Transaksi"
         onAddClick={() => setIsAddTransactionModalOpen(true)}
         variant="line"
         size="md"
         interactive
         emptyTitle="No transactions found"
-        emptyDescription={
-          timeFilter !== "all"
-            ? `No transactions found for ${getTimeFilterLabel(
-                timeFilter,
-              ).toLowerCase()}. Try adjusting your filter or add a new transaction.`
-            : "Start by adding your first transaction to track your money flow."
-        }
-        emptyActionLabel="Add First Transaction"
-        onEmptyAction={handleAddTransaction}
+        emptyDescription="Tidak ada transaksi"
+        emptyActionLabel="Tambah Transaksi Pertama"
         errorTitle="Failed to load transactions"
         errorDescription="We couldn't load your transaction data. Please check your connection and try again."
         onRetry={() => window.location.reload()}
-        loadingMessage="Loading your transactions..."
+        loadingMessage="Memuat data transaksi..."
+        scrollMaxH="47.5vh"
       />
 
       <AddTransactionModal

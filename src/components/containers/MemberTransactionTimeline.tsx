@@ -1,3 +1,4 @@
+import { TransactionType } from "@/features/transactions/transactionTypes";
 import { Icon, Timeline } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { ReactNode } from "react";
@@ -8,7 +9,7 @@ type TimelineEvent = {
   date: string;
   amount: number;
   id: string | number;
-  type: "deposit" | "withdrawal";
+  type: TransactionType;
 };
 
 type MemberTransactionTimelineProps = {

@@ -2,13 +2,13 @@
 
 import { TableContainer } from "@/components/containers/TableContainers";
 import { ActionMenu } from "@/components/custom/ActionMenu";
-import { useGetUsers } from "@/features/users/userHooks";
-import { User } from "@/features/users/userTypes";
+import { useGetProfiles } from "@/features/profiles/profileHooks";
+import { Profile } from "@/features/profiles/profileTypes";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
 const MembersPage = () => {
-  const { data: users, isLoading, error } = useGetUsers();
+  const { data: profiles, isLoading, error } = useGetProfiles();
   const router = useRouter();
 
   // Action handlers
@@ -16,17 +16,17 @@ const MembersPage = () => {
     router.push(`/members/detail/${id}`);
   };
 
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: Profile) => {
     console.log("Edit user:", user.fullname);
     // TODO: Navigate to edit page or open edit modal
   };
 
-  const handleDelete = (user: User) => {
+  const handleDelete = (user: Profile) => {
     console.log("Delete user:", user.fullname);
     // TODO: Show confirmation dialog and delete user
   };
 
-  const columnHelper = createColumnHelper<User>();
+  const columnHelper = createColumnHelper<Profile>();
   const columns = [
     columnHelper.accessor("fullname", {
       header: "Nama Lengkap",
@@ -35,10 +35,6 @@ const MembersPage = () => {
     columnHelper.accessor("email", {
       header: "Email",
       cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("position", {
-      header: "Jabatan",
-      cell: (info) => info.getValue() || "-",
     }),
     columnHelper.display({
       id: "actions",
@@ -57,7 +53,7 @@ const MembersPage = () => {
     <TableContainer
       title="Daftar Anggota"
       subtitle="Kelola data anggota organisasi"
-      data={users || []}
+      data={profiles || []}
       columns={columns}
       isLoading={isLoading}
       isError={!!error}

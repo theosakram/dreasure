@@ -8,7 +8,7 @@ import { FormApi } from "final-form";
 type FormProps<T> = {
   onSubmit: (values: T, form: FormApi<T, Partial<T>>) => void;
   children: (method: FormRenderProps<T>) => React.ReactNode;
-  schema: ZodType<T>;
+  schema?: ZodType<T>;
   initialValues?: Partial<T>;
 };
 
@@ -18,7 +18,11 @@ export const Form = <T extends Record<string, unknown>>(
   return (
     <FinalForm<T>
       initialValues={props.initialValues}
-      validate={(values) => formValidation(props.schema, values)}
+      validate={
+        props.schema
+          ? (values) => formValidation(props.schema!, values)
+          : undefined
+      }
       onSubmit={props.onSubmit}
       render={(method) => props.children(method)}
     />

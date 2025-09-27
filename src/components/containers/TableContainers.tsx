@@ -1,10 +1,23 @@
-import { Box, HStack, Text, Button, Separator } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Text,
+  Button,
+  Separator,
+  ScrollArea,
+  ButtonGroup,
+  IconButton,
+  Pagination,
+  Flex,
+  Spacer,
+} from "@chakra-ui/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "@/components/custom/Table";
 import { Loading } from "@/components/custom/Loading";
 import { Empty } from "@/components/custom/Empty";
 import { Error } from "@/components/custom/Error";
 import { LuPlus } from "react-icons/lu";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 type TableContainerProps<T extends Record<string, unknown>> = {
   // Table props
@@ -45,6 +58,7 @@ type TableContainerProps<T extends Record<string, unknown>> = {
 
   // Loading props
   loadingMessage?: string;
+  scrollMaxH?: string;
 };
 
 export const TableContainer = <T extends Record<string, unknown>>({
@@ -70,6 +84,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
   errorDescription,
   onRetry,
   loadingMessage,
+  scrollMaxH,
 }: TableContainerProps<T>) => {
   const renderContent = () => {
     if (isLoading) {
@@ -98,20 +113,29 @@ export const TableContainer = <T extends Record<string, unknown>>({
     }
 
     return (
-      <Table<T>
-        data={data}
-        columns={columns}
-        variant={variant}
-        size={size}
-        striped={striped}
-        interactive={interactive}
-      />
+      <ScrollArea.Root maxH={scrollMaxH}>
+        <ScrollArea.Viewport>
+          <ScrollArea.Content spaceY="4" textStyle="sm">
+            <Table<T>
+              data={data}
+              columns={columns}
+              variant={variant}
+              size={size}
+              striped={striped}
+              interactive={interactive}
+            />
+          </ScrollArea.Content>
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar>
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+        <ScrollArea.Corner />
+      </ScrollArea.Root>
     );
   };
 
   return (
     <Box>
-      {/* Header Section */}
       {(title || subtitle || showAddButton) && (
         <>
           <HStack justify="space-between" align="start" mb={4}>
@@ -144,7 +168,6 @@ export const TableContainer = <T extends Record<string, unknown>>({
         </>
       )}
 
-      {/* Table Container */}
       <Box
         borderWidth="1px"
         borderRadius="lg"
@@ -153,6 +176,25 @@ export const TableContainer = <T extends Record<string, unknown>>({
       >
         {renderContent()}
       </Box>
+
+      <Flex w="100%" mt="0.5rem">
+        <Spacer />
+        <Pagination.Root count={20} pageSize={2} defaultPage={1}>
+          <ButtonGroup gap="4" size="sm" variant="ghost">
+            <Pagination.PrevTrigger asChild>
+              <IconButton>
+                <HiChevronLeft />
+              </IconButton>
+            </Pagination.PrevTrigger>
+            <Pagination.PageText />
+            <Pagination.NextTrigger asChild>
+              <IconButton>
+                <HiChevronRight />
+              </IconButton>
+            </Pagination.NextTrigger>
+          </ButtonGroup>
+        </Pagination.Root>
+      </Flex>
     </Box>
   );
 };

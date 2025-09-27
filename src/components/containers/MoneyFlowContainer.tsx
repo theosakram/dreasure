@@ -6,26 +6,33 @@ import {
   LuArrowUpDown,
 } from "react-icons/lu";
 import { MetricStat } from "../custom/MetricStat";
-import { useGetUserTransactionSummary } from "@/features/users/userHooks";
 import { useMemo } from "react";
+import { useGetKasWallet } from "@/features/wallets/walletHooks";
 
 export const MoneyFlowContainer = () => {
-  const { data } = useGetUserTransactionSummary();
+  const { data } = useGetKasWallet();
+
   const mappedData = useMemo(() => {
     if (data) {
-      const totalDeposit = data.reduce(
-        (acc, user) => acc + (user.deposit_total || 0),
-        0,
-      );
-      const totalWithdraw = data.reduce(
-        (acc, user) => acc + (user.withdraw_total || 0),
-        0,
-      );
+      const totalDeposit = data.transactions
+        .filter((t) => t.type === "deposit")
+        .reduce((acc, t) => acc + (t.amount || 0), 0);
+
+      const totalWithdraw = data.transactions
+        .filter((t) => t.type === "withdraw")
+        .reduce((acc, t) => acc + (t.amount || 0), 0);
+
+      const balance = data.transactions.reduce((acc, t) => {
+        if (t.type === "deposit") return acc + (t.amount || 0);
+        if (t.type === "withdraw") return acc - (t.amount || 0);
+        return acc;
+      }, 0);
       const netFlow = totalDeposit - totalWithdraw;
+
       return [
         {
           label: "Total Saldo",
-          value: data.reduce((acc, user) => acc + (user.balance || 0), 0),
+          value: balance || 0,
           icon: <LuWallet size={16} />,
           colorScheme: "blue",
         },

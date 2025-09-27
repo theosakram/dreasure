@@ -1,7 +1,7 @@
 import { Box, HStack, Text, SegmentGroup, Icon } from "@chakra-ui/react";
 import { LuCalendarDays } from "react-icons/lu";
 
-type TimeFilterOption = {
+export type TimeFilterOption = {
   value: "today" | "week" | "month" | "all";
   label: string;
 };
@@ -32,10 +32,9 @@ export const TimeFilter = ({
 }: TimeFilterProps) => {
   return (
     <HStack gap={3} align="center">
-      {/* Label Section */}
       <HStack gap={2} align="center">
         {showIcon && (
-          <Box p={1.5} bg="brand.50" borderRadius="md" color="brand.solid">
+          <Box p={1.5} borderRadius="md" color="brand.solid">
             <Icon size="xs">
               <LuCalendarDays />
             </Icon>

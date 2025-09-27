@@ -1,13 +1,13 @@
 "use client";
 
 import { MemberTransactionTimeline } from "@/components/containers/MemberTransactionTimeline";
-import { useGetUserById } from "@/features/users/userHooks";
+import { useGetProfileById } from "@/features/profiles/profileHooks";
 import { Span } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 
 const MembersDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data } = useGetUserById(id);
+  const { data } = useGetProfileById(id);
 
   return (
     <div>

@@ -3,10 +3,7 @@ import { Form } from "../custom/Form";
 import { addTransactionSchema } from "@/utils/forms/schemas/addTransactionSchema";
 import { FormField } from "../custom/FormFIeld";
 import { Select } from "../custom/Select";
-import {
-  useGetUsers,
-  useGetUserTransactionSummary,
-} from "@/features/users/userHooks";
+import { useGetProfiles } from "@/features/profiles/profileHooks";
 import {
   Button,
   HStack,
@@ -28,6 +25,7 @@ import {
   useAddTransaction,
   useGetTransactions,
 } from "@/features/transactions/transactionHooks";
+import { useGetKasWallet } from "@/features/wallets/walletHooks";
 
 type AddTransactionModalProps = {
   open: boolean;
@@ -38,13 +36,13 @@ export const AddTransactionModal = ({
   open,
   setOpen,
 }: AddTransactionModalProps) => {
-  const { data } = useGetUsers();
+  const { data } = useGetProfiles();
   const { refetch } = useGetTransactions();
-  const { refetch: summaryRefetch } = useGetUserTransactionSummary();
+  const { data: kas, refetch: refetchKas } = useGetKasWallet();
   const { mutateAsync: addTransaction, isPending } = useAddTransaction({
     onSuccess: () => {
       refetch();
-      summaryRefetch();
+      refetchKas();
       setOpen(false);
     },
   });
@@ -57,6 +55,7 @@ export const AddTransactionModal = ({
       body={
         <Box p={2}>
           <Form
+            initialValues={{ wallet_id: kas?.id, amount: 0 }}
             onSubmit={(e) => addTransaction(e)}
             schema={addTransactionSchema}
           >
@@ -142,7 +141,7 @@ export const AddTransactionModal = ({
                         <Select
                           options={[
                             { value: "deposit", label: "Setor" },
-                            { value: "withdrawal", label: "Tarik" },
+                            { value: "withdraw", label: "Tarik" },
                           ]}
                           onChange={(option) => input.onChange(option)}
                         />

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Box, Flex } from "@chakra-ui/react";
 import { Sidebar } from "@/components/custom/Sidebar";
 import { Header } from "@/components/custom/Header";
-import { Footer } from "@/components/custom/Footer";
 
 export const metadata: Metadata = {
   title: "Dashboard - Dreasure",
@@ -24,8 +23,6 @@ export default function MainLayout({
         <Box flex={1} p={6}>
           {children}
         </Box>
-
-        <Footer />
       </Flex>
     </Flex>
   );

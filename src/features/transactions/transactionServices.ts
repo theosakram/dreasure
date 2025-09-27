@@ -1,27 +1,39 @@
 import { supabaseClient } from "@/supabase/client";
-import { Transaction } from "./transactionTypes";
+import { AddTransactionRequest, Transaction } from "./transactionTypes";
 
-export const getTransactions = async () => {
-  const supabase = supabaseClient();
-  const { data: transactions } = await supabase
+type GetTransactionPayload = {
+  gte?: string;
+  lte?: string;
+  name?: string;
+};
+
+export async function getTransactions(payload?: GetTransactionPayload) {
+  let query = supabaseClient()
     .from("transactions")
     .select(
       `
-    *,
-    user:users(id,fullname,email, position)
-  `,
+      *,
+      userProfile:profiles!inner (
+        id,
+        fullname,
+        email
+      )
+      `,
     )
-    .overrideTypes<Array<Transaction>>();
+    .order("created_at", { ascending: false });
 
-  return transactions;
-};
+  if (payload?.gte) query = query.gte("created_at", payload.gte);
+  if (payload?.lte) query = query.lte("created_at", payload.lte);
+  if (payload?.name)
+    query = query.ilike("userProfile.fullname", `%${payload.name}%`);
 
-export const addTransaction = async (payload: {
-  user_id: string;
-  amount: number;
-  type: "deposit" | "withdrawal";
-  description?: string;
-}) => {
+  const { data, error } = await query.overrideTypes<Transaction[]>();
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export const addTransaction = async (payload: AddTransactionRequest) => {
   const supabase = supabaseClient();
 
   const { data, error } = await supabase
