@@ -1,8 +1,14 @@
+import { Transaction } from "../transactions/transactionTypes";
+
 export type User = {
   id: string;
   fullname: string;
   email: string;
   position: string;
+};
+
+export type UserWithTransactions = User & {
+  transactions: Array<Transaction>;
 };
 
 export type UserTransactionSummary = User & {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Form } from "@/components/custom/Form";
-import { loginSchema } from "@/utils/forms/login/loginSchema";
+import { loginSchema } from "@/utils/forms/schemas/loginSchema";
 import {
   Box,
   Button,

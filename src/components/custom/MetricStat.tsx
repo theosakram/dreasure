@@ -46,14 +46,16 @@ export const MetricStat = ({
         signDisplay={showSign ? "always" : "auto"}
       />
     </Stat.ValueText>
-    <Button
-      size="sm"
-      variant="surface"
-      colorPalette={colorScheme}
-      w="full"
-      onClick={onClick}
-    >
-      Detail
-    </Button>
+    {onClick && (
+      <Button
+        size="sm"
+        variant="surface"
+        colorPalette={colorScheme}
+        w="full"
+        onClick={onClick}
+      >
+        Detail
+      </Button>
+    )}
   </Stat.Root>
 );

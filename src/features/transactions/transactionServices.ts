@@ -15,3 +15,23 @@ export const getTransactions = async () => {
 
   return transactions;
 };
+
+export const addTransaction = async (payload: {
+  user_id: string;
+  amount: number;
+  type: "deposit" | "withdrawal";
+  description?: string;
+}) => {
+  const supabase = supabaseClient();
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .insert(payload)
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};

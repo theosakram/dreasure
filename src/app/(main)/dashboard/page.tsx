@@ -1,5 +1,6 @@
 "use client";
 
+import { AddTransactionModal } from "@/components/containers/AddTransactionModal";
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
 import { TableContainer } from "@/components/containers/TableContainers";
 import { TimeFilter } from "@/components/custom/TimeFilter";
@@ -11,7 +12,6 @@ import {
   FormatNumber,
   Stack,
   Text,
-  Separator,
   Popover,
   Badge,
 } from "@chakra-ui/react";
@@ -23,6 +23,8 @@ export default function DashboardPage() {
   const [timeFilter, setTimeFilter] = useState<
     "today" | "week" | "month" | "all"
   >("all");
+  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] =
+    useState(false);
 
   const { data, isLoading, error } = useGetTransactions();
 
@@ -239,46 +241,46 @@ export default function DashboardPage() {
   ];
 
   return (
-    <Box p={6}>
-      <Stack gap={6}>
-        <TimeFilter value={timeFilter} onChange={setTimeFilter} />
+    <Stack gap={6}>
+      <MoneyFlowContainer />
+      <TimeFilter value={timeFilter} onChange={setTimeFilter} />
 
-        <MoneyFlowContainer />
+      <TableContainer<Transaction>
+        data={filteredData}
+        columns={columns}
+        isLoading={isLoading}
+        isError={!!error}
+        title="Transaksi Terbaru"
+        subtitle={`${filteredData.length} transaksi${
+          timeFilter !== "all"
+            ? ` di ${getTimeFilterLabel(timeFilter).toLowerCase()}`
+            : ""
+        }`}
+        addButtonLabel="Tambah Transaksi"
+        onAddClick={() => setIsAddTransactionModalOpen(true)}
+        variant="line"
+        size="md"
+        interactive
+        emptyTitle="No transactions found"
+        emptyDescription={
+          timeFilter !== "all"
+            ? `No transactions found for ${getTimeFilterLabel(
+                timeFilter,
+              ).toLowerCase()}. Try adjusting your filter or add a new transaction.`
+            : "Start by adding your first transaction to track your money flow."
+        }
+        emptyActionLabel="Add First Transaction"
+        onEmptyAction={handleAddTransaction}
+        errorTitle="Failed to load transactions"
+        errorDescription="We couldn't load your transaction data. Please check your connection and try again."
+        onRetry={() => window.location.reload()}
+        loadingMessage="Loading your transactions..."
+      />
 
-        <Separator />
-
-        <TableContainer<Transaction>
-          data={filteredData}
-          columns={columns}
-          isLoading={isLoading}
-          isError={!!error}
-          title="Transaksi Terbaru"
-          subtitle={`${filteredData.length} transaksi${
-            timeFilter !== "all"
-              ? ` in ${getTimeFilterLabel(timeFilter).toLowerCase()}`
-              : ""
-          }`}
-          addButtonLabel="Tambah Transaksi"
-          onAddClick={handleAddTransaction}
-          variant="line"
-          size="md"
-          interactive
-          emptyTitle="No transactions found"
-          emptyDescription={
-            timeFilter !== "all"
-              ? `No transactions found for ${getTimeFilterLabel(
-                  timeFilter,
-                ).toLowerCase()}. Try adjusting your filter or add a new transaction.`
-              : "Start by adding your first transaction to track your money flow."
-          }
-          emptyActionLabel="Add First Transaction"
-          onEmptyAction={handleAddTransaction}
-          errorTitle="Failed to load transactions"
-          errorDescription="We couldn't load your transaction data. Please check your connection and try again."
-          onRetry={() => window.location.reload()}
-          loadingMessage="Loading your transactions..."
-        />
-      </Stack>
-    </Box>
+      <AddTransactionModal
+        open={isAddTransactionModalOpen}
+        setOpen={setIsAddTransactionModalOpen}
+      />
+    </Stack>
   );
 }

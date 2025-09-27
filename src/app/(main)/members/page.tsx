@@ -67,7 +67,6 @@ const MembersPage = () => {
       emptyActionLabel="Tambah Anggota"
       addButtonLabel="Tambah Anggota"
       onRetry={() => window.location.reload()}
-      striped
       interactive
     />
   );
