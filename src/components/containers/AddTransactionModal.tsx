@@ -28,26 +28,29 @@ import {
 } from "react-icons/lu";
 import {
   useAddTransaction,
-  useGetTransactions,
+  useGetWalletTransactions,
 } from "@/features/transactions/transactionHooks";
-import { useGetKasWallet } from "@/features/wallets/walletHooks";
+import { useGetWalletByName } from "@/features/wallets/walletHooks";
+import { WalletName } from "@/features/wallets/walletTypes";
 
 type AddTransactionModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
+  type: WalletName;
 };
 
 export const AddTransactionModal = ({
   open,
   setOpen,
+  type,
 }: AddTransactionModalProps) => {
   const { data } = useGetProfiles();
-  const { refetch } = useGetTransactions();
-  const { data: kas, refetch: refetchKas } = useGetKasWallet();
+  const { refetch } = useGetWalletTransactions(type);
+  const { data: wallet, refetch: refetchWallet } = useGetWalletByName(type);
   const { mutateAsync: addTransaction, isPending } = useAddTransaction({
     onSuccess: () => {
       refetch();
-      refetchKas();
+      refetchWallet();
       setOpen(false);
     },
   });
@@ -60,7 +63,7 @@ export const AddTransactionModal = ({
       body={
         <Box p="1rem">
           <Form
-            initialValues={{ wallet_id: kas?.id, amount: 0 }}
+            initialValues={{ wallet_id: wallet?.id, amount: 0 }}
             onSubmit={(e) => addTransaction(e)}
             schema={addTransactionSchema}
           >

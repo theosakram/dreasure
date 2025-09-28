@@ -1,3 +1,4 @@
+import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
 import {
   Box,
   HStack,
@@ -8,6 +9,7 @@ import {
   Flex,
   Separator,
 } from "@chakra-ui/react";
+import { useSearchParams } from "next/navigation";
 import { LuCalendarDays, LuFilter } from "react-icons/lu";
 
 export type TimeFilterOption = {
@@ -18,8 +20,6 @@ export type TimeFilterOption = {
 };
 
 type TimeFilterProps = {
-  value: "today" | "week" | "month" | "all";
-  onChange: (value: "today" | "week" | "month" | "all") => void;
   options?: TimeFilterOption[];
   label?: string;
   showIcon?: boolean;
@@ -58,8 +58,6 @@ const defaultOptions: TimeFilterOption[] = [
 ];
 
 export const TimeFilter = ({
-  value,
-  onChange,
   options = defaultOptions,
   label = "Filter Periode",
   showIcon = true,
@@ -69,10 +67,12 @@ export const TimeFilter = ({
   showDescription = false,
   disabled = false,
 }: TimeFilterProps) => {
-  // Get the current option for enhanced display
-  const currentOption = options.find((option) => option.value === value);
+  const searchParams = useSearchParams();
+  const filter = searchParams.get("filter") as TimeFilterOption["value"];
+  const currentOption = options.find((option) => option.value === filter);
 
-  // Render compact card variant
+  const { shallowPush } = useShallowPush({ type: "replace" });
+
   if (variant === "card") {
     return (
       <Box
@@ -108,9 +108,9 @@ export const TimeFilter = ({
           </HStack>
 
           <SegmentGroup.Root
-            value={value}
+            value={filter || "all"}
             onValueChange={(e) =>
-              !disabled && onChange(e.value as typeof value)
+              !disabled && shallowPush({ filter: e.value || "all" })
             }
             size={size}
             disabled={disabled}
@@ -124,7 +124,6 @@ export const TimeFilter = ({
     );
   }
 
-  // Render compact variant
   if (variant === "compact") {
     return (
       <HStack gap={2} align="center">
@@ -134,8 +133,10 @@ export const TimeFilter = ({
           </Icon>
         )}
         <SegmentGroup.Root
-          value={value}
-          onValueChange={(e) => !disabled && onChange(e.value as typeof value)}
+          value={filter || "all"}
+          onValueChange={(e) =>
+            !disabled && shallowPush({ filter: e.value || "all" })
+          }
           size={size}
           disabled={disabled}
         >
@@ -151,7 +152,6 @@ export const TimeFilter = ({
     );
   }
 
-  // Default variant with enhanced design
   const containerProps =
     orientation === "vertical"
       ? { as: VStack, align: "start", gap: 3 }
@@ -199,8 +199,10 @@ export const TimeFilter = ({
       )}
 
       <SegmentGroup.Root
-        value={value}
-        onValueChange={(e) => !disabled && onChange(e.value as typeof value)}
+        value={filter || "all"}
+        onValueChange={(e) =>
+          !disabled && shallowPush({ filter: e.value || "all" })
+        }
         size={size}
         disabled={disabled}
       >

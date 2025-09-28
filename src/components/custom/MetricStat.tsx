@@ -1,4 +1,11 @@
-import { Stat, HStack, Box, FormatNumber, Button } from "@chakra-ui/react";
+import {
+  Stat,
+  HStack,
+  Box,
+  FormatNumber,
+  Button,
+  Skeleton,
+} from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 export type MetricStatProps = {
@@ -9,6 +16,7 @@ export type MetricStatProps = {
   variant?: "primary" | "success" | "danger" | "neutral" | "blue";
   showSign?: boolean;
   onClick?: () => void;
+  isLoading?: boolean;
 };
 
 export const MetricStat = ({
@@ -19,8 +27,8 @@ export const MetricStat = ({
   variant = "neutral",
   showSign = false,
   onClick,
+  isLoading = false,
 }: MetricStatProps) => {
-  // Theme-aware variant styles
   const getVariantStyles = () => {
     switch (variant) {
       case "primary":
@@ -62,6 +70,26 @@ export const MetricStat = ({
   };
 
   const styles = getVariantStyles();
+
+  if (isLoading) {
+    return (
+      <Stat.Root bg={styles.cardBg} p={5} borderRadius="xl" boxShadow="sm">
+        <HStack justify="space-between" align="start" mb={3}>
+          <Skeleton height="16px" width="80px" borderRadius="md" />
+          <Skeleton height="32px" width="40px" borderRadius="lg" />
+        </HStack>
+
+        <Skeleton
+          height="32px"
+          width="120px"
+          borderRadius="md"
+          mb={onClick ? 4 : 0}
+        />
+
+        {onClick && <Skeleton height="32px" width="full" borderRadius="lg" />}
+      </Stat.Root>
+    );
+  }
 
   return (
     <Stat.Root

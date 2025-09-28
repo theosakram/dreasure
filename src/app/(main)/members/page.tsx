@@ -8,8 +8,10 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
 const MembersPage = () => {
-  const { data: profiles, isLoading, error } = useGetProfiles();
+  const { data: profiles, isLoading, error, refetch } = useGetProfiles();
   const router = useRouter();
+
+  const handleAddMember = () => {};
 
   // Action handlers
   const handleDetail = (id: string) => {
@@ -62,8 +64,10 @@ const MembersPage = () => {
       emptyDescription="Tambahkan anggota baru untuk melihat data di sini"
       emptyActionLabel="Tambah Anggota"
       addButtonLabel="Tambah Anggota"
-      onRetry={() => window.location.reload()}
+      onRetry={refetch}
       interactive
+      showAddButton
+      onAddClick={handleAddMember}
     />
   );
 };

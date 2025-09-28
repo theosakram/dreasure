@@ -6,8 +6,10 @@ import {
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { AddTransactionRequest } from "./transactionTypes";
+import { WalletName } from "../wallets/walletTypes";
+import { walletNames } from "@/utils/constants";
 
-export const useGetTransactions = () => {
+export const useGetWalletTransactions = (walletName: WalletName) => {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
@@ -36,15 +38,24 @@ export const useGetTransactions = () => {
   const payload = {
     ...filterDates(),
     name: q,
+    walletName,
   };
 
   return useQuery({
-    queryKey: ["transactions", q, filter],
+    queryKey: [`${walletName}-transactions`, q, filter],
     queryFn: async () => {
-      const { getTransactions } = await import("./transactionServices");
-      return getTransactions(payload);
+      const { getWalletTransactions } = await import("./transactionServices");
+      return getWalletTransactions(payload);
     },
   });
+};
+
+export const useGetKasTransactions = () => {
+  return useGetWalletTransactions(walletNames.kas);
+};
+
+export const useGetBergulirTransactions = () => {
+  return useGetWalletTransactions(walletNames.bergulir);
 };
 
 export const useAddTransaction = (

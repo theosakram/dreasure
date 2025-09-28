@@ -36,7 +36,7 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     href: "/revolving",
-    label: "Uang Bergulir",
+    label: "Dana Bergulir",
     icon: FaSyncAlt,
   },
   {

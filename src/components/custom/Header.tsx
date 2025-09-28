@@ -16,7 +16,7 @@ export const Header = ({ showLogout = true }: HeaderProps) => {
   const title = useMemo(() => {
     const popped = pathname.split("/").pop();
     if (popped === "cash") return "Uang Kas";
-    if (popped === "revolving") return "Uang Bergulir";
+    if (popped === "revolving") return "Dana Bergulir";
     return popped;
   }, [pathname]);
 

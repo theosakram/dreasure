@@ -6,9 +6,8 @@ import {
   Box,
   Button,
   Card,
-  Flex,
+  Center,
   Heading,
-  HStack,
   Icon,
   Input,
   InputGroup,
@@ -16,25 +15,223 @@ import {
   Stack,
   Text,
   VStack,
-  Separator,
-  IconButton,
 } from "@chakra-ui/react";
 import {
-  RiGoogleFill,
-  RiGithubFill,
-  RiAppleFill,
   RiLockLine,
   RiMailLine,
+  RiEyeLine,
+  RiEyeOffLine,
 } from "react-icons/ri";
+import { TbMoneybag } from "react-icons/tb";
 import { z } from "zod";
 import { FormField } from "@/components/custom/FormFIeld";
-import { PasswordFormInput } from "@/components/custom/PasswordFormInput";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { login } from "@/supabase/actions";
 import { supabaseClient } from "@/supabase/client";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
+
+// Types for SOLID principles (Interface Segregation)
+interface LoadingSpinnerProps {
+  text: string;
+}
+
+interface FormHeaderProps {
+  title: string;
+  subtitle: string;
+}
+
+interface InputFieldProps {
+  name: keyof LoginFormValues;
+  label: string;
+  type: string;
+  placeholder: string;
+  icon: React.ReactElement;
+  isRequired?: boolean;
+}
+
+// Single Responsibility Principle - Each component has one clear purpose
+const LoadingSpinner = ({ text }: LoadingSpinnerProps) => (
+  <Box
+    h="100vh"
+    bg="linear-gradient(135deg, brand.50 0%, brand.100 50%, sage.50 100%)"
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <VStack gap={4}>
+      <Box position="relative">
+        <Box
+          w={12}
+          h={12}
+          border="3px solid"
+          borderColor="brand.100"
+          borderRadius="full"
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w={12}
+          h={12}
+          border="3px solid transparent"
+          borderTopColor="brand.solid"
+          borderRadius="full"
+          animation="spin 1s linear infinite"
+        />
+      </Box>
+      <Text color="brand.700" fontSize="lg" fontWeight="medium">
+        {text}
+      </Text>
+    </VStack>
+  </Box>
+);
+
+const FormHeader = ({ title, subtitle }: FormHeaderProps) => (
+  <VStack gap={3} textAlign="center">
+    {/* Brand Icon */}
+    <Box
+      p={3}
+      borderRadius="xl"
+      bg="linear-gradient(135deg, brand.400, brand.600)"
+      shadow="lg"
+      border="2px solid"
+      borderColor="brand.300"
+    >
+      <Icon size="xl" color="green">
+        <TbMoneybag />
+      </Icon>
+    </Box>
+
+    {/* Lock Icon */}
+    <Box
+      p={2}
+      borderRadius="lg"
+      bg="linear-gradient(135deg, brand.500, brand.600)"
+      shadow="md"
+    >
+      <Icon size="md" color="white">
+        <RiLockLine />
+      </Icon>
+    </Box>
+
+    <VStack gap={1}>
+      <Heading size="lg" color="fg.default" fontWeight="bold">
+        {title}
+      </Heading>
+      <Text color="fg.muted" fontSize="md" maxW="sm" lineHeight="1.4">
+        {subtitle}
+      </Text>
+    </VStack>
+  </VStack>
+);
+
+const CustomInputField = ({
+  name,
+  label,
+  type,
+  placeholder,
+  icon,
+  isRequired = false,
+}: InputFieldProps) => (
+  <FormField<string> name={name} label={label} isRequired={isRequired}>
+    {({ input }) => (
+      <InputGroup
+        startElement={
+          <Icon color="fg.subtle" size="lg">
+            {icon}
+          </Icon>
+        }
+      >
+        <Input
+          {...input}
+          type={type}
+          placeholder={placeholder}
+          size="xl"
+          bg="bg.subtle"
+          border="2px solid"
+          borderColor="border.subtle"
+          _hover={{
+            borderColor: "brand.300",
+            bg: "bg.canvas",
+          }}
+          _focus={{
+            borderColor: "brand.500",
+            shadow: "0 0 0 1px var(--chakra-colors-brand-500)",
+            bg: "bg.canvas",
+          }}
+          fontSize="md"
+          h="48px"
+        />
+      </InputGroup>
+    )}
+  </FormField>
+);
+
+const PasswordInputField = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <FormField<string> name="password" label="Kata Sandi" isRequired>
+      {({ input }) => (
+        <InputGroup
+          startElement={
+            <Icon color="fg.subtle" size="lg">
+              <RiLockLine />
+            </Icon>
+          }
+          endElement={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowPassword(!showPassword)}
+              color="fg.muted"
+              _hover={{ color: "brand.500" }}
+            >
+              <Icon size="lg">
+                {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
+              </Icon>
+            </Button>
+          }
+        >
+          <Input
+            {...input}
+            type={showPassword ? "text" : "password"}
+            placeholder="Masukkan kata sandi Anda"
+            size="xl"
+            bg="bg.subtle"
+            border="2px solid"
+            borderColor="border.subtle"
+            _hover={{
+              borderColor: "brand.300",
+              bg: "bg.canvas",
+            }}
+            _focus={{
+              borderColor: "brand.500",
+              shadow: "0 0 0 1px var(--chakra-colors-brand-500)",
+              bg: "bg.canvas",
+            }}
+            fontSize="md"
+            h="48px"
+          />
+        </InputGroup>
+      )}
+    </FormField>
+  );
+};
+
+// Data configuration (Open/Closed Principle)
+const FORM_FIELDS = [
+  {
+    name: "email" as const,
+    label: "Alamat Email",
+    type: "email",
+    placeholder: "Masukkan alamat email Anda",
+    icon: <RiMailLine />,
+    isRequired: true,
+  },
+];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -70,130 +267,37 @@ export default function LoginPage() {
     });
   };
 
-  const handleSocialLogin = (provider: string) => {
-    console.log(`Login with ${provider}`);
-  };
-
   if (isLoading) {
-    return (
-      <Box
-        minH="100vh"
-        bg="linear-gradient(135deg, brand.600 0%, brand.800 100%)"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <VStack gap={3}>
-          <Box
-            w={8}
-            h={8}
-            border="2px solid"
-            borderColor="whiteAlpha.300"
-            borderTopColor="white"
-            borderRadius="full"
-            animation="spin 1s linear infinite"
-          />
-          <Text color="white" textStyle="sm">
-            Checking authentication...
-          </Text>
-        </VStack>
-      </Box>
-    );
+    return <LoadingSpinner text="Memeriksa autentikasi..." />;
   }
 
   return (
-    <Box
-      minH="100vh"
-      bg="linear-gradient(135deg, blue.500 0%, purple.600 100%)"
+    <Center
+      w="100vw"
+      maxH="100vh"
+      h="100vh"
+      bg="linear-gradient(135deg, brand.50 0%, brand.100 50%, sage.50 100%)"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      p={4}
     >
       <Card.Root
-        maxW="md"
+        maxW="lg"
         w="full"
         variant="elevated"
-        shadow="xl"
-        rounded="2xl"
+        shadow="2xl"
+        rounded="3xl"
         overflow="hidden"
+        border="1px solid"
+        borderColor="border.subtle"
+        bg="bg.canvas"
       >
-        {/* Header Section */}
-        <Box
-          bg="linear-gradient(135deg, brand.700 0%, brand.800 100%)"
-          p={8}
-          textAlign="center"
-          color="white"
-        >
-          <Box
-            w={16}
-            h={16}
-            bg="whiteAlpha.200"
-            rounded="full"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            mx="auto"
-            mb={4}
-          >
-            <Icon size="lg" color="white">
-              <RiLockLine />
-            </Icon>
-          </Box>
-          <Heading size="lg" mb={2}>
-            Welcome Back
-          </Heading>
-          <Text opacity={0.9}>Sign in to your account to continue</Text>
-        </Box>
-
         <Card.Body p={8}>
           <Stack gap={6}>
-            <VStack gap={3}>
-              <Text textStyle="sm" color="fg.muted" textAlign="center">
-                Sign in with
-              </Text>
-              <HStack w="full" gap={3}>
-                <Button
-                  variant="outline"
-                  flex={1}
-                  size="lg"
-                  onClick={() => handleSocialLogin("Google")}
-                >
-                  <Icon color="red.500">
-                    <RiGoogleFill />
-                  </Icon>
-                  Google
-                </Button>
-                <IconButton
-                  variant="outline"
-                  size="lg"
-                  onClick={() => handleSocialLogin("GitHub")}
-                  aria-label="Login with GitHub"
-                >
-                  <Icon>
-                    <RiGithubFill />
-                  </Icon>
-                </IconButton>
-                <IconButton
-                  variant="outline"
-                  size="lg"
-                  onClick={() => handleSocialLogin("Apple")}
-                  aria-label="Login with Apple"
-                >
-                  <Icon>
-                    <RiAppleFill />
-                  </Icon>
-                </IconButton>
-              </HStack>
-            </VStack>
-
-            <HStack>
-              <Separator flex={1} />
-              <Text textStyle="xs" color="fg.muted" px={3}>
-                OR
-              </Text>
-              <Separator flex={1} />
-            </HStack>
+            <FormHeader
+              title="Selamat Datang Kembali"
+              subtitle="Masuk ke akun Dreasure Anda untuk melanjutkan mengelola keuangan"
+            />
 
             <Form<LoginFormValues>
               schema={loginSchema}
@@ -202,77 +306,55 @@ export default function LoginPage() {
             >
               {({ handleSubmit, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                  <Stack gap={6}>
-                    <FormField<string>
-                      name="email"
-                      label="Email Address"
-                      isRequired
-                    >
-                      {({ input }) => (
-                        <InputGroup
-                          startElement={
-                            <Icon color="fg.muted">
-                              <RiMailLine />
-                            </Icon>
-                          }
-                        >
-                          <Input
-                            {...input}
-                            type="email"
-                            placeholder="Enter your email"
-                            size="lg"
-                          />
-                        </InputGroup>
-                      )}
-                    </FormField>
+                  <Stack gap={4}>
+                    {FORM_FIELDS.map((field) => (
+                      <CustomInputField key={field.name} {...field} />
+                    ))}
 
-                    <PasswordFormInput />
+                    <PasswordInputField />
 
-                    <Flex justify="space-between" align="center">
-                      <Text textStyle="sm" color="fg.muted">
-                        {/* Checkbox would go here in a full implementation */}
-                        Remember me
-                      </Text>
+                    <VStack gap={3} pt={1}>
                       <Link
-                        href="#"
-                        textStyle="sm"
-                        color="brand.solid"
+                        alignSelf="flex-end"
+                        fontSize="sm"
+                        color="brand.600"
                         fontWeight="medium"
-                        _hover={{ color: "brand.600" }}
+                        _hover={{
+                          color: "brand.700",
+                          textDecoration: "underline",
+                        }}
                       >
-                        Forgot password?
+                        Lupa kata sandi?
                       </Link>
-                    </Flex>
 
-                    <Button
-                      size="lg"
-                      colorPalette="brand"
-                      onClick={handleSubmit}
-                      loading={submitting}
-                      loadingText="Signing in..."
-                      type="submit"
-                    >
-                      Sign In
-                    </Button>
+                      <Button
+                        size="xl"
+                        colorPalette="brand"
+                        onClick={handleSubmit}
+                        loading={submitting}
+                        loadingText="Sedang masuk..."
+                        type="submit"
+                        w="full"
+                        h="48px"
+                        fontSize="lg"
+                        fontWeight="semibold"
+                        shadow="lg"
+                        _hover={{
+                          transform: "translateY(-2px)",
+                          shadow: "xl",
+                        }}
+                        transition="all 0.2s"
+                      >
+                        Masuk
+                      </Button>
+                    </VStack>
                   </Stack>
                 </form>
               )}
             </Form>
-
-            <Text textAlign="center" textStyle="sm" color="fg.muted">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="#"
-                color="brand.solid"
-                fontWeight="medium"
-                _hover={{ color: "brand.600" }}
-              >
-                Sign up here
-              </Link>
-            </Text>
           </Stack>
         </Card.Body>
       </Card.Root>
-    </Box>
+    </Center>
   );
 }

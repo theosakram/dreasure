@@ -63,6 +63,8 @@ export type TableContainerProps<T extends Record<string, unknown>> = {
 
   // Container styling
   containerVariant?: "elevated" | "outlined" | "ghost";
+
+  customAddButton?: React.ReactNode;
 };
 
 export const TableContainer = <T extends Record<string, unknown>>({
@@ -91,6 +93,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
   loadingMessage,
   scrollMaxH = "600px",
   containerVariant = "elevated",
+  customAddButton,
 }: TableContainerProps<T>) => {
   // Get container styles based on variant
   const getContainerStyles = () => {
@@ -221,10 +224,12 @@ export const TableContainer = <T extends Record<string, unknown>>({
               )}
             </VStack>
 
-            {showAddButton && onAddClick && (
+            {customAddButton}
+
+            {showAddButton && onAddClick && !customAddButton && (
               <Button
                 size="sm"
-                colorPalette="green"
+                colorPalette="brand"
                 variant="solid"
                 onClick={onAddClick}
                 fontWeight="medium"
