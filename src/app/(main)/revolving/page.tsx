@@ -10,8 +10,16 @@ import { useGetBergulirTransactions } from "@/features/transactions/transactionH
 import { Transaction } from "@/features/transactions/transactionTypes";
 import { useGetBergulirWallet } from "@/features/wallets/walletHooks";
 import { moneyFlowMapper } from "@/utils/helpers/moneyFlowMapper";
-import { Button, ButtonGroup, Menu, Portal, Stack } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Menu,
+  Portal,
+  Stack,
+  Skeleton,
+  VStack,
+} from "@chakra-ui/react";
+import { useMemo, useState, Suspense } from "react";
 import {
   TbMoneybag,
   TbReceipt,
@@ -20,7 +28,35 @@ import {
   TbCreditCard,
 } from "react-icons/tb";
 
-const RevolvingPage = () => {
+// Loading fallback for the revolving page
+const RevolvingSkeleton = () => (
+  <Stack gap={6}>
+    {/* MoneyFlow skeleton */}
+    <VStack gap={4}>
+      <Skeleton height="120px" width="full" borderRadius="xl" />
+      <Stack direction="row" gap={4} width="full">
+        <Skeleton height="80px" flex="1" borderRadius="lg" />
+        <Skeleton height="80px" flex="1" borderRadius="lg" />
+        <Skeleton height="80px" flex="1" borderRadius="lg" />
+      </Stack>
+    </VStack>
+
+    {/* TimeFilter skeleton */}
+    <Skeleton height="40px" width="320px" borderRadius="lg" />
+
+    {/* SearchName skeleton */}
+    <Skeleton height="40px" width="280px" borderRadius="md" />
+
+    {/* Table skeleton */}
+    <VStack gap={3}>
+      <Skeleton height="60px" width="full" borderRadius="lg" />
+      <Skeleton height="300px" width="full" borderRadius="lg" />
+    </VStack>
+  </Stack>
+);
+
+// Component that uses hooks with useSearchParams
+const RevolvingContent = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const { data, isLoading, error, isRefetching } = useGetBergulirTransactions();
   const { data: bergulir } = useGetBergulirWallet();
@@ -137,6 +173,14 @@ const RevolvingPage = () => {
         type="bergulir"
       />
     </Stack>
+  );
+};
+
+const RevolvingPage = () => {
+  return (
+    <Suspense fallback={<RevolvingSkeleton />}>
+      <RevolvingContent />
+    </Suspense>
   );
 };
 

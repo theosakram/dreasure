@@ -26,7 +26,7 @@ import { TbMoneybag } from "react-icons/tb";
 import { z } from "zod";
 import { FormField } from "@/components/custom/FormFIeld";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { login } from "@/supabase/actions";
 import { supabaseClient } from "@/supabase/client";
 
@@ -233,7 +233,8 @@ const FORM_FIELDS = [
   },
 ];
 
-export default function LoginPage() {
+// Separate component that uses useSearchParams
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -356,5 +357,13 @@ export default function LoginPage() {
         </Card.Body>
       </Card.Root>
     </Center>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner text="Memuat halaman masuk..." />}>
+      <LoginContent />
+    </Suspense>
   );
 }

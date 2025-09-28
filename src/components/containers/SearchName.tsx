@@ -1,11 +1,29 @@
-import { Box, InputGroup, Icon, Input, Button } from "@chakra-ui/react";
+import {
+  Box,
+  InputGroup,
+  Icon,
+  Input,
+  Button,
+  Skeleton,
+} from "@chakra-ui/react";
 import { Form } from "react-final-form";
 import { LuSearch, LuX } from "react-icons/lu";
 import { FormField } from "../custom/FormFIeld";
 import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export const SearchName = () => {
+// Loading fallback component
+const SearchNameSkeleton = () => (
+  <Box w="fit-content">
+    <InputGroup>
+      <Skeleton height="40px" width="280px" borderRadius="md" />
+    </InputGroup>
+  </Box>
+);
+
+// Main SearchName component that uses useSearchParams
+const SearchNameContent = () => {
   const { shallowPush } = useShallowPush({ type: "replace" });
   const searchParams = useSearchParams();
 
@@ -43,5 +61,14 @@ export const SearchName = () => {
         </form>
       )}
     </Form>
+  );
+};
+
+// Main export component with Suspense boundary
+export const SearchName = () => {
+  return (
+    <Suspense fallback={<SearchNameSkeleton />}>
+      <SearchNameContent />
+    </Suspense>
   );
 };

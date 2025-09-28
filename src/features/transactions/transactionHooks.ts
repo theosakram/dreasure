@@ -9,34 +9,38 @@ import { AddTransactionRequest } from "./transactionTypes";
 import { WalletName } from "../wallets/walletTypes";
 import { walletNames } from "@/utils/constants";
 
+// Helper function to get filter dates
+const getFilterDates = (filter: string | null | undefined) => {
+  if (filter === "today") {
+    return {
+      gte: dayjs().startOf("day").toISOString(),
+      lte: dayjs().endOf("day").toISOString(),
+    };
+  }
+
+  if (filter === "last-week") {
+    return {
+      gte: dayjs().subtract(7, "day").toISOString(),
+    };
+  }
+
+  if (filter === "this-month") {
+    return {
+      gte: dayjs().startOf("month").toISOString(),
+    };
+  }
+
+  return {};
+};
+
+// Version that can be used within Suspense boundaries
 export const useGetWalletTransactions = (walletName: WalletName) => {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
 
-  const filterDates = () => {
-    if (filter === "today") {
-      return {
-        gte: dayjs().startOf("day").toISOString(),
-        lte: dayjs().endOf("day").toISOString(),
-      };
-    }
-
-    if (filter === "last-week") {
-      return {
-        gte: dayjs().subtract(7, "day").toISOString(),
-      };
-    }
-
-    if (filter === "this-month") {
-      return {
-        gte: dayjs().startOf("month").toISOString(),
-      };
-    }
-  };
-
   const payload = {
-    ...filterDates(),
+    ...getFilterDates(filter),
     name: q,
     walletName,
   };

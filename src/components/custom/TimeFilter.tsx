@@ -1,3 +1,5 @@
+"use client";
+
 import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
 import {
   Box,
@@ -8,8 +10,10 @@ import {
   Icon,
   Flex,
   Separator,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { LuCalendarDays, LuFilter } from "react-icons/lu";
 
 export type TimeFilterOption = {
@@ -57,7 +61,57 @@ const defaultOptions: TimeFilterOption[] = [
   },
 ];
 
-export const TimeFilter = ({
+// Loading fallback component
+const TimeFilterSkeleton = ({
+  variant = "default",
+}: {
+  variant?: TimeFilterProps["variant"];
+}) => {
+  if (variant === "card") {
+    return (
+      <Box
+        p={4}
+        bg="surface.subtle"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="border.subtle"
+      >
+        <VStack align="stretch" gap={3}>
+          <HStack gap={2} align="center">
+            <Skeleton height="32px" width="32px" borderRadius="md" />
+            <VStack align="start" gap={1}>
+              <Skeleton height="16px" width="80px" borderRadius="sm" />
+              <Skeleton height="12px" width="120px" borderRadius="sm" />
+            </VStack>
+          </HStack>
+          <Skeleton height="40px" width="full" borderRadius="lg" />
+        </VStack>
+      </Box>
+    );
+  }
+
+  if (variant === "compact") {
+    return (
+      <HStack gap={2} align="center">
+        <Skeleton height="20px" width="20px" borderRadius="sm" />
+        <Skeleton height="32px" width="280px" borderRadius="lg" />
+      </HStack>
+    );
+  }
+
+  return (
+    <HStack gap={4} align="center">
+      <HStack gap={2.5} align="center">
+        <Skeleton height="32px" width="32px" borderRadius="lg" />
+        <Skeleton height="16px" width="100px" borderRadius="sm" />
+      </HStack>
+      <Skeleton height="40px" width="320px" borderRadius="lg" />
+    </HStack>
+  );
+};
+
+// Main TimeFilter component that uses useSearchParams
+const TimeFilterContent = ({
   options = defaultOptions,
   label = "Filter Periode",
   showIcon = true,
@@ -210,5 +264,14 @@ export const TimeFilter = ({
         <SegmentGroup.Items items={options} />
       </SegmentGroup.Root>
     </Flex>
+  );
+};
+
+// Main export component with Suspense boundary
+export const TimeFilter = (props: TimeFilterProps) => {
+  return (
+    <Suspense fallback={<TimeFilterSkeleton variant={props.variant} />}>
+      <TimeFilterContent {...props} />
+    </Suspense>
   );
 };
