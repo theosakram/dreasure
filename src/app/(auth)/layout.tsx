@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Box } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
-  title: "Authentication - Dreasure",
+  title: "Authentication - Dreasury",
   description: "Sign in to your account",
 };
 

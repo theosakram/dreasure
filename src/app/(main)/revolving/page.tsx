@@ -1,6 +1,6 @@
 "use client";
 
-import { AddTransactionModal } from "@/components/containers/AddTransactionModal";
+import { AddTransactionModal } from "@/components/containers/transactions/AddTransactionModal";
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
 import { SearchName } from "@/components/containers/SearchName";
 import { TableContainer } from "@/components/containers/TableContainers";
@@ -27,6 +27,7 @@ import {
   TbDownload,
   TbCreditCard,
 } from "react-icons/tb";
+import { InstallmentModal } from "@/components/containers/transactions/InstallmentModal";
 
 // Loading fallback for the revolving page
 const RevolvingSkeleton = () => (
@@ -58,6 +59,11 @@ const RevolvingSkeleton = () => (
 // Component that uses hooks with useSearchParams
 const RevolvingContent = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [installmentModalOpen, setInstallmentModalOpen] = useState(false);
+  const [installmentType, setInstallmentType] = useState<"take" | "pay">(
+    "take",
+  );
+
   const { data, isLoading, error, isRefetching } = useGetBergulirTransactions();
   const { data: bergulir } = useGetBergulirWallet();
   const mappedBergulir = useMemo(
@@ -106,7 +112,7 @@ const RevolvingContent = () => {
                   transition="all 0.2s ease"
                 >
                   <TbCreditCard />
-                  Cicilan
+                  Hutang
                   <TbChevronDown />
                 </Button>
               </Menu.Trigger>
@@ -129,9 +135,13 @@ const RevolvingContent = () => {
                       }}
                       fontWeight="medium"
                       cursor="pointer"
+                      onClick={() => {
+                        setInstallmentType("take");
+                        setInstallmentModalOpen(true);
+                      }}
                     >
                       <TbDownload />
-                      Ambil Cicilan
+                      Ambil Hutang
                     </Menu.Item>
                     <Menu.Item
                       value="bayar-cicilan"
@@ -142,9 +152,13 @@ const RevolvingContent = () => {
                         color: "success.fg",
                       }}
                       fontWeight="medium"
+                      onClick={() => {
+                        setInstallmentType("pay");
+                        setInstallmentModalOpen(true);
+                      }}
                     >
                       <TbReceipt />
-                      Bayar Cicilan
+                      Bayar Hutang
                     </Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
@@ -159,6 +173,7 @@ const RevolvingContent = () => {
                 boxShadow: "lg",
               }}
               transition="all 0.2s ease"
+              onClick={() => setAddModalOpen(true)}
             >
               <TbMoneybag />
               Donasi
@@ -171,6 +186,14 @@ const RevolvingContent = () => {
         open={addModalOpen}
         setOpen={setAddModalOpen}
         type="bergulir"
+      />
+
+      <InstallmentModal
+        type={installmentType}
+        modalProps={{
+          open: installmentModalOpen,
+          setOpen: setInstallmentModalOpen,
+        }}
       />
     </Stack>
   );

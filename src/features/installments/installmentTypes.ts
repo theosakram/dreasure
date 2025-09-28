@@ -16,4 +16,17 @@ export type InstallmentPayment = {
   amount: number;
   paid_date: string;
   created_at: string;
+  description?: string;
 };
+
+export type InstallmentWithPayments = Installment & {
+  installment_payments: Array<InstallmentPayment>;
+};
+
+export type AddInstallmentRequest = Partial<
+  Omit<Installment, "id" | "created_at">
+>;
+
+export type AddInstallmentPaymentRequest = Partial<
+  Omit<InstallmentPayment, "id" | "created_at">
+>;

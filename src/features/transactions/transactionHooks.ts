@@ -63,7 +63,7 @@ export const useGetBergulirTransactions = () => {
 };
 
 export const useAddTransaction = (
-  options: Omit<
+  options?: Omit<
     UseMutationOptions<unknown, Error, AddTransactionRequest>,
     "mutationFn"
   >,

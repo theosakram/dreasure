@@ -297,7 +297,7 @@ function LoginContent() {
           <Stack gap={6}>
             <FormHeader
               title="Selamat Datang Kembali"
-              subtitle="Masuk ke akun Dreasure Anda untuk melanjutkan mengelola keuangan"
+              subtitle="Masuk ke akun Dreasury Anda untuk melanjutkan mengelola keuangan"
             />
 
             <Form<LoginFormValues>

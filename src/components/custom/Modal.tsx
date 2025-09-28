@@ -1,7 +1,7 @@
 import { Dialog, Button, Portal, CloseButton } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-type ModalProps = {
+export type ModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   title?: string;

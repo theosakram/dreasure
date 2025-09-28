@@ -1,4 +1,4 @@
-# 💰 Dreasure
+# 💰 Dreasury
 
 A modern financial management application built with Next.js, designed to help organizations manage cash flow, member transactions, and revolving funds efficiently.
 

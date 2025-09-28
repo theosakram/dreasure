@@ -1,6 +1,6 @@
 "use client";
 
-import { AddTransactionModal } from "@/components/containers/AddTransactionModal";
+import { AddTransactionModal } from "@/components/containers/transactions/AddTransactionModal";
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
 import { TableContainer } from "@/components/containers/TableContainers";
 import { TimeFilter } from "@/components/custom/TimeFilter";

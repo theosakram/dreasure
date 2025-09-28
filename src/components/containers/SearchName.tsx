@@ -33,7 +33,7 @@ const SearchNameContent = () => {
     <Form initialValues={{ q }} onSubmit={(e) => shallowPush({ q: e.q })}>
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <Box w="fit-content">
+          <Box w="20rem">
             <FormField<string> name="q">
               {({ input }) => (
                 <InputGroup
@@ -50,7 +50,12 @@ const SearchNameContent = () => {
                     )
                   }
                 >
-                  <Input placeholder="Cari nama..." {...input} bg="bg.panel" />
+                  <Input
+                    borderRadius="xl"
+                    placeholder="Cari nama..."
+                    {...input}
+                    bg="bg.panel"
+                  />
                 </InputGroup>
               )}
             </FormField>

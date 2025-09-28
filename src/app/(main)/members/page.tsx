@@ -38,6 +38,10 @@ const MembersPage = () => {
       header: "Email",
       cell: (info) => info.getValue(),
     }),
+    columnHelper.accessor("phone", {
+      header: "No. Handphone",
+      cell: (info) => info.getValue() || "-",
+    }),
     columnHelper.display({
       id: "actions",
       header: "",

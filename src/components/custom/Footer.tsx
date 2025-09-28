@@ -7,7 +7,7 @@ type FooterProps = {
 };
 
 export const Footer = ({
-  appName = "Dreasure",
+  appName = "Dreasury",
   year = new Date().getFullYear(),
   technologies = ["Next.js", "Chakra UI v3", "Supabase"],
 }: FooterProps) => {

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dreasure - Your App Name",
-  description: "Welcome to Dreasure",
+  title: "Dreasury - Your App Name",
+  description: "Welcome to Dreasury",
 };
 
 export default function RootLayout({

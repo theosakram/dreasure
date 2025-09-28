@@ -258,7 +258,7 @@ export default function Home() {
                     bgGradient="linear-gradient(135deg, token(colors.brand.600), token(colors.brand.800))"
                     bgClip="text"
                   >
-                    Dreasure
+                    Dreasury
                   </Heading>
                   <Text
                     fontSize="xl"

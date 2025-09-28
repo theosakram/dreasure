@@ -5,7 +5,7 @@ export const getProfiles = async () => {
   const supabase = supabaseClient();
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("*")
+    .select(`*`)
     .overrideTypes<Array<Profile>>();
 
   return profiles;
@@ -15,7 +15,11 @@ export const getProfileById = async (id: string) => {
   const supabase = supabaseClient();
   const { data: profiles } = await supabase
     .from("profiles")
-    .select(`*, transactions(*)`)
+    .select(
+      `*, transactions(*), installments (*,
+        installment_payments(*)
+      )`,
+    )
     .eq("id", id)
     .single<ProfileWithTransactions>();
 

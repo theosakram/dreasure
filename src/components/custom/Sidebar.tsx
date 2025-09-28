@@ -47,7 +47,7 @@ export const navigationItems: NavigationItem[] = [
   },
 ];
 
-export const Sidebar = ({ appName = "Dreasure" }: SidebarProps) => {
+export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const pathname = usePathname();
 
