@@ -14,7 +14,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex minH="100vh" bg="bg.subtle">
+    <Flex minH="100vh" bg="bg.default">
       <Sidebar />
 
       <Flex direction="column" flex={1}>

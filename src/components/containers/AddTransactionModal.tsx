@@ -7,19 +7,24 @@ import { useGetProfiles } from "@/features/profiles/profileHooks";
 import {
   Button,
   HStack,
+  VStack,
   Input,
-  Stack,
   Textarea,
   Text,
   Box,
   Icon,
-  InputGroup,
+  Badge,
+  Separator,
+  Flex,
 } from "@chakra-ui/react";
 import {
   LuUsers,
   LuDollarSign,
   LuFileText,
   LuArrowUpDown,
+  LuPlus,
+  LuArrowUp,
+  LuArrowDown,
 } from "react-icons/lu";
 import {
   useAddTransaction,
@@ -51,9 +56,9 @@ export const AddTransactionModal = ({
     <Modal
       open={open}
       setOpen={setOpen}
-      title="Tambah Transaksi"
+      title="Tambah Transaksi Baru"
       body={
-        <Box p={2}>
+        <Box p="1rem">
           <Form
             initialValues={{ wallet_id: kas?.id, amount: 0 }}
             onSubmit={(e) => addTransaction(e)}
@@ -61,21 +66,48 @@ export const AddTransactionModal = ({
           >
             {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
-                <Stack gap={6}>
+                <VStack gap={5} align="stretch">
                   {/* Member Selection */}
-                  <Box>
-                    <HStack gap={2} mb={2}>
-                      <Icon color="brand.solid" size="sm">
-                        <LuUsers />
-                      </Icon>
-                      <Text
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color="fg.default"
+                  <Box
+                    p={4}
+                    borderRadius="xl"
+                    border="1px solid"
+                    borderColor="border.subtle"
+                    bg="surface.subtle"
+                    transition="all 0.2s"
+                    _hover={{
+                      borderColor: "brand.fg",
+                      shadow: "sm",
+                    }}
+                  >
+                    <HStack gap={3} mb={3}>
+                      <Box
+                        p={2}
+                        borderRadius="lg"
+                        bg="brand.subtle"
+                        color="brand.solid"
                       >
-                        Pilih Anggota
-                      </Text>
-                      <Text color="red.500">*</Text>
+                        <Icon size="sm">
+                          <LuUsers />
+                        </Icon>
+                      </Box>
+                      <VStack align="start" gap={0}>
+                        <HStack gap={1}>
+                          <Text
+                            fontSize="sm"
+                            fontWeight="semibold"
+                            color="fg.default"
+                          >
+                            Pilih Anggota
+                          </Text>
+                          <Badge size="xs" colorPalette="red" variant="solid">
+                            Wajib
+                          </Badge>
+                        </HStack>
+                        <Text fontSize="xs" color="fg.muted">
+                          Pilih anggota yang akan melakukan transaksi
+                        </Text>
+                      </VStack>
                     </HStack>
                     <FormField name="user_id" label="" isRequired>
                       {({ input }) => (
@@ -92,86 +124,217 @@ export const AddTransactionModal = ({
                     </FormField>
                   </Box>
 
-                  {/* Amount Input */}
-                  <Box>
-                    <HStack gap={2} mb={2}>
-                      <Icon color="brand.solid" size="sm">
-                        <LuDollarSign />
-                      </Icon>
-                      <Text
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color="fg.default"
+                  {/* Transaction Type */}
+                  <Box
+                    p={4}
+                    borderRadius="xl"
+                    border="1px solid"
+                    borderColor="border.subtle"
+                    bg="surface.subtle"
+                    transition="all 0.2s"
+                    _hover={{
+                      borderColor: "brand.fg",
+                      shadow: "sm",
+                    }}
+                  >
+                    <HStack gap={3} mb={3}>
+                      <Box
+                        p={2}
+                        borderRadius="lg"
+                        bg="brand.subtle"
+                        color="brand.solid"
                       >
-                        Jumlah
-                      </Text>
-                      <Text color="red.500">*</Text>
+                        <Icon size="sm">
+                          <LuArrowUpDown />
+                        </Icon>
+                      </Box>
+                      <VStack align="start" gap={0}>
+                        <HStack gap={1}>
+                          <Text
+                            fontSize="sm"
+                            fontWeight="semibold"
+                            color="fg.default"
+                          >
+                            Jenis Transaksi
+                          </Text>
+                          <Badge size="xs" colorPalette="red" variant="solid">
+                            Wajib
+                          </Badge>
+                        </HStack>
+                        <Text fontSize="xs" color="fg.muted">
+                          Pilih apakah ini transaksi setor atau tarik dana
+                        </Text>
+                      </VStack>
                     </HStack>
-                    <FormField<string> name="amount" label="" isRequired>
+                    <FormField name="type" label="" isRequired>
                       {({ input }) => (
-                        <InputGroup>
-                          <Input
-                            type="number"
-                            placeholder="0"
+                        <HStack gap={3} w="full">
+                          <Button
+                            variant={
+                              input.value === "deposit" ? "solid" : "outline"
+                            }
+                            colorPalette={
+                              input.value === "deposit" ? "success" : "gray"
+                            }
                             size="md"
-                            {...input}
-                          />
-                        </InputGroup>
+                            flex="1"
+                            onClick={() => input.onChange("deposit")}
+                          >
+                            <Icon size="sm">
+                              <LuArrowUp />
+                            </Icon>
+                            Setor Dana
+                          </Button>
+                          <Button
+                            variant={
+                              input.value === "withdraw" ? "solid" : "outline"
+                            }
+                            colorPalette={
+                              input.value === "withdraw" ? "orange" : "gray"
+                            }
+                            size="md"
+                            flex="1"
+                            onClick={() => input.onChange("withdraw")}
+                          >
+                            <Icon size="sm">
+                              <LuArrowDown />
+                            </Icon>
+                            Tarik Dana
+                          </Button>
+                        </HStack>
                       )}
                     </FormField>
                   </Box>
 
-                  {/* Transaction Type */}
-                  <Box>
-                    <HStack gap={2} mb={2}>
-                      <Icon color="brand.solid" size="sm">
-                        <LuArrowUpDown />
-                      </Icon>
-                      <Text
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color="fg.default"
+                  {/* Amount Input */}
+                  <Box
+                    p={4}
+                    borderRadius="xl"
+                    border="1px solid"
+                    borderColor="border.subtle"
+                    bg="surface.subtle"
+                    transition="all 0.2s"
+                    _hover={{
+                      borderColor: "brand.fg",
+                      shadow: "sm",
+                    }}
+                  >
+                    <HStack gap={3} mb={3}>
+                      <Box
+                        p={2}
+                        borderRadius="lg"
+                        bg="brand.subtle"
+                        color="brand.solid"
                       >
-                        Tipe Transaksi
-                      </Text>
-                      <Text color="red.500">*</Text>
+                        <Icon size="sm">
+                          <LuDollarSign />
+                        </Icon>
+                      </Box>
+                      <VStack align="start" gap={0}>
+                        <HStack gap={1}>
+                          <Text
+                            fontSize="sm"
+                            fontWeight="semibold"
+                            color="fg.default"
+                          >
+                            Jumlah Transaksi
+                          </Text>
+                          <Badge size="xs" colorPalette="red" variant="solid">
+                            Wajib
+                          </Badge>
+                        </HStack>
+                        <Text fontSize="xs" color="fg.muted">
+                          Masukkan nominal dalam Rupiah
+                        </Text>
+                      </VStack>
                     </HStack>
-                    <FormField name="type" label="" isRequired>
+                    <FormField<string> name="amount" label="" isRequired>
                       {({ input }) => (
-                        <Select
-                          options={[
-                            { value: "deposit", label: "Setor" },
-                            { value: "withdraw", label: "Tarik" },
-                          ]}
-                          onChange={(option) => input.onChange(option)}
-                        />
+                        <Box position="relative" w="100%">
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            size="lg"
+                            fontSize="lg"
+                            fontWeight="semibold"
+                            textAlign="right"
+                            ps="12"
+                            {...input}
+                          />
+                          <Box
+                            position="absolute"
+                            left="4"
+                            top="50%"
+                            transform="translateY(-50%)"
+                            fontSize="lg"
+                            fontWeight="semibold"
+                            color="fg.muted"
+                            zIndex="1"
+                            pointerEvents="none"
+                          >
+                            Rp
+                          </Box>
+                        </Box>
                       )}
                     </FormField>
                   </Box>
 
                   {/* Description */}
-                  <Box>
-                    <HStack gap={2} mb={2}>
-                      <Icon color="brand.solid" size="sm">
-                        <LuFileText />
-                      </Icon>
-                      <Text
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color="fg.default"
+                  <Box
+                    p={4}
+                    borderRadius="xl"
+                    border="1px solid"
+                    borderColor="border.subtle"
+                    bg="surface.subtle"
+                    transition="all 0.2s"
+                    _hover={{
+                      borderColor: "brand.fg",
+                      shadow: "sm",
+                    }}
+                  >
+                    <HStack gap={3} mb={3}>
+                      <Box
+                        p={2}
+                        borderRadius="lg"
+                        bg="sage.100"
+                        color="sage.700"
+                        _dark={{
+                          bg: "sage.900",
+                          color: "sage.300",
+                        }}
                       >
-                        Catatan
-                      </Text>
-                      <Text fontSize="xs" color="fg.muted">
-                        (Opsional)
-                      </Text>
+                        <Icon size="sm">
+                          <LuFileText />
+                        </Icon>
+                      </Box>
+                      <VStack align="start" gap={0}>
+                        <HStack gap={1}>
+                          <Text
+                            fontSize="sm"
+                            fontWeight="semibold"
+                            color="fg.default"
+                          >
+                            Catatan Transaksi
+                          </Text>
+                          <Badge
+                            size="xs"
+                            variant="outline"
+                            colorPalette="gray"
+                          >
+                            Opsional
+                          </Badge>
+                        </HStack>
+                        <Text fontSize="xs" color="fg.muted">
+                          Tambahkan keterangan untuk transaksi ini
+                        </Text>
+                      </VStack>
                     </HStack>
                     <FormField<string> name="description" label="">
                       {({ input }) => (
                         <Textarea
-                          placeholder="Tambahkan catatan transaksi..."
+                          placeholder="Contoh: Bayar arisan bulan Januari, Penarikan untuk keperluan darurat..."
                           resize="vertical"
-                          minH="20"
+                          minH="24"
                           size="md"
                           {...input}
                         />
@@ -179,34 +342,38 @@ export const AddTransactionModal = ({
                     </FormField>
                   </Box>
 
-                  {/* Action Buttons */}
-                  <HStack
-                    justify="end"
-                    gap={3}
-                    pt={4}
-                    borderTopWidth="1px"
-                    borderColor="border.muted"
-                  >
-                    <Button
-                      variant="outline"
-                      size="xs"
-                      onClick={() => setOpen(false)}
-                      disabled={submitting || isPending}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      type="submit"
-                      colorPalette="brand"
-                      size="xs"
-                      minW="20"
-                      loading={submitting || isPending}
-                      loadingText="Menyimpan..."
-                    >
-                      Simpan Transaksi
-                    </Button>
-                  </HStack>
-                </Stack>
+                  <Separator my={2} />
+
+                  {/* Enhanced Action Buttons */}
+                  <Flex justify="space-between" align="center" pt={2}>
+                    <Text fontSize="xs" color="fg.muted">
+                      Transaksi akan tercatat dalam sistem
+                    </Text>
+                    <HStack gap={3}>
+                      <Button
+                        variant="ghost"
+                        size="md"
+                        onClick={() => setOpen(false)}
+                        disabled={submitting || isPending}
+                      >
+                        Batal
+                      </Button>
+                      <Button
+                        type="submit"
+                        colorPalette="brand"
+                        size="md"
+                        minW="32"
+                        loading={submitting || isPending}
+                        loadingText="Menyimpan..."
+                      >
+                        <Icon size="sm">
+                          <LuPlus />
+                        </Icon>
+                        Simpan Transaksi
+                      </Button>
+                    </HStack>
+                  </Flex>
+                </VStack>
               </form>
             )}
           </Form>

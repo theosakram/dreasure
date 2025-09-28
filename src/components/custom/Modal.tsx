@@ -16,6 +16,7 @@ export const Modal = (props: ModalProps) => {
       open={props.open}
       onOpenChange={(e) => props.setOpen(e.open)}
       placement="center"
+      size="lg"
     >
       <Portal>
         <Dialog.Backdrop />

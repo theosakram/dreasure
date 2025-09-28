@@ -1,18 +1,18 @@
-import { SimpleGrid, StatGroup } from "@chakra-ui/react";
+import { SimpleGrid, StatGroup, Box } from "@chakra-ui/react";
 import {
   LuTrendingUp,
   LuTrendingDown,
   LuWallet,
   LuArrowUpDown,
 } from "react-icons/lu";
-import { MetricStat } from "../custom/MetricStat";
+import { MetricStat, MetricStatProps } from "../custom/MetricStat";
 import { useMemo } from "react";
 import { useGetKasWallet } from "@/features/wallets/walletHooks";
 
 export const MoneyFlowContainer = () => {
   const { data } = useGetKasWallet();
 
-  const mappedData = useMemo(() => {
+  const mappedData = useMemo((): MetricStatProps[] => {
     if (data) {
       const totalDeposit = data.transactions
         .filter((t) => t.type === "deposit")
@@ -33,26 +33,30 @@ export const MoneyFlowContainer = () => {
         {
           label: "Total Saldo",
           value: balance || 0,
-          icon: <LuWallet size={16} />,
-          colorScheme: "blue",
+          icon: <LuWallet size={18} />,
+          colorScheme: "sage",
+          variant: "blue",
         },
         {
           label: "Uang Masuk",
           value: totalDeposit,
-          icon: <LuTrendingUp size={16} />,
-          colorScheme: "brand",
+          icon: <LuTrendingUp size={18} />,
+          colorScheme: "green",
+          variant: "success",
         },
         {
           label: "Uang Keluar",
           value: totalWithdraw,
-          icon: <LuTrendingDown size={16} />,
+          icon: <LuTrendingDown size={18} />,
           colorScheme: "red",
+          variant: "danger",
         },
         {
           label: "Perubahan",
           value: netFlow,
-          icon: <LuArrowUpDown size={16} />,
-          colorScheme: netFlow >= 0 ? "brand" : "red",
+          icon: <LuArrowUpDown size={18} />,
+          colorScheme: netFlow >= 0 ? "green" : "red",
+          variant: netFlow >= 0 ? "success" : "danger",
           showSign: true,
         },
       ];
@@ -62,12 +66,14 @@ export const MoneyFlowContainer = () => {
   }, [data]);
 
   return (
-    <StatGroup asChild>
-      <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
-        {mappedData.map((metric) => (
-          <MetricStat key={metric.label} {...metric} />
-        ))}
-      </SimpleGrid>
-    </StatGroup>
+    <Box layerStyle="surface.raised" p={4} borderRadius="xl">
+      <StatGroup asChild>
+        <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
+          {mappedData.map((metric) => (
+            <MetricStat key={metric.label} {...metric} />
+          ))}
+        </SimpleGrid>
+      </StatGroup>
+    </Box>
   );
 };

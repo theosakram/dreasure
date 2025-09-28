@@ -1,11 +1,12 @@
 import { Stat, HStack, Box, FormatNumber, Button } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-type MetricStatProps = {
+export type MetricStatProps = {
   label: string;
   value: number;
   icon: ReactNode;
   colorScheme: string;
+  variant?: "primary" | "success" | "danger" | "neutral" | "blue";
   showSign?: boolean;
   onClick?: () => void;
 };
@@ -15,47 +16,118 @@ export const MetricStat = ({
   value,
   icon,
   colorScheme,
+  variant = "neutral",
   showSign = false,
   onClick,
-}: MetricStatProps) => (
-  <Stat.Root borderWidth="1px" p={4} rounded="md" bg="bg.surface">
-    <HStack justify="space-between" align="start" mb={2}>
-      <Stat.Label fontSize="xs" color="fg.muted" fontWeight="medium">
-        {label}
-      </Stat.Label>
-      <Box
-        p={1.5}
-        bg={`${colorScheme}.50`}
-        rounded="md"
-        color={`${colorScheme}.600`}
-      >
-        {icon}
-      </Box>
-    </HStack>
-    <Stat.ValueText
-      fontSize="lg"
-      fontWeight="bold"
-      color={`${colorScheme}.600`}
-      lineHeight="1"
-      mb={3}
+}: MetricStatProps) => {
+  // Theme-aware variant styles
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "primary":
+        return {
+          cardBg: "bg.panel",
+          iconBg: "brand.muted",
+          iconColor: "brand.fg",
+          valueColor: "brand.solid",
+        };
+      case "success":
+        return {
+          cardBg: "bg.panel",
+          iconBg: "success.muted",
+          iconColor: "success.fg",
+          valueColor: "success.solid",
+        };
+      case "danger":
+        return {
+          cardBg: "bg.panel",
+          iconBg: "red.50",
+          iconColor: "red.600",
+          valueColor: "red.600",
+        };
+      case "blue":
+        return {
+          cardBg: "bg.panel",
+          iconBg: "blue.50",
+          iconColor: "blue.600",
+          valueColor: "blue.600",
+        };
+      default:
+        return {
+          cardBg: "bg.panel",
+          iconBg: "bg.muted",
+          iconColor: "fg.muted",
+          valueColor: "fg.default",
+        };
+    }
+  };
+
+  const styles = getVariantStyles();
+
+  return (
+    <Stat.Root
+      bg={styles.cardBg}
+      p={5}
+      borderRadius="xl"
+      boxShadow="sm"
+      transition="all 0.2s"
+      cursor={onClick ? "pointer" : "default"}
+      _hover={{
+        borderColor: styles.iconColor,
+        boxShadow: "lg",
+      }}
     >
-      <FormatNumber
-        value={value}
-        style="currency"
-        currency="IDR"
-        signDisplay={showSign ? "always" : "auto"}
-      />
-    </Stat.ValueText>
-    {onClick && (
-      <Button
-        size="sm"
-        variant="surface"
-        colorPalette={colorScheme}
-        w="full"
-        onClick={onClick}
+      <HStack justify="space-between" align="start" mb={3}>
+        <Stat.Label
+          textStyle="caption"
+          color="fg.muted"
+          fontWeight="semibold"
+          letterSpacing="wide"
+          textTransform="uppercase"
+        >
+          {label}
+        </Stat.Label>
+        <Box
+          p={2.5}
+          bg={styles.iconBg}
+          borderRadius="lg"
+          color={styles.iconColor}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          boxShadow="xs"
+        >
+          {icon}
+        </Box>
+      </HStack>
+
+      <Stat.ValueText
+        textStyle="title"
+        color={styles.valueColor}
+        lineHeight="1.1"
+        mb={onClick ? 4 : 0}
+        fontWeight="bold"
       >
-        Detail
-      </Button>
-    )}
-  </Stat.Root>
-);
+        <FormatNumber
+          value={value}
+          style="currency"
+          currency="IDR"
+          signDisplay={showSign ? "always" : "auto"}
+        />
+      </Stat.ValueText>
+
+      {onClick && (
+        <Button
+          size="sm"
+          variant="subtle"
+          colorPalette={colorScheme}
+          w="full"
+          onClick={onClick}
+          fontWeight="medium"
+          borderRadius="lg"
+        >
+          Lihat Detail
+        </Button>
+      )}
+    </Stat.Root>
+  );
+};
