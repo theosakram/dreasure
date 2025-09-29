@@ -1,21 +1,25 @@
 "use client";
 
 import {
-  Box,
   Heading,
   Stack,
   IconButton,
   Tooltip,
   Portal,
+  Flex,
+  Spacer,
+  Button,
 } from "@chakra-ui/react";
 import { NavItem } from "./NavItem";
 import { IconType } from "react-icons";
 import { FaWallet, FaSyncAlt, FaAngleLeft } from "react-icons/fa";
 import { RiUserLine } from "react-icons/ri";
 import { HiMenuAlt2 } from "react-icons/hi";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useParams, usePathname } from "next/navigation";
 import { isNavItemActive } from "@/utils/helpers/navigation";
+import { LuArrowLeft } from "react-icons/lu";
+import { CustomLink } from "./CustomLink";
 
 type SidebarProps = {
   appName?: string;
@@ -28,35 +32,38 @@ type NavigationItem = {
   matchPatterns?: string[];
 };
 
-export const navigationItems: NavigationItem[] = [
-  {
-    href: "/cash",
-    label: "Uang Kas",
-    icon: FaWallet,
-  },
-  {
-    href: "/revolving",
-    label: "Dana Bergulir",
-    icon: FaSyncAlt,
-  },
-  {
-    href: "/members",
-    label: "Anggota",
-    icon: RiUserLine,
-    matchPatterns: ["/members/detail"],
-  },
-];
-
 export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const pathname = usePathname();
+  const { id } = useParams<{ id: string }>();
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const navigationItems: NavigationItem[] = useMemo(() => {
+    return [
+      {
+        href: `/cash/${id}`,
+        label: "Uang Kas",
+        icon: FaWallet,
+      },
+      {
+        href: `/revolving/${id}`,
+        label: "Dana Bergulir",
+        icon: FaSyncAlt,
+      },
+      {
+        href: `/members/${id}`,
+        label: "Anggota",
+        icon: RiUserLine,
+        matchPatterns: ["/members/detail"],
+      },
+    ];
+  }, [id]);
+
   return (
-    <Box
+    <Flex
       w={isExpanded ? "64" : "16"}
       h="100vh"
       bg="bg.panel"
@@ -65,6 +72,7 @@ export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
       p={4}
       transition="width 0.3s ease"
       position="relative"
+      direction="column"
     >
       <Stack gap={6} h="full">
         {/* Header with toggle button */}
@@ -119,6 +127,14 @@ export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
           ))}
         </Stack>
       </Stack>
-    </Box>
+
+      <Spacer />
+      <CustomLink href="/orgs">
+        <Button w="100%" colorPalette="brand" variant="solid" size="sm">
+          <LuArrowLeft />
+          Organisasi
+        </Button>
+      </CustomLink>
+    </Flex>
   );
 };

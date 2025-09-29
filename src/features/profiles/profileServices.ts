@@ -2,6 +2,24 @@ import { supabaseClient } from "@/supabase/client";
 import { Profile, ProfileWithTransactions } from "./profileTypes";
 import { GetPaginationRequest } from "../shared/sharedTypes";
 
+export const getSelf = async () => {
+  const supabase = supabaseClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  if (userError) throw userError;
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user?.id)
+    .single<Profile>();
+  if (profileError) throw profileError;
+
+  return { profile };
+};
+
 export const getProfiles = async (payload: GetPaginationRequest) => {
   const supabase = supabaseClient();
   const { data: profiles, count } = await supabase

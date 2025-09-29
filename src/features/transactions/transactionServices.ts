@@ -1,14 +1,15 @@
 import { supabaseClient } from "@/supabase/client";
 import { AddTransactionRequest, Transaction } from "./transactionTypes";
-import { WalletName } from "../wallets/walletTypes";
+import { WalletTypes } from "../wallets/walletTypes";
 import { GetPaginationRequest } from "../shared/sharedTypes";
 
 type GetTransactionPayload = {
   gte?: string;
   lte?: string;
   name?: string;
-  walletName: WalletName;
+  walletType?: WalletTypes;
   pagination: GetPaginationRequest;
+  orgId?: string;
 };
 
 export async function getWalletTransactions(payload?: GetTransactionPayload) {
@@ -24,13 +25,15 @@ export async function getWalletTransactions(payload?: GetTransactionPayload) {
       ),
       wallet:wallets!inner (
         id,
-        name
+        name,
+        org_id
       )
       `,
       { count: "exact" },
     )
 
-    .eq("wallet.name", payload?.walletName);
+    .eq("wallet.type", payload?.walletType)
+    .eq("wallet.org_id", payload?.orgId);
 
   if (payload?.gte) query = query.gte("created_at", payload.gte);
   if (payload?.lte) query = query.lte("created_at", payload.lte);

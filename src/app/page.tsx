@@ -308,7 +308,7 @@ export default function Home() {
               >
                 <Box flex="1" maxW={{ base: "full", xl: "400px" }}>
                   <FeatureCard
-                    href="/cash"
+                    href="/login"
                     icon={<LuWallet />}
                     title="Uang Kas"
                     description="Kelola kas harian organisasi dengan pencatatan transaksi yang akurat dan laporan real-time"
@@ -318,7 +318,7 @@ export default function Home() {
 
                 <Box flex="1" maxW={{ base: "full", xl: "400px" }}>
                   <FeatureCard
-                    href="/revolving"
+                    href="/login"
                     icon={<LuRefreshCw />}
                     title="Dana Bergulir"
                     description="Sistem pinjaman dengan manajemen cicilan, dan notifikasi otomatis"

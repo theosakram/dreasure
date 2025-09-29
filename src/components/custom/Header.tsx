@@ -11,21 +11,30 @@ import {
   Separator,
   Breadcrumb,
   Spacer,
+  Heading,
+  Skeleton,
 } from "@chakra-ui/react";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { LuWallet, LuUsers } from "react-icons/lu";
 import { logout } from "@/supabase/actions";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { FaHome, FaSyncAlt } from "react-icons/fa";
+import { useGetSelf } from "@/features/profiles/profileHooks";
+import { GoOrganization } from "react-icons/go";
+import { useGetOrgById } from "@/features/orgs/orgHooks";
 
 type HeaderProps = {
   showLogout?: boolean;
+  type?: "org" | "main";
 };
 
-export const Header = ({ showLogout = true }: HeaderProps) => {
+export const Header = ({ showLogout = true, type = "main" }: HeaderProps) => {
   const pathname = usePathname();
+  const { data: selfData, isLoading } = useGetSelf();
+  const { id } = useParams<{ id: string }>();
+  const { data: selfOrg } = useGetOrgById(id);
 
   const pageInfo = useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);
@@ -128,20 +137,53 @@ export const Header = ({ showLogout = true }: HeaderProps) => {
       />
 
       <Flex w="100%" align="center" p="1rem">
-        <Breadcrumb.Root size="lg">
-          <Breadcrumb.List>
-            <Breadcrumb.Item>
-              <Breadcrumb.Link>Dashboard</Breadcrumb.Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Separator />
-            <Breadcrumb.Item>
-              <Breadcrumb.Link fontWeight="bold">
-                {pageInfo.icon && <pageInfo.icon />}
-                {pageInfo.title}
-              </Breadcrumb.Link>
-            </Breadcrumb.Item>
-          </Breadcrumb.List>
-        </Breadcrumb.Root>
+        {type === "org" ? (
+          <HStack gap="0.75rem" align="center">
+            {isLoading ? (
+              <Skeleton height="20px" width="180px" borderRadius="md" />
+            ) : (
+              <>
+                <Box
+                  bg="blue.500"
+                  color="white"
+                  borderRadius="lg"
+                  p={2}
+                  display="flex"
+                  alignItems="center"
+                  boxShadow="sm"
+                  mr={2}
+                >
+                  <GoOrganization size={22} />
+                </Box>
+                <VStack align="start" gap={0}>
+                  <Text fontSize="sm" color="fg.muted" fontWeight="medium">
+                    Organisasi milik
+                  </Text>
+                  <Heading size="md" color="fg.default" fontWeight="bold">
+                    {selfData?.profile.fullname}
+                  </Heading>
+                </VStack>
+              </>
+            )}
+          </HStack>
+        ) : (
+          <Breadcrumb.Root size="lg">
+            <Breadcrumb.List>
+              <Breadcrumb.Item>
+                <Breadcrumb.Link fontWeight="bold">
+                  {selfOrg?.name || "Dashboard"}
+                </Breadcrumb.Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item>
+                <Breadcrumb.Link>
+                  {pageInfo.icon && <pageInfo.icon />}
+                  {pageInfo.title}
+                </Breadcrumb.Link>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb.Root>
+        )}
 
         <Spacer />
         {/* Right Side - Actions */}

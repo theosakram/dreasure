@@ -17,7 +17,7 @@ export async function login(payload: SupabaseLogin) {
   revalidatePath("/", "layout");
   const returnTo = payload.returnTo
     ? decodeURIComponent(payload.returnTo)
-    : "/cash";
+    : "/orgs";
   redirect(returnTo);
 }
 

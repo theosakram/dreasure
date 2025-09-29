@@ -4,10 +4,10 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { AddTransactionRequest } from "./transactionTypes";
-import { WalletName } from "../wallets/walletTypes";
-import { walletNames } from "@/utils/constants";
+import { WalletTypes } from "../wallets/walletTypes";
+import { walletTypes } from "@/utils/constants";
 import { getPageRange } from "@/utils/helpers/getPageRange";
 
 const getFilterDates = (filter: string | null | undefined) => {
@@ -33,21 +33,30 @@ const getFilterDates = (filter: string | null | undefined) => {
   return {};
 };
 
-export const useGetWalletTransactions = (walletName: WalletName) => {
+export const useGetWalletTransactions = (walletType: WalletTypes) => {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
   const page = parseInt(searchParams.get("page") || "1");
+  const { id } = useParams<{ id: string }>();
 
   const payload = {
     ...getFilterDates(filter),
     name: q,
-    walletName,
+    walletType,
     pagination: getPageRange(page),
+    orgId: id,
   };
 
   return useQuery({
-    queryKey: [`${walletName}-transactions`, q, filter],
+    queryKey: [
+      `${walletType}-transactions-${id}`,
+      q,
+      filter,
+      page,
+      id,
+      walletType,
+    ],
     queryFn: async () => {
       const { getWalletTransactions } = await import("./transactionServices");
       return getWalletTransactions(payload);
@@ -55,12 +64,12 @@ export const useGetWalletTransactions = (walletName: WalletName) => {
   });
 };
 
-export const useGetKasTransactions = () => {
-  return useGetWalletTransactions(walletNames.kas);
+export const useGetTransactionWalletTransactions = () => {
+  return useGetWalletTransactions(walletTypes.transaction);
 };
 
-export const useGetBergulirTransactions = () => {
-  return useGetWalletTransactions(walletNames.bergulir);
+export const useGetInstallmentWalletTransactions = () => {
+  return useGetWalletTransactions(walletTypes.installment);
 };
 
 export const useAddTransaction = (

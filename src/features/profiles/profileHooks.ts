@@ -2,6 +2,16 @@ import { getPageRange } from "@/utils/helpers/getPageRange";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
+export const useGetSelf = () => {
+  return useQuery({
+    queryKey: ["self"],
+    queryFn: async () => {
+      const { getSelf } = await import("./profileServices");
+      return getSelf();
+    },
+  });
+};
+
 export const useGetProfiles = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1");

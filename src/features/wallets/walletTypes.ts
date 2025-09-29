@@ -2,12 +2,12 @@ import { Transaction } from "../transactions/transactionTypes";
 
 export type Wallet = {
   id: string;
-  name: WalletName;
+  name: string;
   description: string;
   created_at: string;
 };
 
-export type WalletName = "kas" | "bergulir";
+export type WalletTypes = "transaction" | "installment";
 
 export type WalletWithTransactions = Wallet & {
   transactions: Array<Transaction>;

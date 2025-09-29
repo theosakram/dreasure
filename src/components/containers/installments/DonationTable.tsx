@@ -3,13 +3,14 @@ import { Button } from "@chakra-ui/react";
 import { TbMoneybag } from "react-icons/tb";
 import { TableContainer } from "../TableContainers";
 import { transactionColumns } from "../transactions/TransactionsColumns";
-import { useGetBergulirTransactions } from "@/features/transactions/transactionHooks";
+import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
 import { AddTransactionModal } from "../transactions/AddTransactionModal";
 import { useState } from "react";
 
 export const DonationTable = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const { data, isLoading, error, isRefetching } = useGetBergulirTransactions();
+  const { data, isLoading, error, isRefetching } =
+    useGetInstallmentWalletTransactions();
   const { count, data: transactions } = data || {};
 
   return (
@@ -61,7 +62,7 @@ export const DonationTable = () => {
       <AddTransactionModal
         open={addModalOpen}
         setOpen={setAddModalOpen}
-        type="bergulir"
+        type="installment"
       />
     </>
   );

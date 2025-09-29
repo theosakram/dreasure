@@ -6,8 +6,8 @@ import {
   useAddTransaction,
   useGetWalletTransactions,
 } from "@/features/transactions/transactionHooks";
-import { useGetWalletByName } from "@/features/wallets/walletHooks";
-import { WalletName } from "@/features/wallets/walletTypes";
+import { useGetWalletByType } from "@/features/wallets/walletHooks";
+import { WalletTypes } from "@/features/wallets/walletTypes";
 import { UserSelectForm } from "../forms/UserSelectForm";
 import { AmountForm } from "../forms/AmountForm";
 import { DescriptionForm } from "../forms/DescriptionForm";
@@ -17,7 +17,7 @@ import { SubmitFormButton } from "../forms/SubmitFormButton";
 type AddTransactionModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  type: WalletName;
+  type: WalletTypes;
 };
 
 export const AddTransactionModal = ({
@@ -26,7 +26,7 @@ export const AddTransactionModal = ({
   type: transactionType,
 }: AddTransactionModalProps) => {
   const { refetch } = useGetWalletTransactions(transactionType);
-  const { data, refetch: refetchWallet } = useGetWalletByName(transactionType);
+  const { data, refetch: refetchWallet } = useGetWalletByType(transactionType);
   const { mutateAsync: addTransaction, isPending } = useAddTransaction({
     onSuccess: () => {
       refetch();
@@ -46,7 +46,7 @@ export const AddTransactionModal = ({
             initialValues={{
               wallet_id: data?.id,
               amount: 0,
-              type: transactionType === "bergulir" ? "deposit" : undefined,
+              type: transactionType === "installment" ? "deposit" : undefined,
             }}
             onSubmit={(e) => addTransaction(e)}
             schema={addTransactionSchema}
@@ -55,7 +55,7 @@ export const AddTransactionModal = ({
               <form onSubmit={handleSubmit}>
                 <VStack gap={5} align="stretch">
                   <UserSelectForm />
-                  {transactionType === "kas" && <TransactionTypeForm />}
+                  {transactionType === "transaction" && <TransactionTypeForm />}
                   <AmountForm />
                   <DescriptionForm />
 

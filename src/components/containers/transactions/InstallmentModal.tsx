@@ -15,9 +15,9 @@ import {
   useAddInstallment,
   useAddInstallmentPayment,
 } from "@/features/installments/installmentHooks";
-import { useGetBergulirTransactions } from "@/features/transactions/transactionHooks";
+import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
 import { InstallmentForm } from "../forms/InstallmentForm";
-import { useGetBergulirWallet } from "@/features/wallets/walletHooks";
+import { useGetInstallmentWallet } from "@/features/wallets/walletHooks";
 import dayjs from "dayjs";
 
 type InstallmentType = "take" | "pay";
@@ -29,7 +29,7 @@ type InstallmentModalProps = {
 };
 
 const TakeInstallmentModal = (props: ModalShowProps) => {
-  const { refetch } = useGetBergulirTransactions();
+  const { refetch } = useGetInstallmentWalletTransactions();
   const { mutateAsync, isPending } = useAddInstallment({
     onSuccess: () => {
       props.setOpen(false);
@@ -67,7 +67,7 @@ const TakeInstallmentModal = (props: ModalShowProps) => {
 };
 
 const PayInstallmentModal = (props: ModalShowProps) => {
-  const { data, refetch } = useGetBergulirWallet();
+  const { data, refetch } = useGetInstallmentWallet();
   const { mutateAsync, isPending } = useAddInstallmentPayment({
     onSuccess: () => {
       props.setOpen(false);

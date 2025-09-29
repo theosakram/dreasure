@@ -247,7 +247,7 @@ function LoginContent() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        const returnTo = searchParams.get("returnTo") || "/cash";
+        const returnTo = searchParams.get("returnTo") || "/orgs";
         router.replace(returnTo);
         return;
       }
@@ -259,7 +259,7 @@ function LoginContent() {
   }, [router, searchParams]);
 
   const handleLogin = async (values: LoginFormValues) => {
-    const returnTo = searchParams.get("returnTo") || "/cash";
+    const returnTo = searchParams.get("returnTo") || "/orgs";
 
     await login({
       email: values.email,

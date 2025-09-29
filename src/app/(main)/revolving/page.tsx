@@ -5,8 +5,8 @@ import { InstallmentTable } from "@/components/containers/installments/Installme
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
 import { SearchName } from "@/components/containers/SearchName";
 import { TimeFilter } from "@/components/custom";
-import { useGetBergulirTransactions } from "@/features/transactions/transactionHooks";
-import { useGetBergulirWallet } from "@/features/wallets/walletHooks";
+import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
+import { useGetInstallmentWallet } from "@/features/wallets/walletHooks";
 import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
 import { moneyFlowMapper } from "@/utils/helpers/moneyFlowMapper";
 import { Stack, Skeleton, VStack, Tabs } from "@chakra-ui/react";
@@ -37,8 +37,8 @@ const RevolvingSkeleton = () => (
 );
 
 const RevolvingContent = () => {
-  const { isLoading } = useGetBergulirTransactions();
-  const { data: bergulir } = useGetBergulirWallet();
+  const { isLoading } = useGetInstallmentWalletTransactions();
+  const { data: bergulir } = useGetInstallmentWallet();
   const mappedBergulir = useMemo(
     () => moneyFlowMapper(bergulir?.transactions || []),
     [bergulir?.transactions],

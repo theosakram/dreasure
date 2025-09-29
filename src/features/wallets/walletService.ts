@@ -11,12 +11,13 @@ export const getWallets = async () => {
   return wallets;
 };
 
-export const getWalletByName = async (name: string) => {
+export const getWalletByType = async (type: string, org_id: string) => {
   const supabase = supabaseClient();
   const { data: wallet } = await supabase
     .from("wallets")
     .select(`*, transactions(*)`)
-    .eq("name", name)
+    .eq("type", type)
+    .eq("org_id", org_id)
     .single<WalletWithTransactions>();
 
   return wallet;

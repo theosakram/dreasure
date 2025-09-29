@@ -261,7 +261,7 @@ const TimeFilterContent = ({
         disabled={disabled}
       >
         <SegmentGroup.Indicator />
-        <SegmentGroup.Items items={options} />
+        <SegmentGroup.Items cursor="pointer" items={options} />
       </SegmentGroup.Root>
     </Flex>
   );

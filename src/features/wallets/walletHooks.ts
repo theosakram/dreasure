@@ -1,5 +1,6 @@
-import { walletNames } from "@/utils/constants";
+import { walletTypes } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 export const useGetWallets = () => {
   return useQuery({
@@ -11,21 +12,23 @@ export const useGetWallets = () => {
   });
 };
 
-export const useGetWalletByName = (name: string) => {
+export const useGetWalletByType = (type: string) => {
+  const { id } = useParams<{ id: string }>();
+
   return useQuery({
-    queryKey: ["wallet", name],
+    queryKey: ["wallet", type, id],
     queryFn: async () => {
-      const { getWalletByName } = await import("./walletService");
-      return getWalletByName(name);
+      const { getWalletByType } = await import("./walletService");
+      return getWalletByType(type, id);
     },
-    enabled: !!name,
+    enabled: !!type && !!id,
   });
 };
 
-export const useGetKasWallet = () => {
-  return useGetWalletByName(walletNames.kas);
+export const useGetTransactionWallet = () => {
+  return useGetWalletByType(walletTypes.transaction);
 };
 
-export const useGetBergulirWallet = () => {
-  return useGetWalletByName(walletNames.bergulir);
+export const useGetInstallmentWallet = () => {
+  return useGetWalletByType(walletTypes.installment);
 };

@@ -1,4 +1,5 @@
-import { Link, Text, Icon, Tooltip, Portal } from "@chakra-ui/react";
+import { Text, Icon, Tooltip, Portal } from "@chakra-ui/react";
+import { CustomLink } from "./CustomLink";
 
 type NavigationItem = {
   href: string;
@@ -22,28 +23,30 @@ export const NavItem = ({
   return (
     <Tooltip.Root disabled={!isCollapsed}>
       <Tooltip.Trigger asChild>
-        <Link
+        <CustomLink
           href={item.href}
-          p={3}
-          rounded="lg"
-          _hover={{
-            bg: isActive ? "brand.muted" : "bg.muted",
+          linkProps={{
+            p: 3,
+            rounded: "lg",
+            _hover: {
+              bg: isActive ? "brand.muted" : "bg.muted",
+            },
+            bg: isActive ? "brand.muted" : "transparent",
+            color: isActive ? "brand.fg" : "fg.default",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: isCollapsed ? "center" : "flex-start",
+            gap: isCollapsed ? 0 : 3,
+            transition: "all 0.3s ease",
+            onClick,
+            fontWeight: isActive ? "semibold" : "medium",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+            _active: { outline: "none" },
+            _focus: { outline: "none" },
+            _focusVisible: { outline: "none" },
           }}
-          bg={isActive ? "brand.muted" : "transparent"}
-          color={isActive ? "brand.fg" : "fg.default"}
-          display="flex"
-          alignItems="center"
-          justifyContent={isCollapsed ? "center" : "flex-start"}
-          gap={isCollapsed ? 0 : 3}
-          transition="all 0.3s ease"
-          onClick={onClick}
-          fontWeight={isActive ? "semibold" : "medium"}
-          overflow="hidden"
-          whiteSpace="nowrap"
-          textDecoration="none"
-          _active={{ outline: "none" }}
-          _focus={{ outline: "none" }}
-          _focusVisible={{ outline: "none" }}
         >
           <Icon boxSize={5} flexShrink={0}>
             <item.icon />
@@ -58,7 +61,7 @@ export const NavItem = ({
           >
             {item.label}
           </Text>
-        </Link>
+        </CustomLink>
       </Tooltip.Trigger>
       <Portal>
         <Tooltip.Positioner>
