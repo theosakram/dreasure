@@ -38,23 +38,23 @@ export const useGetWalletTransactions = (walletType: WalletTypes) => {
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
   const page = parseInt(searchParams.get("page") || "1");
-  const { id } = useParams<{ id: string }>();
+  const { orgId } = useParams<{ orgId: string }>();
 
   const payload = {
     ...getFilterDates(filter),
     name: q,
     walletType,
     pagination: getPageRange(page),
-    orgId: id,
+    orgId: orgId,
   };
 
   return useQuery({
     queryKey: [
-      `${walletType}-transactions-${id}`,
+      `${walletType}-transactions-${orgId}`,
       q,
       filter,
       page,
-      id,
+      orgId,
       walletType,
     ],
     queryFn: async () => {

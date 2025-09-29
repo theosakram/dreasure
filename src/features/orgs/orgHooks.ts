@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 export const useGetOrgById = (id?: string) => {
   return useQuery({
@@ -8,6 +9,19 @@ export const useGetOrgById = (id?: string) => {
       return getOrgById(id || "");
     },
     enabled: !!id,
+  });
+};
+
+export const useGetOrgMembersByOrgId = () => {
+  const { orgId } = useParams<{ orgId: string }>();
+
+  return useQuery({
+    queryKey: ["org_members", orgId],
+    queryFn: async () => {
+      const { getOrgMembersByOrgId } = await import("./orgServices");
+      return getOrgMembersByOrgId(orgId || "");
+    },
+    enabled: !!orgId,
   });
 };
 

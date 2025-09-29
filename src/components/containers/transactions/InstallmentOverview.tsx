@@ -37,8 +37,8 @@ import {
 } from "react-icons/lu";
 
 export const InstallmentOverview = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useGetProfileById(id);
+  const { userId } = useParams<{ userId: string }>();
+  const { data, isLoading } = useGetProfileById(userId);
 
   const installmentStats = useMemo(() => {
     if (!data || !data.installments)

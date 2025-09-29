@@ -36,7 +36,7 @@ export const ProfileDashboardHero = () => {
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4} w="100%">
         <For each={orgs?.data}>
           {(org) => (
-            <CustomLink href={`/cash/${org.id}`} key={org.id}>
+            <CustomLink href={`/${org.id}/cash`} key={org.id}>
               <Card.Root
                 key={org.id}
                 boxShadow="md"

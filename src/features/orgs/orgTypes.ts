@@ -1,3 +1,4 @@
+import { Profile } from "../profiles/profileTypes";
 import { Wallet } from "../wallets/walletTypes";
 
 export type Organization = {
@@ -20,4 +21,8 @@ export type OrganizationMembership = {
 
 export type OrganizationWithWallets = Organization & {
   wallets: Wallet[];
+};
+
+export type OrganizationMembershipWithProfile = OrganizationMembership & {
+  user: Profile;
 };

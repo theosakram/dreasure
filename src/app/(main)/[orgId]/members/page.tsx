@@ -2,22 +2,23 @@
 
 import { TableContainer } from "@/components/containers/TableContainers";
 import { ActionMenu } from "@/components/custom/ActionMenu";
-import { useGetProfiles } from "@/features/profiles/profileHooks";
+import { useGetOrgMembersByOrgId } from "@/features/orgs/orgHooks";
 import { Profile } from "@/features/profiles/profileTypes";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 
 const MembersContent = () => {
-  const { data, isLoading, error, refetch } = useGetProfiles();
-  const { count, profiles } = data || {};
   const router = useRouter();
+  const { orgId } = useParams<{ orgId: string }>();
+  const { data, isLoading, error, refetch } = useGetOrgMembersByOrgId();
+  const { count, data: members } = data || {};
 
   const handleAddMember = () => {};
 
   // Action handlers
-  const handleDetail = (id: string) => {
-    router.push(`/members/detail/${id}`);
+  const handleDetail = (userId: string) => {
+    router.push(`/${orgId}/members/${userId}`);
   };
 
   const handleEdit = (user: Profile) => {
@@ -61,7 +62,7 @@ const MembersContent = () => {
     <TableContainer
       title="Daftar Anggota"
       subtitle="Kelola data anggota organisasi"
-      data={profiles || []}
+      data={members?.map((m) => m.user) || []}
       columns={columns}
       isLoading={isLoading}
       isError={!!error}

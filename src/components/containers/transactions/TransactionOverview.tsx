@@ -27,8 +27,8 @@ import {
 import { MemberTransactionTimeline } from "../MemberTransactionTimeline";
 
 export const TransactionOverview = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = useGetProfileById(id);
+  const { userId } = useParams<{ userId: string }>();
+  const { data, isLoading } = useGetProfileById(userId);
 
   const stats = useMemo(() => {
     if (!data)

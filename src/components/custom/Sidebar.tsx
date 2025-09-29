@@ -35,7 +35,7 @@ type NavigationItem = {
 export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const pathname = usePathname();
-  const { id } = useParams<{ id: string }>();
+  const { orgId } = useParams<{ orgId: string }>();
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -44,23 +44,25 @@ export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
   const navigationItems: NavigationItem[] = useMemo(() => {
     return [
       {
-        href: `/cash/${id}`,
+        href: `/${orgId}/cash`,
         label: "Uang Kas",
         icon: FaWallet,
+        matchPatterns: ["/cash", "/cash/detail"],
       },
       {
-        href: `/revolving/${id}`,
+        href: `/${orgId}/revolving`,
         label: "Dana Bergulir",
         icon: FaSyncAlt,
+        matchPatterns: ["/revolving", "/revolving/detail"],
       },
       {
-        href: `/members/${id}`,
+        href: `/${orgId}/members`,
         label: "Anggota",
         icon: RiUserLine,
-        matchPatterns: ["/members/detail"],
+        matchPatterns: ["/members", "/members/detail"],
       },
     ];
-  }, [id]);
+  }, [orgId]);
 
   return (
     <Flex

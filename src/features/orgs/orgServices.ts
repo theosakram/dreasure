@@ -1,5 +1,9 @@
 import { supabaseClient } from "@/supabase/client";
-import { Organization, OrganizationWithWallets } from "./orgTypes";
+import {
+  Organization,
+  OrganizationMembershipWithProfile,
+  OrganizationWithWallets,
+} from "./orgTypes";
 
 export const getOrgById = async (id: string) => {
   const supabase = supabaseClient();
@@ -12,6 +16,20 @@ export const getOrgById = async (id: string) => {
     throw new Error(error.message);
   }
   return data;
+};
+
+export const getOrgMembersByOrgId = async (org_id: string) => {
+  const supabase = supabaseClient();
+  const { data, error, count } = await supabase
+    .from("org_memberships")
+    .select("*, user:profiles(*)", { count: "exact" })
+    .eq("org_id", org_id)
+    .overrideTypes<Array<OrganizationMembershipWithProfile>>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return { data, count };
 };
 
 export const getOrgsByOwnerId = async () => {

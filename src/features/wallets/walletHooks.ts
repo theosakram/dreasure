@@ -13,15 +13,15 @@ export const useGetWallets = () => {
 };
 
 export const useGetWalletByType = (type: string) => {
-  const { id } = useParams<{ id: string }>();
+  const { orgId } = useParams<{ orgId: string }>();
 
   return useQuery({
-    queryKey: ["wallet", type, id],
+    queryKey: ["wallet", type, orgId],
     queryFn: async () => {
       const { getWalletByType } = await import("./walletService");
-      return getWalletByType(type, id);
+      return getWalletByType(type, orgId);
     },
-    enabled: !!type && !!id,
+    enabled: !!type && !!orgId,
   });
 };
 
