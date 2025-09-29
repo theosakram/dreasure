@@ -34,12 +34,16 @@ export const ActionMenu = ({
       icon: <LuEye size={16} />,
       onClick: onDetail || (() => console.log("Detail clicked")),
     },
-    {
-      label: "Ubah",
-      value: "edit",
-      icon: <LuSettings size={16} />,
-      onClick: onEdit || (() => console.log("Edit clicked")),
-    },
+    ...(onEdit
+      ? [
+          {
+            label: "Ubah",
+            value: "edit" as const,
+            icon: <LuSettings size={16} />,
+            onClick: onEdit || (() => console.log("Edit clicked")),
+          },
+        ]
+      : []),
     {
       label: "Hapus",
       value: "delete",

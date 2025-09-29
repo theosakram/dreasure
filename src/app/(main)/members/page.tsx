@@ -6,9 +6,11 @@ import { useGetProfiles } from "@/features/profiles/profileHooks";
 import { Profile } from "@/features/profiles/profileTypes";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 
-const MembersPage = () => {
-  const { data: profiles, isLoading, error, refetch } = useGetProfiles();
+const MembersContent = () => {
+  const { data, isLoading, error, refetch } = useGetProfiles();
+  const { count, profiles } = data || {};
   const router = useRouter();
 
   const handleAddMember = () => {};
@@ -72,7 +74,21 @@ const MembersPage = () => {
       interactive
       showAddButton
       onAddClick={handleAddMember}
+      pagination={{
+        total: count || 0,
+        pageSize: 10,
+        currentPage: 1,
+        onPageChange: console.log,
+      }}
     />
+  );
+};
+
+export const MembersPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MembersContent />
+    </Suspense>
   );
 };
 

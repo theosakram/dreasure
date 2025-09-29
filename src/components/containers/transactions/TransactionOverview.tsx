@@ -471,10 +471,11 @@ export const TransactionOverview = () => {
               isLoading={isLoading}
               maxWidth="100%"
               timelines={
-                data?.transactions.map((d: Transaction) => ({
+                data?.transactions.map((d) => ({
                   amount: d.amount,
                   date: d.created_at,
                   type: d.type,
+                  walletName: d.wallet.name,
                   title: (
                     <HStack gap={3} align="center">
                       <Circle

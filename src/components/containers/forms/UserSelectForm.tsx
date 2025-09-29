@@ -7,16 +7,17 @@ import { FormCard, FormCardHeader } from "./FormCard";
 
 export const UserSelectForm = () => {
   const { data, isLoading } = useGetProfiles();
+  const { profiles } = data || {};
   const mappedData = useMemo(() => {
-    if (data) {
-      return data.map((user) => ({
+    if (profiles) {
+      return profiles.map((user) => ({
         value: user.id,
         label: user.fullname,
       }));
     }
 
     return [];
-  }, [data]);
+  }, [profiles]);
 
   return (
     <FormCard>

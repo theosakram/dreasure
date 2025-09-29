@@ -1,14 +1,17 @@
 import { supabaseClient } from "@/supabase/client";
 import { Profile, ProfileWithTransactions } from "./profileTypes";
+import { GetPaginationRequest } from "../shared/sharedTypes";
 
-export const getProfiles = async () => {
+export const getProfiles = async (payload: GetPaginationRequest) => {
   const supabase = supabaseClient();
-  const { data: profiles } = await supabase
+  const { data: profiles, count } = await supabase
     .from("profiles")
-    .select(`*`)
+    .select(`*`, { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(payload.from, payload.to)
     .overrideTypes<Array<Profile>>();
 
-  return profiles;
+  return { profiles, count };
 };
 
 export const getProfileById = async (id: string) => {
@@ -16,7 +19,7 @@ export const getProfileById = async (id: string) => {
   const { data: profiles } = await supabase
     .from("profiles")
     .select(
-      `*, transactions(*), installments (*,
+      `*, transactions(*, wallet:wallets(*)), installments (*,
         installment_payments(*)
       )`,
     )

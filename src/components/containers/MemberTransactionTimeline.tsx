@@ -31,6 +31,7 @@ type TransactionEvent = {
   id: string | number;
   type: TransactionType;
   description?: string;
+  walletName: string;
 };
 
 type MemberTransactionListProps = {
@@ -405,10 +406,21 @@ export const MemberTransactionTimeline = ({
                             transaction.type === "deposit" ? "green" : "red"
                           }
                           variant="surface"
-                          size="xs"
+                          size="sm"
                           borderRadius="full"
                         >
                           {transaction.type === "deposit" ? "Masuk" : "Keluar"}
+                        </Badge>
+                        <Badge
+                          colorPalette={
+                            transaction.walletName === "kas" ? "blue" : "orange"
+                          }
+                          variant="surface"
+                          size="sm"
+                          borderRadius="full"
+                          textTransform="capitalize"
+                        >
+                          {transaction.walletName}
                         </Badge>
                       </HStack>
                       <Text

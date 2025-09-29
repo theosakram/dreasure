@@ -1,3 +1,5 @@
+import { Profile } from "../profiles/profileTypes";
+
 export type Installment = {
   id: string;
   user_id: string;
@@ -17,6 +19,15 @@ export type InstallmentPayment = {
   paid_date: string;
   created_at: string;
   description?: string;
+};
+
+export type InstallmentWithUser = Installment & {
+  user: Profile;
+};
+
+export type InstallmentPaymentFull = InstallmentPayment & {
+  user: Profile;
+  installment: Installment;
 };
 
 export type InstallmentWithPayments = Installment & {

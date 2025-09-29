@@ -1,4 +1,5 @@
 import { Profile } from "../profiles/profileTypes";
+import { Wallet } from "../wallets/walletTypes";
 
 export type TransactionType = "deposit" | "withdraw";
 
@@ -11,6 +12,10 @@ export type Transaction = {
   description: string;
   created_at: string;
   userProfile: Profile;
+};
+
+export type TransactionWithWallet = Transaction & {
+  wallet: Wallet;
 };
 
 export type AddTransactionRequest = {

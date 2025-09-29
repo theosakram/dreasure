@@ -6,7 +6,6 @@ import {
   Skeleton,
   VStack,
   Avatar,
-  Badge,
   Button,
   Icon,
   Text,
@@ -18,14 +17,11 @@ import {
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import {
-  LuPencil,
   LuEllipsis,
   LuMail,
   LuPhone,
   LuCalendar,
   LuUser,
-  LuShield,
-  LuTrendingUp,
 } from "react-icons/lu";
 
 export const ProfileHeader = () => {
@@ -140,21 +136,6 @@ export const ProfileHeader = () => {
                 >
                   {profile?.fullname}
                 </Text>
-                <Badge
-                  colorPalette="green"
-                  variant="solid"
-                  size="sm"
-                  borderRadius="full"
-                  px={3}
-                  py={1}
-                  fontWeight="medium"
-                  display="flex"
-                  alignItems="center"
-                  gap={1}
-                >
-                  <LuShield size={12} />
-                  Aktif
-                </Badge>
               </HStack>
 
               {/* ID and Join Date */}
@@ -229,36 +210,19 @@ export const ProfileHeader = () => {
 
             {/* Action Buttons */}
             <VStack gap={2} align="end">
-              <Group gap={2}>
-                <Button
-                  size="sm"
-                  variant="surface"
-                  colorPalette="blue"
-                  borderRadius="xl"
-                  px={4}
-                  _hover={{
-                    transform: "translateY(-1px)",
-                    boxShadow: "md",
-                  }}
-                  transition="all 0.2s"
-                >
-                  <LuPencil size={16} />
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="surface"
-                  borderRadius="xl"
-                  px={3}
-                  _hover={{
-                    transform: "translateY(-1px)",
-                    boxShadow: "md",
-                  }}
-                  transition="all 0.2s"
-                >
-                  <LuEllipsis size={16} />
-                </Button>
-              </Group>
+              <Button
+                size="sm"
+                variant="surface"
+                borderRadius="xl"
+                px={3}
+                _hover={{
+                  transform: "translateY(-1px)",
+                  boxShadow: "md",
+                }}
+                transition="all 0.2s"
+              >
+                <LuEllipsis size={16} />
+              </Button>
 
               {/* Quick Stats */}
               <HStack gap={4} mt={4} opacity={0.8}>
@@ -270,33 +234,8 @@ export const ProfileHeader = () => {
                     Transaksi
                   </Text>
                 </VStack>
-                <VStack gap={0} align="center">
-                  <Text fontSize="lg" fontWeight="bold" color="green.500">
-                    98%
-                  </Text>
-                  <Text fontSize="xs" color="fg.muted" textAlign="center">
-                    Score
-                  </Text>
-                </VStack>
               </HStack>
             </VStack>
-          </HStack>
-        </Box>
-
-        {/* Bottom Section with Activity Indicator */}
-        <Box px={6} py={4} bg="bg.subtle">
-          <HStack justify="space-between" align="center">
-            <HStack gap={3}>
-              <Circle bg="green.100" size="6" color="green.600">
-                <LuTrendingUp size={12} />
-              </Circle>
-              <Text fontSize="sm" color="fg.muted">
-                Aktif dalam 7 hari terakhir
-              </Text>
-            </HStack>
-            <Text fontSize="xs" color="fg.muted" opacity={0.7}>
-              Terakhir aktif: {dayjs().format("DD MMM, HH:mm")}
-            </Text>
           </HStack>
         </Box>
       </Card.Body>

@@ -12,6 +12,7 @@ import { Stack, Skeleton, VStack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
 import { SearchName } from "@/components/containers/SearchName";
 import { transactionColumns } from "@/components/containers/transactions/TransactionsColumns";
+import { useSearchParams } from "next/navigation";
 
 // Loading fallback for the entire page
 const DashboardSkeleton = () => (
@@ -44,11 +45,14 @@ const DashboardSkeleton = () => (
 const DashboardContent = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const { data, isLoading, error, isRefetching } = useGetKasTransactions();
+  const { count, data: transactions } = data || {};
   const { data: kas } = useGetKasWallet();
   const mappedKas = useMemo(
     () => moneyFlowMapper(kas?.transactions || []),
     [kas?.transactions],
   );
+  const searchParams = useSearchParams();
+  const page = +(searchParams.get("page") ?? "1");
 
   return (
     <Stack gap={6}>
@@ -59,12 +63,12 @@ const DashboardContent = () => {
       <SearchName />
 
       <TableContainer<Transaction>
-        data={data}
+        data={transactions}
         columns={transactionColumns}
         isLoading={isLoading || isRefetching}
         isError={!!error}
         title="Transaksi Terbaru"
-        subtitle={`${data?.length || 0} transaksi`}
+        subtitle={`${transactions?.length || 0} transaksi`}
         addButtonLabel="Tambah Transaksi"
         onAddClick={() => setAddModalOpen(true)}
         variant="line"
@@ -78,6 +82,12 @@ const DashboardContent = () => {
         onRetry={() => window.location.reload()}
         loadingMessage="Memuat data transaksi..."
         scrollMaxH="47.5vh"
+        pagination={{
+          total: count || 0,
+          pageSize: 10,
+          currentPage: page,
+          onPageChange: console.log,
+        }}
       />
 
       <AddTransactionModal

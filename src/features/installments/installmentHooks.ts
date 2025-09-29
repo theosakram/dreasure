@@ -8,6 +8,16 @@ import {
   AddInstallmentRequest,
 } from "./installmentTypes";
 
+export const useGetInstallments = () => {
+  return useQuery({
+    queryKey: ["installments"],
+    queryFn: async () => {
+      const { getInstallments } = await import("./installmentServices");
+      return getInstallments();
+    },
+  });
+};
+
 export const useGetInstallmentsByUserId = (userId?: string) => {
   return useQuery({
     queryKey: ["installments-by-user-id", userId],
@@ -33,6 +43,16 @@ export const useAddInstallment = (
       return addInstallment(payload);
     },
     ...options,
+  });
+};
+
+export const useGetInstallmentPayments = () => {
+  return useQuery({
+    queryKey: ["installment-payments"],
+    queryFn: async () => {
+      const { getInstallmentPayments } = await import("./installmentServices");
+      return getInstallmentPayments();
+    },
   });
 };
 

@@ -65,6 +65,13 @@ export type TableContainerProps<T extends Record<string, unknown>> = {
   containerVariant?: "elevated" | "outlined" | "ghost";
 
   customAddButton?: React.ReactNode;
+
+  pagination?: {
+    total: number;
+    pageSize: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
+  };
 };
 
 export const TableContainer = <T extends Record<string, unknown>>({
@@ -94,6 +101,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
   scrollMaxH = "600px",
   containerVariant = "elevated",
   customAddButton,
+  pagination,
 }: TableContainerProps<T>) => {
   // Get container styles based on variant
   const getContainerStyles = () => {
@@ -251,17 +259,19 @@ export const TableContainer = <T extends Record<string, unknown>>({
         </VStack>
       )}
 
-      {/* Table Section */}
       <Box {...containerStyles}>{renderContent()}</Box>
 
-      {/* Pagination Section */}
-      {data && data.length > 0 && (
+      {pagination && (
         <Flex justify="space-between" align="center" pt={2}>
           <Text textStyle="caption" color="fg.muted">
-            Menampilkan {data.length} dari {data.length} data
+            Menampilkan {data.length} dari {pagination.total} data
           </Text>
 
-          <Pagination.Root count={20} pageSize={10} defaultPage={1}>
+          <Pagination.Root
+            count={pagination.total}
+            pageSize={10}
+            defaultPage={1}
+          >
             <HStack gap={2}>
               <Pagination.PrevTrigger asChild>
                 <IconButton

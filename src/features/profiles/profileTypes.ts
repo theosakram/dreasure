@@ -1,4 +1,4 @@
-import { Transaction } from "../transactions/transactionTypes";
+import { TransactionWithWallet } from "../transactions/transactionTypes";
 import { InstallmentWithPayments } from "../installments/installmentTypes";
 
 export type Profile = {
@@ -10,6 +10,6 @@ export type Profile = {
 };
 
 export type ProfileWithTransactions = Profile & {
-  transactions: Array<Transaction>;
+  transactions: Array<TransactionWithWallet>;
   installments?: Array<InstallmentWithPayments>;
 };

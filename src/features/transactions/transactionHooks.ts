@@ -8,8 +8,8 @@ import { useSearchParams } from "next/navigation";
 import { AddTransactionRequest } from "./transactionTypes";
 import { WalletName } from "../wallets/walletTypes";
 import { walletNames } from "@/utils/constants";
+import { getPageRange } from "@/utils/helpers/getPageRange";
 
-// Helper function to get filter dates
 const getFilterDates = (filter: string | null | undefined) => {
   if (filter === "today") {
     return {
@@ -18,13 +18,13 @@ const getFilterDates = (filter: string | null | undefined) => {
     };
   }
 
-  if (filter === "last-week") {
+  if (filter === "week") {
     return {
       gte: dayjs().subtract(7, "day").toISOString(),
     };
   }
 
-  if (filter === "this-month") {
+  if (filter === "month") {
     return {
       gte: dayjs().startOf("month").toISOString(),
     };
@@ -33,16 +33,17 @@ const getFilterDates = (filter: string | null | undefined) => {
   return {};
 };
 
-// Version that can be used within Suspense boundaries
 export const useGetWalletTransactions = (walletName: WalletName) => {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
+  const page = parseInt(searchParams.get("page") || "1");
 
   const payload = {
     ...getFilterDates(filter),
     name: q,
     walletName,
+    pagination: getPageRange(page),
   };
 
   return useQuery({
