@@ -1,18 +1,21 @@
 "use client";
 
 import { AddOrgMembershipModal } from "@/components/containers/orgs/AddOrgMembershipModal";
-import { TableCell } from "@/components/containers/TableCell";
+import {
+  profileColumnHelper,
+  profileColumns,
+} from "@/components/containers/profiles/ProfilesColumn";
 import { TableContainer } from "@/components/containers/TableContainers";
 import { ActionMenu } from "@/components/custom/ActionMenu";
 import { useGetOrgMembersByOrgId } from "@/features/orgs/orgHooks";
 import { Profile } from "@/features/profiles/profileTypes";
-import { createColumnHelper } from "@tanstack/react-table";
-import { useParams, useRouter } from "next/navigation";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
+import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 
 const MembersContent = () => {
   const router = useRouter();
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
   const { data, isLoading, error, refetch } = useGetOrgMembersByOrgId();
   const { count, data: members } = data || {};
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -32,25 +35,9 @@ const MembersContent = () => {
     // TODO: Show confirmation dialog and delete user
   };
 
-  const columnHelper = createColumnHelper<Profile & { role: string }>();
   const columns = [
-    columnHelper.accessor("fullname", {
-      header: "Nama Lengkap",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("email", {
-      header: "Email",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("phone", {
-      header: "No. Handphone",
-      cell: (info) => info.getValue() || "-",
-    }),
-    columnHelper.accessor("role", {
-      header: "Peran",
-      cell: (info) => <TableCell.OrgRoleBadge role={info.getValue()} />,
-    }),
-    columnHelper.display({
+    ...profileColumns,
+    profileColumnHelper.display({
       id: "actions",
       header: "",
       cell: ({ row }) => (

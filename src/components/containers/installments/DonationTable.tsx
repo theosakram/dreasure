@@ -43,6 +43,7 @@ export const DonationTable = () => {
         }}
         customAddButton={
           <Button
+            size="sm"
             variant="solid"
             colorPalette="cyan"
             fontWeight="semibold"

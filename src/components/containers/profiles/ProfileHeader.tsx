@@ -1,7 +1,6 @@
 import { useGetProfileById } from "@/features/profiles/profileHooks";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 import {
-  Box,
-  Card,
   HStack,
   Skeleton,
   VStack,
@@ -9,236 +8,100 @@ import {
   Button,
   Icon,
   Text,
-  Float,
-  Circle,
-  Group,
-  Separator,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import { useParams } from "next/navigation";
-import {
-  LuEllipsis,
-  LuMail,
-  LuPhone,
-  LuCalendar,
-  LuUser,
-} from "react-icons/lu";
+import { LuEllipsis, LuMail, LuPhone } from "react-icons/lu";
 
 export const ProfileHeader = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId } = useGetIdsFromParam();
   const { data: profile, isLoading } = useGetProfileById(userId);
 
   if (isLoading) {
     return (
-      <Card.Root
-        variant="subtle"
-        layerStyle="fill.surface"
-        borderRadius="2xl"
-        overflow="hidden"
+      <HStack
+        gap={4}
+        p={4}
         bg="bg.panel"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="border.subtle"
       >
-        <Card.Body p={0}>
-          <Box
-            bgGradient="to-r"
-            gradientFrom="blue.500/20"
-            gradientTo="purple.500/20"
-            p={6}
-          >
-            <HStack gap={5} align="start">
-              <Skeleton boxSize="16" borderRadius="2xl" />
-              <VStack align="start" gap={2} flex="1" pt={2}>
-                <Skeleton height="6" width="200px" borderRadius="md" />
-                <Skeleton height="4" width="120px" borderRadius="md" />
-                <HStack gap={3} mt={2}>
-                  <Skeleton height="3" width="80px" borderRadius="md" />
-                  <Skeleton height="3" width="100px" borderRadius="md" />
-                </HStack>
-              </VStack>
-            </HStack>
-          </Box>
-        </Card.Body>
-      </Card.Root>
+        <Skeleton boxSize="12" borderRadius="xl" />
+        <VStack align="start" gap={1.5} flex="1">
+          <Skeleton height="5" width="180px" borderRadius="md" />
+          <Skeleton height="3" width="140px" borderRadius="md" />
+        </VStack>
+        <Skeleton height="9" width="20" borderRadius="lg" />
+      </HStack>
     );
   }
 
   return (
-    <Card.Root
-      variant="subtle"
-      layerStyle="fill.surface"
-      borderRadius="2xl"
-      overflow="hidden"
+    <HStack
+      gap={4}
+      p={4}
       bg="bg.panel"
-      boxShadow="lg"
+      borderRadius="xl"
       border="1px solid"
-      borderColor="border.muted"
-      transition="all 0.2s ease-in-out"
+      borderColor="border.subtle"
+      justify="space-between"
+      align="center"
     >
-      <Card.Body p={0}>
-        {/* Header with gradient background */}
-        <Box
-          bgGradient="to-r"
-          gradientFrom="blue.500/10"
-          gradientVia="purple.500/10"
-          gradientTo="teal.500/10"
-          p={6}
-          position="relative"
-          _dark={{
-            gradientFrom: "blue.400/20",
-            gradientVia: "purple.400/20",
-            gradientTo: "teal.400/20",
-          }}
-        >
-          {/* Decorative elements */}
-          <Box
-            position="absolute"
-            top={0}
-            right={0}
-            w="32"
-            h="32"
-            bg="blue.500/5"
-            borderRadius="full"
-            transform="translate(16px, -16px)"
-          />
-          <Box
-            position="absolute"
-            bottom={0}
-            left={0}
-            w="24"
-            h="24"
-            bg="purple.500/5"
-            borderRadius="full"
-            transform="translate(-12px, 12px)"
-          />
+      {/* Left: Avatar & Info */}
+      <HStack gap={3} flex="1" minW="0">
+        <Avatar.Root colorPalette="brand" variant="subtle" size="lg">
+          <Avatar.Fallback name={profile?.fullname} />
+        </Avatar.Root>
 
-          <HStack gap={5} align="start" position="relative">
-            {/* Enhanced Avatar */}
-            <Avatar.Root colorPalette="green" variant="subtle" size="2xl">
-              <Avatar.Fallback name={profile?.fullname} />
-              <Float placement="bottom-end" offsetX="2" offsetY="2">
-                <Circle
-                  bg="green.500"
-                  size="8px"
-                  outline="0.1em solid"
-                  outlineColor="bg"
-                />
-              </Float>
-            </Avatar.Root>
-
-            {/* Profile Info */}
-            <VStack align="start" gap={2} flex="1" pt={1}>
-              <HStack gap={3} align="center" w="full">
-                <Text
-                  textStyle="2xl"
-                  fontWeight="bold"
-                  color="fg"
-                  lineHeight="1.2"
-                  letterSpacing="tight"
-                >
-                  {profile?.fullname}
-                </Text>
-              </HStack>
-
-              {/* ID and Join Date */}
-              <HStack gap={4} align="center" opacity={0.8}>
-                <HStack gap={1.5}>
-                  <Icon color="fg.muted" fontSize="sm">
-                    <LuUser />
-                  </Icon>
-                  <Text
-                    color="fg.muted"
-                    fontSize="sm"
-                    fontFamily="mono"
-                    fontWeight="medium"
-                  >
-                    #{profile?.id.slice(0, 8).toUpperCase()}
-                  </Text>
-                </HStack>
-                <Separator orientation="vertical" h="4" />
-                <HStack gap={1.5}>
-                  <Icon color="fg.muted" fontSize="sm">
-                    <LuCalendar />
-                  </Icon>
-                  <Text color="fg.muted" fontSize="sm">
-                    Bergabung {dayjs(profile?.created_at).format("MMM YYYY")}
-                  </Text>
-                </HStack>
-              </HStack>
-
-              {/* Contact Information */}
-              <Group gap={6} mt={3}>
-                <HStack gap={2} minW="0">
-                  <Circle bg="blue.100" size="8" color="blue.600">
-                    <LuMail size={14} />
-                  </Circle>
-                  <VStack gap={0} align="start" minW="0">
-                    <Text fontSize="xs" color="fg.muted" fontWeight="medium">
-                      Email
-                    </Text>
-                    <Text
-                      fontSize="sm"
-                      color="fg"
-                      truncate
-                      maxW="200px"
-                      fontWeight="medium"
-                    >
-                      {profile?.email || "Tidak ada"}
-                    </Text>
-                  </VStack>
-                </HStack>
-
-                <HStack gap={2} minW="0">
-                  <Circle bg="green.100" size="8" color="green.600">
-                    <LuPhone size={14} />
-                  </Circle>
-                  <VStack gap={0} align="start" minW="0">
-                    <Text fontSize="xs" color="fg.muted" fontWeight="medium">
-                      Telepon
-                    </Text>
-                    <Text
-                      fontSize="sm"
-                      color="fg"
-                      truncate
-                      maxW="150px"
-                      fontWeight="medium"
-                    >
-                      {profile?.phone || "Tidak ada"}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </Group>
-            </VStack>
-
-            {/* Action Buttons */}
-            <VStack gap={2} align="end">
-              <Button
-                size="sm"
-                variant="surface"
-                borderRadius="xl"
-                px={3}
-                _hover={{
-                  transform: "translateY(-1px)",
-                  boxShadow: "md",
-                }}
-                transition="all 0.2s"
-              >
-                <LuEllipsis size={16} />
-              </Button>
-
-              {/* Quick Stats */}
-              <HStack gap={4} mt={4} opacity={0.8}>
-                <VStack gap={0} align="center">
-                  <Text fontSize="lg" fontWeight="bold" color="blue.500">
-                    24
-                  </Text>
-                  <Text fontSize="xs" color="fg.muted" textAlign="center">
-                    Transaksi
-                  </Text>
-                </VStack>
-              </HStack>
-            </VStack>
+        <VStack gap={0.5} align="start" flex="1" minW="0">
+          <Text
+            fontSize="lg"
+            fontWeight="semibold"
+            color="fg.default"
+            lineClamp={1}
+          >
+            {profile?.fullname}
+          </Text>
+          <HStack gap={2} fontSize="sm" color="fg.muted">
+            <Text fontFamily="mono">
+              #{profile?.id.slice(0, 8).toUpperCase()}
+            </Text>
+            <Text>•</Text>
+            <Text>
+              Bergabung {dayjs(profile?.created_at).format("MMM YYYY")}
+            </Text>
           </HStack>
-        </Box>
-      </Card.Body>
-    </Card.Root>
+        </VStack>
+      </HStack>
+
+      {/* Right: Contact & Actions */}
+      <HStack gap={3} flexShrink={0}>
+        {profile?.email && (
+          <HStack gap={2} px={3} py={2} bg="bg.subtle" borderRadius="lg">
+            <Icon color="fg.muted">
+              <LuMail size={14} />
+            </Icon>
+            <Text fontSize="sm" color="fg.default" maxW="200px" lineClamp={1}>
+              {profile.email}
+            </Text>
+          </HStack>
+        )}
+
+        {profile?.phone && (
+          <HStack gap={2} px={3} py={2} bg="bg.subtle" borderRadius="lg">
+            <Icon color="fg.muted">
+              <LuPhone size={14} />
+            </Icon>
+            <Text fontSize="sm" color="fg.default">
+              {profile.phone}
+            </Text>
+          </HStack>
+        )}
+
+        <Button size="sm" variant="ghost" borderRadius="lg">
+          <LuEllipsis size={16} />
+        </Button>
+      </HStack>
+    </HStack>
   );
 };

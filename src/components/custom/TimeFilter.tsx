@@ -70,18 +70,18 @@ const TimeFilterSkeleton = ({
   if (variant === "card") {
     return (
       <Box
-        p={4}
-        bg="surface.subtle"
+        p={5}
+        bg="bg.panel"
         borderRadius="xl"
         border="1px solid"
         borderColor="border.subtle"
       >
         <VStack align="stretch" gap={3}>
-          <HStack gap={2} align="center">
-            <Skeleton height="32px" width="32px" borderRadius="md" />
+          <HStack gap={2.5} align="center">
+            <Skeleton height="32px" width="32px" borderRadius="lg" />
             <VStack align="start" gap={1}>
-              <Skeleton height="16px" width="80px" borderRadius="sm" />
-              <Skeleton height="12px" width="120px" borderRadius="sm" />
+              <Skeleton height="16px" width="80px" borderRadius="md" />
+              <Skeleton height="12px" width="120px" borderRadius="md" />
             </VStack>
           </HStack>
           <Skeleton height="40px" width="full" borderRadius="lg" />
@@ -92,8 +92,8 @@ const TimeFilterSkeleton = ({
 
   if (variant === "compact") {
     return (
-      <HStack gap={2} align="center">
-        <Skeleton height="20px" width="20px" borderRadius="sm" />
+      <HStack gap={2.5} align="center">
+        <Skeleton height="20px" width="20px" borderRadius="md" />
         <Skeleton height="32px" width="280px" borderRadius="lg" />
       </HStack>
     );
@@ -103,7 +103,7 @@ const TimeFilterSkeleton = ({
     <HStack gap={4} align="center">
       <HStack gap={2.5} align="center">
         <Skeleton height="32px" width="32px" borderRadius="lg" />
-        <Skeleton height="16px" width="100px" borderRadius="sm" />
+        <Skeleton height="16px" width="100px" borderRadius="md" />
       </HStack>
       <Skeleton height="40px" width="320px" borderRadius="lg" />
     </HStack>
@@ -130,21 +130,20 @@ const TimeFilterContent = ({
   if (variant === "card") {
     return (
       <Box
-        p={4}
-        bg="surface.subtle"
+        p={5}
+        bg="bg.panel"
         borderRadius="xl"
         border="1px solid"
         borderColor="border.subtle"
-        shadow="sm"
+        transition="all 0.15s"
         _hover={{
-          shadow: "md",
-          borderColor: "brand.fg",
+          borderColor: "border.emphasized",
+          shadow: "sm",
         }}
-        transition="all 0.2s"
       >
         <VStack align="stretch" gap={3}>
-          <HStack gap={2} align="center">
-            <Box p={2} borderRadius="md" bg="brand.muted" color="brand.solid">
+          <HStack gap={2.5} align="center">
+            <Box p={2} borderRadius="lg" bg="brand.muted" color="brand.fg">
               <Icon size="sm">
                 <LuFilter />
               </Icon>
@@ -154,7 +153,7 @@ const TimeFilterContent = ({
                 {label}
               </Text>
               {showDescription && currentOption?.description && (
-                <Text fontSize="xs" color="fg.muted" lineHeight="1.3">
+                <Text fontSize="xs" color="fg.muted">
                   {currentOption.description}
                 </Text>
               )}
@@ -180,9 +179,9 @@ const TimeFilterContent = ({
 
   if (variant === "compact") {
     return (
-      <HStack gap={2} align="center">
+      <HStack gap={2.5} align="center">
         {showIcon && (
-          <Icon size="sm" color="brand.solid">
+          <Icon size="sm" color="brand.fg">
             <LuCalendarDays />
           </Icon>
         )}
@@ -213,44 +212,28 @@ const TimeFilterContent = ({
 
   return (
     <Flex {...containerProps}>
-      {/* Enhanced Label Section */}
+      {/* Label Section */}
       <HStack gap={2.5} align="center" minW="fit-content">
         {showIcon && (
-          <Box
-            p={2}
-            borderRadius="lg"
-            color="brand.solid"
-            transition="all 0.2s"
-            _hover={{
-              bg: "brand.muted",
-              transform: "scale(1.05)",
-            }}
-          >
+          <Box p={2} borderRadius="lg" bg="brand.muted" color="brand.fg">
             <Icon size="sm">
               <LuCalendarDays />
             </Icon>
           </Box>
         )}
         <VStack align="start" gap={0}>
-          <Text
-            fontSize="sm"
-            fontWeight="semibold"
-            color="fg.default"
-            letterSpacing="tight"
-          >
+          <Text fontSize="sm" fontWeight="semibold" color="fg.default">
             {label}
           </Text>
           {showDescription && currentOption?.description && (
-            <Text fontSize="xs" color="fg.subtle" lineHeight="1.2">
+            <Text fontSize="xs" color="fg.muted">
               {currentOption.description}
             </Text>
           )}
         </VStack>
       </HStack>
 
-      {orientation === "vertical" && (
-        <Separator size="sm" colorPalette="gray" />
-      )}
+      {orientation === "vertical" && <Separator />}
 
       <SegmentGroup.Root
         value={filter || "all"}

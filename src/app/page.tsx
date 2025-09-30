@@ -31,96 +31,37 @@ interface FeatureCardProps {
   isPrimary?: boolean;
 }
 
-const FeatureCard = ({
-  href,
-  icon,
-  title,
-  description,
-  isPrimary = false,
-}: FeatureCardProps) => (
+const FeatureCard = ({ href, icon, title, description }: FeatureCardProps) => (
   <Link href={href}>
     <Box
       display="block"
-      position="relative"
       h="full"
-      minH="280px"
-      bg={isPrimary ? "brand.solid" : "bg.panel"}
-      borderRadius="3xl"
-      border="2px solid"
-      borderColor={isPrimary ? "brand.600" : "border.muted"}
-      overflow="hidden"
+      minH="240px"
+      bg="bg.panel"
+      borderRadius="2xl"
+      border="1px solid"
+      borderColor={"border.muted"}
       cursor="pointer"
-      transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+      transition="all 0.15s"
       _hover={{
-        transform: "translateY(-4px) scale(1.01)",
-        shadow: "2xl",
-        borderColor: isPrimary ? "brand.400" : "brand.emphasized",
+        borderColor: "brand.emphasized",
       }}
-      _active={{
-        transform: "translateY(-4px) scale(1.01)",
-      }}
+      boxShadow="xl"
     >
-      {/* Background Pattern */}
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-        opacity={isPrimary ? 0.1 : 0.05}
-        bgGradient={
-          isPrimary
-            ? "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3), transparent 50%)"
-            : "radial-gradient(circle at 80% 20%, rgba(16,185,129,0.1), transparent 50%)"
-        }
-      />
-
-      {/* Content */}
-      <VStack
-        position="relative"
-        h="full"
-        p={8}
-        justify="space-between"
-        align="start"
-        zIndex={1}
-      >
-        {/* Icon Section */}
-        <VStack gap={6} align="start" flex="1" justify="center">
-          <Box
-            p={4}
-            borderRadius="2xl"
-            bg={isPrimary ? "rgba(255,255,255,0.15)" : "brand.muted"}
-            border="2px solid"
-            borderColor={
-              isPrimary ? "rgba(255,255,255,0.2)" : "brand.emphasized"
-            }
-            backdropBlur="10px"
-          >
-            <Icon
-              size="2xl"
-              color={isPrimary ? "white" : "brand.solid"}
-              filter={
-                isPrimary ? "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" : "none"
-              }
-            >
-              {icon}
-            </Icon>
+      <VStack h="full" p={6} gap={5} justify="space-between" align="start">
+        <VStack gap={4} align="start" flex="1">
+          <Box p={3} borderRadius="xl" bg="brand.muted" color="brand.fg">
+            <Icon fontSize="2xl">{icon}</Icon>
           </Box>
 
-          <VStack gap={3} align="start">
-            <Heading
-              size="xl"
-              color={isPrimary ? "white" : "fg.default"}
-              fontWeight="bold"
-              letterSpacing="tight"
-            >
+          <VStack gap={2} align="start">
+            <Heading size="xl" color="fg.default" fontWeight="semibold">
               {title}
             </Heading>
             <Text
-              fontSize="md"
-              lineHeight="1.6"
-              color={isPrimary ? "rgba(255,255,255,0.9)" : "fg.muted"}
-              maxW="280px"
+              fontSize="sm"
+              lineHeight="1.5"
+              color="fg.muted"
               textAlign="left"
             >
               {description}
@@ -128,22 +69,9 @@ const FeatureCard = ({
           </VStack>
         </VStack>
 
-        {/* CTA */}
-        <HStack
-          gap={3}
-          color={isPrimary ? "white" : "brand.solid"}
-          fontWeight="semibold"
-          transition="all 0.3s"
-          _groupHover={{ gap: 4 }}
-        >
-          <Text fontSize="lg">
-            {isPrimary ? "Mulai Kelola" : "Kelola Sekarang"}
-          </Text>
-          <Icon
-            size="lg"
-            transition="transform 0.3s"
-            _groupHover={{ transform: "translateX(4px)" }}
-          >
+        <HStack gap={2} color="brand.fg" fontWeight="medium" fontSize="sm">
+          <Text>Kelola sekarang</Text>
+          <Icon size="sm">
             <LuArrowRight />
           </Icon>
         </HStack>
@@ -160,23 +88,11 @@ const TrustIndicator = ({
   icon: React.ReactElement;
   label: string;
 }) => (
-  <HStack
-    gap={3}
-    opacity={0.8}
-    transition="opacity 0.3s"
-    _hover={{ opacity: 1 }}
-  >
-    <Box
-      p={2}
-      borderRadius="lg"
-      bg="success.emphasized"
-      borderColor="success.emphasized"
-    >
-      <Icon size="md" color="success.solid">
-        {icon}
-      </Icon>
+  <HStack gap={2}>
+    <Box p={1.5} borderRadius="md" bg="brand.muted" color="brand.fg">
+      <Icon fontSize="sm">{icon}</Icon>
     </Box>
-    <Text fontSize="md" fontWeight="medium" color="fg.muted">
+    <Text fontSize="sm" fontWeight="medium" color="fg.muted">
       {label}
     </Text>
   </HStack>
@@ -184,129 +100,53 @@ const TrustIndicator = ({
 
 export default function Home() {
   return (
-    <Box
-      h="100vh"
-      w="100vw"
-      bg="bg.canvas"
-      overflow="hidden"
-      position="relative"
-    >
-      {/* Background Elements */}
-      <Box
-        position="absolute"
-        top="10%"
-        right="10%"
-        w="300px"
-        h="300px"
-        borderRadius="full"
-        bg="brand.muted"
-        opacity={0.1}
-        filter="blur(60px)"
-        pointerEvents="none"
-      />
-      <Box
-        position="absolute"
-        bottom="15%"
-        left="5%"
-        w="200px"
-        h="200px"
-        borderRadius="full"
-        bg="sage.muted"
-        opacity={0.1}
-        filter="blur(40px)"
-        pointerEvents="none"
-      />
-
+    <Box h="100vh" w="100vw" bg="bg.canvas" overflow="hidden">
       <Container maxW="7xl" h="full" py={0}>
         <Center h="full">
           <VStack gap={10} w="full" textAlign="center">
             {/* Brand Header */}
-            <VStack gap={6}>
-              {/* Logo & Brand */}
-              <VStack gap={4} align="center">
-                <Box
-                  p={4}
-                  borderRadius="3xl"
-                  bg="brand.muted"
-                  border="3px solid"
-                  borderColor="brand.emphasized"
-                  shadow="lg"
-                  position="relative"
-                  _before={{
-                    content: '""',
-                    position: "absolute",
-                    top: "-2px",
-                    left: "-2px",
-                    right: "-2px",
-                    bottom: "-2px",
-                    borderRadius: "3xl",
-                    bg: "linear-gradient(135deg, rgba(16,185,129,0.3), rgba(34,197,94,0.1))",
-                    zIndex: -1,
-                  }}
-                >
-                  <Icon size="2xl" color="brand.solid">
+            <VStack gap={5}>
+              <VStack gap={3} align="center">
+                <Box p={4} borderRadius="2xl" bg="brand.muted" color="brand.fg">
+                  <Icon fontSize="4xl">
                     <TbMoneybag />
                   </Icon>
                 </Box>
 
-                <VStack gap={2}>
-                  <Heading
-                    size="4xl"
-                    color="fg.default"
-                    fontWeight="800"
-                    letterSpacing="tight"
-                    bgGradient="linear-gradient(135deg, token(colors.brand.600), token(colors.brand.800))"
-                    bgClip="text"
-                  >
+                <VStack gap={1}>
+                  <Heading size="4xl" color="fg.default" fontWeight="bold">
                     Dreasury
                   </Heading>
-                  <Text
-                    fontSize="xl"
-                    color="fg.muted"
-                    fontWeight="500"
-                    letterSpacing="wide"
-                    textTransform="uppercase"
-                  >
+                  <Text fontSize="md" color="fg.muted" fontWeight="medium">
                     Aplikasi Manajemen Keuangan Organisasi
                   </Text>
                 </VStack>
               </VStack>
 
               {/* Trust Indicators */}
-              <HStack gap={8} wrap="wrap" justify="center" pt={2}>
+              <HStack gap={6} wrap="wrap" justify="center" pt={1}>
                 <TrustIndicator icon={<LuShield />} label="Aman & Terpercaya" />
-                <TrustIndicator
-                  icon={<LuActivity />}
-                  label="Real-time Reporting"
-                />
-                <TrustIndicator icon={<LuUsers />} label="Multi-user Access" />
-                <TrustIndicator
-                  icon={<LuTrendingUp />}
-                  label="Analytics Dashboard"
-                />
+                <TrustIndicator icon={<LuActivity />} label="Real-time" />
+                <TrustIndicator icon={<LuUsers />} label="Multi-user" />
+                <TrustIndicator icon={<LuTrendingUp />} label="Analytics" />
               </HStack>
             </VStack>
 
             {/* Main Features */}
-            <VStack gap={6} w="full" maxW="6xl">
-              <Heading
-                size="2xl"
-                color="fg.default"
-                fontWeight="600"
-                letterSpacing="tight"
-              >
+            <VStack gap={5} w="full" maxW="5xl">
+              <Heading size="xl" color="fg.default" fontWeight="semibold">
                 Feature yang tersedia
               </Heading>
 
               {/* Feature Cards Grid */}
               <Stack
                 direction={{ base: "column", xl: "row" }}
-                gap={8}
+                gap={5}
                 w="full"
                 justify="center"
                 align="stretch"
               >
-                <Box flex="1" maxW={{ base: "full", xl: "400px" }}>
+                <Box flex="1" maxW={{ base: "full", xl: "360px" }}>
                   <FeatureCard
                     href="/login"
                     icon={<LuWallet />}
@@ -316,32 +156,25 @@ export default function Home() {
                   />
                 </Box>
 
-                <Box flex="1" maxW={{ base: "full", xl: "400px" }}>
+                <Box flex="1" maxW={{ base: "full", xl: "360px" }}>
                   <FeatureCard
                     href="/login"
                     icon={<LuRefreshCw />}
                     title="Dana Bergulir"
-                    description="Sistem pinjaman dengan manajemen cicilan, dan notifikasi otomatis"
+                    description="Sistem pinjaman dengan manajemen cicilan dan notifikasi otomatis"
                   />
                 </Box>
               </Stack>
             </VStack>
 
             {/* Auth Actions */}
-            <HStack gap={4} pt={4}>
+            <HStack gap={4} pt={3}>
               <Button
                 asChild
                 size="lg"
                 variant="solid"
                 colorPalette="brand"
-                px={8}
-                py={6}
-                borderRadius="2xl"
-                shadow="lg"
-                _hover={{
-                  transform: "translateY(-2px)",
-                  shadow: "xl",
-                }}
+                borderRadius="xl"
               >
                 <Link href="/login">Masuk</Link>
               </Button>

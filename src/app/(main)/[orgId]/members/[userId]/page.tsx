@@ -7,10 +7,10 @@ import { ProfileHeader } from "@/components/containers/profiles/ProfileHeader";
 
 const MembersDetailPage = () => {
   return (
-    <VStack gap={8} align="stretch" w="full">
+    <VStack gap={6} align="stretch" w="full">
       <ProfileHeader />
 
-      <Grid templateColumns="repeat(2, 1fr)" gap="6">
+      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
         <GridItem>
           <TransactionOverview />
         </GridItem>

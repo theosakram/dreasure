@@ -1,6 +1,6 @@
 import { walletTypes } from "@/utils/constants";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 export const useGetWallets = () => {
   return useQuery({
@@ -13,13 +13,13 @@ export const useGetWallets = () => {
 };
 
 export const useGetWalletByType = (type: string) => {
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
 
   return useQuery({
     queryKey: ["wallet", type, orgId],
     queryFn: async () => {
       const { getWalletByType } = await import("./walletService");
-      return getWalletByType(type, orgId);
+      return getWalletByType(type, orgId || "");
     },
     enabled: !!type && !!orgId,
   });

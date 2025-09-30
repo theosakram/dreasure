@@ -25,13 +25,14 @@ export const useGetProfiles = () => {
   });
 };
 
-export const useGetProfileById = (id: string) => {
+export const useGetProfileById = (id?: string) => {
   return useQuery({
     queryKey: ["profile_by_id", id],
     queryFn: async () => {
       const { getProfileById } = await import("./profileServices");
 
-      return getProfileById(id);
+      return getProfileById(id || "");
     },
+    enabled: !!id,
   });
 };

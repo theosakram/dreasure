@@ -4,11 +4,12 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { AddTransactionRequest } from "./transactionTypes";
 import { WalletTypes } from "../wallets/walletTypes";
 import { walletTypes } from "@/utils/constants";
 import { getPageRange } from "@/utils/helpers/getPageRange";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 
 const getFilterDates = (filter: string | null | undefined) => {
   if (filter === "today") {
@@ -38,7 +39,7 @@ export const useGetWalletTransactions = (walletType: WalletTypes) => {
   const filter = searchParams.get("filter") || undefined;
   const q = searchParams.get("q") || undefined;
   const page = parseInt(searchParams.get("page") || "1");
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
 
   const payload = {
     ...getFilterDates(filter),

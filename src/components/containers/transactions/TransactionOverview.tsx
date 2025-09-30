@@ -4,30 +4,91 @@ import { formatCurrency } from "@/utils/helpers/formatCurrency";
 import {
   Card,
   Skeleton,
-  SimpleGrid,
   VStack,
   HStack,
   Box,
-  Progress,
   Text,
-  Circle,
   Badge,
-  Float,
+  Separator,
+  Stack,
+  Heading,
 } from "@chakra-ui/react";
-import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import {
-  LuChartPie,
   LuWallet,
   LuArrowUpRight,
   LuArrowDownRight,
   LuActivity,
-  LuChartBar,
 } from "react-icons/lu";
 import { MemberTransactionTimeline } from "../MemberTransactionTimeline";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
+
+// Stat Card Component for cleaner code
+interface StatCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactElement;
+  colorScheme: "green" | "red" | "blue";
+  subtitle?: string;
+}
+
+const StatCard = ({
+  label,
+  value,
+  icon,
+  colorScheme,
+  subtitle,
+}: StatCardProps) => (
+  <VStack
+    gap={3}
+    p={6}
+    bg="bg.panel"
+    borderRadius="xl"
+    border="1px solid"
+    borderColor="border.subtle"
+    align="start"
+    flex="1"
+    minW="0"
+    transition="all 0.2s"
+    _hover={{
+      borderColor: `${colorScheme}.emphasized`,
+      shadow: "sm",
+    }}
+  >
+    <HStack justify="space-between" w="full">
+      <Box
+        p={2}
+        borderRadius="lg"
+        bg={`${colorScheme}.muted`}
+        color={`${colorScheme}.fg`}
+      >
+        {icon}
+      </Box>
+      {subtitle && (
+        <Badge
+          colorPalette={colorScheme}
+          variant="subtle"
+          size="sm"
+          borderRadius="full"
+        >
+          {subtitle}
+        </Badge>
+      )}
+    </HStack>
+
+    <VStack gap={1} align="start" w="full">
+      <Text fontSize="sm" color="fg.muted" fontWeight="medium">
+        {label}
+      </Text>
+      <Text fontSize="2xl" fontWeight="bold" color={`${colorScheme}.fg`}>
+        {value}
+      </Text>
+    </VStack>
+  </VStack>
+);
 
 export const TransactionOverview = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId } = useGetIdsFromParam();
   const { data, isLoading } = useGetProfileById(userId);
 
   const stats = useMemo(() => {
@@ -66,406 +127,143 @@ export const TransactionOverview = () => {
 
   if (isLoading) {
     return (
-      <Card.Root
-        variant="subtle"
-        layerStyle="fill.surface"
-        borderRadius="2xl"
-        overflow="hidden"
-        bg="bg.panel"
-        boxShadow="lg"
-        border="1px solid"
-        borderColor="border.muted"
-      >
-        <Card.Body p={0}>
-          {/* Header Skeleton */}
-          <Box
-            bgGradient="to-r"
-            gradientFrom="blue.500/10"
-            gradientVia="green.500/10"
-            gradientTo="purple.500/10"
-            p={6}
-            position="relative"
-          >
-            <HStack justify="space-between" align="start">
-              <VStack align="start" gap={2}>
-                <Skeleton height="8" width="180px" borderRadius="lg" />
-                <Skeleton height="4" width="120px" borderRadius="md" />
-              </VStack>
-              <Skeleton boxSize="12" borderRadius="2xl" />
-            </HStack>
-          </Box>
+      <VStack gap={6} align="stretch">
+        {/* Header Skeleton */}
+        <VStack gap={2} align="start">
+          <Skeleton height="8" width="160px" borderRadius="lg" />
+          <Skeleton height="4" width="240px" borderRadius="md" />
+        </VStack>
 
-          {/* Stats Skeleton */}
-          <Box p={6}>
-            <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
-              {Array.from({ length: 3 }).map((_, i) => (
-                <VStack
-                  key={i}
-                  gap={3}
-                  p={5}
-                  bg="bg.subtle"
-                  borderRadius="xl"
-                  align="center"
-                  minH="24"
-                >
-                  <Skeleton boxSize="12" borderRadius="full" />
-                  <Skeleton height="4" width="80px" borderRadius="md" />
-                  <Skeleton height="6" width="100px" borderRadius="md" />
-                </VStack>
-              ))}
-            </SimpleGrid>
-          </Box>
-        </Card.Body>
-      </Card.Root>
+        {/* Stats Skeleton */}
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          gap={4}
+          align="stretch"
+        >
+          {Array.from({ length: 3 }).map((_, i) => (
+            <VStack
+              key={i}
+              gap={3}
+              p={6}
+              bg="bg.panel"
+              borderRadius="xl"
+              border="1px solid"
+              borderColor="border.subtle"
+              align="start"
+              flex="1"
+            >
+              <Skeleton boxSize="8" borderRadius="lg" />
+              <Skeleton height="4" width="80px" borderRadius="md" />
+              <Skeleton height="8" width="120px" borderRadius="md" />
+            </VStack>
+          ))}
+        </Stack>
+
+        {/* Timeline Skeleton */}
+        <Card.Root
+          bg="bg.panel"
+          borderRadius="xl"
+          border="1px solid"
+          borderColor="border.subtle"
+        >
+          <Card.Body p={6}>
+            <VStack gap={4} align="stretch">
+              <Skeleton height="6" width="180px" borderRadius="md" />
+              <Skeleton height="32" borderRadius="lg" />
+            </VStack>
+          </Card.Body>
+        </Card.Root>
+      </VStack>
     );
   }
 
-  const balancePercentage =
-    stats.totalDeposits > 0 ? (stats.balance / stats.totalDeposits) * 100 : 0;
-
   return (
-    <Card.Root
-      variant="subtle"
-      layerStyle="fill.surface"
-      borderRadius="2xl"
-      overflow="hidden"
-      bg="bg.panel"
-      boxShadow="lg"
-      border="1px solid"
-      borderColor="border.muted"
-      _hover={{
-        boxShadow: "xl",
-      }}
-      transition="all 0.2s ease-in-out"
-    >
-      <Card.Body p={0}>
-        {/* Header with gradient background */}
-        <Box
-          bgGradient="to-r"
-          gradientFrom="blue.500/10"
-          gradientVia="green.500/10"
-          gradientTo="purple.500/10"
-          p={6}
-          position="relative"
-          _dark={{
-            gradientFrom: "blue.400/20",
-            gradientVia: "green.400/20",
-            gradientTo: "purple.400/20",
-          }}
-        >
-          {/* Decorative elements */}
-          <Box
-            position="absolute"
-            top={0}
-            right={0}
-            w="24"
-            h="24"
-            bg="green.500/5"
+    <VStack gap={6} align="stretch">
+      {/* Header */}
+      <VStack gap={2} align="start">
+        <Heading size="xl" fontWeight="bold" color="fg.default">
+          Uang Kas
+        </Heading>
+        <HStack gap={3} align="center">
+          <Text color="fg.muted" fontSize="md">
+            Total {stats.transactionCount} transaksi
+          </Text>
+          <Badge
+            colorPalette="brand"
+            variant="subtle"
+            size="sm"
             borderRadius="full"
-            transform="translate(12px, -12px)"
-          />
-          <Box
-            position="absolute"
-            bottom={0}
-            left={0}
-            w="20"
-            h="20"
-            bg="blue.500/5"
-            borderRadius="full"
-            transform="translate(-10px, 10px)"
-          />
+          >
+            <HStack gap={1}>
+              <LuActivity size={14} />
+              <Text>Aktif</Text>
+            </HStack>
+          </Badge>
+        </HStack>
+      </VStack>
 
-          <HStack justify="space-between" align="start" position="relative">
-            <VStack align="start" gap={1}>
-              <HStack gap={3} align="center">
-                <Text
-                  textStyle="2xl"
-                  fontWeight="bold"
-                  color="fg"
-                  letterSpacing="tight"
-                >
-                  Uang Kas
-                </Text>
-                <Badge
-                  colorPalette="blue"
-                  variant="surface"
-                  size="sm"
-                  borderRadius="full"
-                  px={3}
-                  fontWeight="medium"
-                  display="flex"
-                  alignItems="center"
-                  gap={1}
-                >
-                  <LuActivity size={12} />
-                  Aktif
-                </Badge>
-              </HStack>
-              <Text color="fg.muted" fontSize="md" opacity={0.8}>
-                Total {stats.transactionCount} transaksi tercatat
+      {/* Stats Grid */}
+      <Stack direction={{ base: "column", md: "row" }} gap={4} align="stretch">
+        <StatCard
+          label="Total Setoran"
+          value={formatCurrency(stats.totalDeposits)}
+          icon={<LuArrowUpRight size={20} />}
+          colorScheme="green"
+          subtitle={
+            stats.totalDeposits + stats.totalWithdrawals > 0
+              ? `${(
+                  (stats.totalDeposits /
+                    (stats.totalDeposits + stats.totalWithdrawals)) *
+                  100
+                ).toFixed(0)}%`
+              : undefined
+          }
+        />
+
+        <StatCard
+          label="Total Penarikan"
+          value={formatCurrency(stats.totalWithdrawals)}
+          icon={<LuArrowDownRight size={20} />}
+          colorScheme="red"
+          subtitle={
+            stats.totalDeposits + stats.totalWithdrawals > 0
+              ? `${(
+                  (stats.totalWithdrawals /
+                    (stats.totalDeposits + stats.totalWithdrawals)) *
+                  100
+                ).toFixed(0)}%`
+              : undefined
+          }
+        />
+
+        <StatCard
+          label="Saldo Kas"
+          value={formatCurrency(stats.balance)}
+          icon={<LuWallet size={20} />}
+          colorScheme={stats.balance >= 0 ? "blue" : "red"}
+          subtitle={stats.balance >= 0 ? "Surplus" : "Defisit"}
+        />
+      </Stack>
+
+      <Separator />
+
+      {/* Transaction Timeline */}
+      <Card.Root
+        bg="bg.panel"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="border.subtle"
+      >
+        <Card.Body p={6}>
+          <VStack gap={6} align="stretch">
+            <VStack gap={1} align="start">
+              <Heading size="md" fontWeight="semibold" color="fg.default">
+                Riwayat Transaksi
+              </Heading>
+              <Text fontSize="sm" color="fg.muted">
+                Aktivitas terbaru dalam kas
               </Text>
             </VStack>
-
-            <Circle
-              bg="blue.100"
-              size="16"
-              color="blue.600"
-              boxShadow="lg"
-              _dark={{
-                bg: "blue.900/30",
-                color: "blue.300",
-              }}
-            >
-              <LuChartBar size={28} />
-            </Circle>
-          </HStack>
-        </Box>
-
-        {/* Stats Grid */}
-        <Box p={6}>
-          <SimpleGrid columns={{ base: 1, md: 3 }} gap={6} mb={8}>
-            {/* Deposits Card */}
-            <Box
-              bg="bg.subtle"
-              borderRadius="xl"
-              p={6}
-              border="1px solid"
-              borderColor="border.muted"
-              position="relative"
-              overflow="hidden"
-              _hover={{
-                boxShadow: "md",
-              }}
-              transition="all 0.2s"
-            >
-              <Box
-                position="absolute"
-                top={0}
-                right={0}
-                w="20"
-                h="20"
-                bg="green.500/5"
-                borderRadius="full"
-                transform="translate(10px, -10px)"
-              />
-              <VStack gap={4} align="start" position="relative">
-                <HStack gap={3} align="center" w="full">
-                  <Circle bg="green.100" size="12" color="green.600">
-                    <LuArrowUpRight size={20} />
-                  </Circle>
-                  <VStack gap={0} align="start" flex="1">
-                    <Text fontSize="sm" color="fg.muted" fontWeight="medium">
-                      Setoran
-                    </Text>
-                    <Text textStyle="xl" fontWeight="bold" color="green.500">
-                      {formatCurrency(stats.totalDeposits)}
-                    </Text>
-                  </VStack>
-                </HStack>
-                <Float placement="top-end">
-                  <Badge
-                    colorPalette="green"
-                    variant="surface"
-                    size="xs"
-                    borderRadius="full"
-                  >
-                    +
-                    {(
-                      (stats.totalDeposits /
-                        (stats.totalDeposits + stats.totalWithdrawals)) *
-                        100 || 0
-                    ).toFixed(0)}
-                    %
-                  </Badge>
-                </Float>
-              </VStack>
-            </Box>
-
-            {/* Withdrawals Card */}
-            <Box
-              bg="bg.subtle"
-              borderRadius="xl"
-              p={6}
-              border="1px solid"
-              borderColor="border.muted"
-              position="relative"
-              overflow="hidden"
-              _hover={{
-                boxShadow: "md",
-              }}
-              transition="all 0.2s"
-            >
-              <Box
-                position="absolute"
-                top={0}
-                right={0}
-                w="20"
-                h="20"
-                bg="red.500/5"
-                borderRadius="full"
-                transform="translate(10px, -10px)"
-              />
-              <VStack gap={4} align="start" position="relative">
-                <HStack gap={3} align="center" w="full">
-                  <Circle bg="red.100" size="12" color="red.600">
-                    <LuArrowDownRight size={20} />
-                  </Circle>
-                  <VStack gap={0} align="start" flex="1">
-                    <Text fontSize="sm" color="fg.muted" fontWeight="medium">
-                      Penarikan
-                    </Text>
-                    <Text textStyle="xl" fontWeight="bold" color="red.500">
-                      {formatCurrency(stats.totalWithdrawals)}
-                    </Text>
-                  </VStack>
-                </HStack>
-                <Float placement="top-end">
-                  <Badge
-                    colorPalette="red"
-                    variant="surface"
-                    size="xs"
-                    borderRadius="full"
-                  >
-                    -
-                    {(
-                      (stats.totalWithdrawals /
-                        (stats.totalDeposits + stats.totalWithdrawals)) *
-                        100 || 0
-                    ).toFixed(0)}
-                    %
-                  </Badge>
-                </Float>
-              </VStack>
-            </Box>
-
-            {/* Balance Card */}
-            <Box
-              bg="bg.subtle"
-              borderRadius="xl"
-              p={6}
-              border="1px solid"
-              borderColor="border.muted"
-              position="relative"
-              overflow="hidden"
-              transition="all 0.2s"
-            >
-              <Box
-                position="absolute"
-                top={0}
-                right={0}
-                w="20"
-                h="20"
-                bg={stats.balance >= 0 ? "blue.500/5" : "red.500/5"}
-                borderRadius="full"
-                transform="translate(10px, -10px)"
-              />
-              <VStack gap={4} align="start" position="relative">
-                <HStack gap={3} align="center" w="full">
-                  <Circle
-                    bg={stats.balance >= 0 ? "blue.100" : "red.100"}
-                    size="12"
-                    color={stats.balance >= 0 ? "blue.600" : "red.600"}
-                  >
-                    <LuWallet size={20} />
-                  </Circle>
-                  <VStack gap={0} align="start" flex="1">
-                    <Text fontSize="sm" color="fg.muted" fontWeight="medium">
-                      Saldo Kas
-                    </Text>
-                    <Text
-                      textStyle="xl"
-                      fontWeight="bold"
-                      color={stats.balance >= 0 ? "blue.500" : "red.500"}
-                    >
-                      {formatCurrency(stats.balance)}
-                    </Text>
-                  </VStack>
-                </HStack>
-                <Float placement="top-end">
-                  <Badge
-                    colorPalette={stats.balance >= 0 ? "blue" : "red"}
-                    variant="surface"
-                    size="xs"
-                    borderRadius="full"
-                  >
-                    {stats.balance >= 0 ? "Surplus" : "Defisit"}
-                  </Badge>
-                </Float>
-              </VStack>
-            </Box>
-          </SimpleGrid>
-
-          {/* Balance Ratio Progress */}
-          {stats.totalDeposits > 0 && (
-            <Box
-              bg="bg.subtle"
-              borderRadius="xl"
-              p={6}
-              border="1px solid"
-              borderColor="border.muted"
-              mb={8}
-            >
-              <VStack gap={4} align="stretch">
-                <HStack justify="space-between" align="center">
-                  <HStack gap={3}>
-                    <Circle bg="purple.100" size="8" color="purple.600">
-                      <LuChartPie size={16} />
-                    </Circle>
-                    <VStack gap={0} align="start">
-                      <Text fontSize="sm" fontWeight="medium" color="fg">
-                        Rasio Saldo
-                      </Text>
-                      <Text fontSize="xs" color="fg.muted">
-                        Persentase saldo dari total setoran
-                      </Text>
-                    </VStack>
-                  </HStack>
-                  <Badge
-                    colorPalette={stats.balance >= 0 ? "green" : "red"}
-                    variant="solid"
-                    size="sm"
-                    borderRadius="full"
-                    fontWeight="bold"
-                  >
-                    {balancePercentage.toFixed(1)}%
-                  </Badge>
-                </HStack>
-
-                <Progress.Root
-                  value={Math.abs(balancePercentage)}
-                  colorPalette={stats.balance >= 0 ? "green" : "red"}
-                  size="lg"
-                  borderRadius="full"
-                  bg="bg.emphasized"
-                >
-                  <Progress.Track>
-                    <Progress.Range />
-                  </Progress.Track>
-                </Progress.Root>
-              </VStack>
-            </Box>
-          )}
-
-          {/* Transaction Timeline Section */}
-          <Box
-            borderRadius="xl"
-            p={6}
-            border="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack gap={3} mb={6} align="center">
-              <Circle bg="gray.100" size="8" color="gray.600">
-                <LuActivity size={16} />
-              </Circle>
-              <VStack gap={0} align="start">
-                <Text textStyle="lg" fontWeight="bold" color="fg">
-                  Riwayat Transaksi
-                </Text>
-                <Text fontSize="sm" color="fg.muted">
-                  Aktivitas terbaru dalam kas
-                </Text>
-              </VStack>
-            </HStack>
 
             <MemberTransactionTimeline
               isLoading={isLoading}
@@ -478,49 +276,49 @@ export const TransactionOverview = () => {
                   walletName: d.wallet.name,
                   walletType: d.wallet.type,
                   title: (
-                    <HStack gap={3} align="center">
-                      <Circle
-                        bg={d.type === "deposit" ? "green.100" : "red.100"}
-                        size="6"
-                        color={d.type === "deposit" ? "green.600" : "red.600"}
-                      >
-                        {d.type === "deposit" ? (
-                          <LuArrowUpRight size={12} />
-                        ) : (
-                          <LuArrowDownRight size={12} />
-                        )}
-                      </Circle>
-                      <VStack gap={0} align="start" minW="0" flex="1">
-                        <HStack gap={2} align="center">
+                    <HStack gap={3} align="center" justify="space-between">
+                      <HStack gap={3} flex="1" minW="0">
+                        <Box
+                          p={2}
+                          borderRadius="lg"
+                          bg={
+                            d.type === "deposit" ? "green.muted" : "red.muted"
+                          }
+                          color={d.type === "deposit" ? "green.fg" : "red.fg"}
+                        >
+                          {d.type === "deposit" ? (
+                            <LuArrowUpRight size={16} />
+                          ) : (
+                            <LuArrowDownRight size={16} />
+                          )}
+                        </Box>
+                        <VStack gap={0.5} align="start" flex="1" minW="0">
                           <Text
                             fontWeight="medium"
-                            color={
-                              d.type === "deposit" ? "green.500" : "red.500"
-                            }
+                            color="fg.default"
                             fontSize="sm"
                           >
                             {d.type === "deposit" ? "Setoran" : "Penarikan"}
                           </Text>
-                          <Badge
-                            colorPalette={
-                              d.type === "deposit" ? "green" : "red"
-                            }
-                            variant="surface"
-                            size="xs"
-                            borderRadius="full"
+                          <Text
+                            color="fg.muted"
+                            fontSize="xs"
+                            lineClamp={1}
+                            maxW="full"
                           >
-                            {formatCurrency(d.amount)}
-                          </Badge>
-                        </HStack>
-                        <Text
-                          color="fg.muted"
-                          fontSize="xs"
-                          truncate
-                          maxW="300px"
-                        >
-                          {d.description}
-                        </Text>
-                      </VStack>
+                            {d.description}
+                          </Text>
+                        </VStack>
+                      </HStack>
+                      <Badge
+                        colorPalette={d.type === "deposit" ? "green" : "red"}
+                        variant="subtle"
+                        size="sm"
+                        borderRadius="full"
+                        flexShrink={0}
+                      >
+                        {formatCurrency(d.amount)}
+                      </Badge>
                     </HStack>
                   ),
                   id: d.id,
@@ -528,9 +326,9 @@ export const TransactionOverview = () => {
                 })) || []
               }
             />
-          </Box>
-        </Box>
-      </Card.Body>
-    </Card.Root>
+          </VStack>
+        </Card.Body>
+      </Card.Root>
+    </VStack>
   );
 };

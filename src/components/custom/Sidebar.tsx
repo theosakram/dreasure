@@ -4,8 +4,6 @@ import {
   Heading,
   Stack,
   IconButton,
-  Tooltip,
-  Portal,
   Flex,
   Spacer,
   Button,
@@ -16,10 +14,11 @@ import { FaWallet, FaSyncAlt, FaAngleLeft } from "react-icons/fa";
 import { RiUserLine } from "react-icons/ri";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useMemo, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { isNavItemActive } from "@/utils/helpers/navigation";
 import { LuArrowLeft } from "react-icons/lu";
 import { CustomLink } from "./CustomLink";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 
 type SidebarProps = {
   appName?: string;
@@ -35,7 +34,7 @@ type NavigationItem = {
 export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const pathname = usePathname();
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -70,55 +69,46 @@ export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
       h="100vh"
       bg="bg.panel"
       borderRightWidth="1px"
-      borderColor="border.muted"
-      p={4}
-      transition="width 0.3s ease"
+      borderColor="border.subtle"
+      p={3}
+      transition="width 0.2s ease"
       position="relative"
       direction="column"
     >
-      <Stack gap={6} h="full">
+      <Stack gap={4} h="full">
         {/* Header with toggle button */}
-        <Stack direction="row" justify="space-between" align="center">
+        <Stack direction="row" justify="space-between" align="center" h="12">
           {isExpanded && (
             <Heading
               size="md"
               color="fg.default"
+              fontWeight="bold"
               opacity={isExpanded ? 1 : 0}
-              transition="opacity 0.2s ease"
+              transition="opacity 0.15s ease"
             >
               {appName}
             </Heading>
           )}
 
-          <Tooltip.Root>
-            <Tooltip.Trigger asChild>
-              <IconButton
-                variant="ghost"
-                size="sm"
-                onClick={toggleSidebar}
-                aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
-                color="fg.muted"
-                _hover={{
-                  bg: "bg.muted",
-                  color: "fg.default",
-                }}
-                ml={!isExpanded ? -1 : 0}
-              >
-                {isExpanded ? <FaAngleLeft /> : <HiMenuAlt2 />}
-              </IconButton>
-            </Tooltip.Trigger>
-            <Portal>
-              <Tooltip.Positioner>
-                <Tooltip.Content>
-                  {isExpanded ? "Collapse sidebar" : "Expand sidebar"}
-                </Tooltip.Content>
-              </Tooltip.Positioner>
-            </Portal>
-          </Tooltip.Root>
+          <IconButton
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            color="fg.muted"
+            borderRadius="lg"
+            _hover={{
+              bg: "bg.subtle",
+              color: "fg.default",
+            }}
+            ml={!isExpanded ? -1 : 0}
+          >
+            {isExpanded ? <FaAngleLeft /> : <HiMenuAlt2 />}
+          </IconButton>
         </Stack>
 
         {/* Navigation items */}
-        <Stack gap={2} flex={1}>
+        <Stack gap={1} flex={1}>
           {navigationItems.map((item) => (
             <NavItem
               key={item.href}
@@ -132,9 +122,16 @@ export const Sidebar = ({ appName = "Dreasury" }: SidebarProps) => {
 
       <Spacer />
       <CustomLink href="/orgs">
-        <Button w="100%" colorPalette="brand" variant="solid" size="sm">
+        <Button
+          w="100%"
+          colorPalette="brand"
+          variant="outline"
+          size="sm"
+          borderRadius="lg"
+          justifyContent={isExpanded ? "flex-start" : "center"}
+        >
           <LuArrowLeft />
-          Organisasi
+          {isExpanded && "Organisasi"}
         </Button>
       </CustomLink>
     </Flex>

@@ -3,7 +3,6 @@ import {
   HStack,
   Text,
   Button,
-  Separator,
   ScrollArea,
   IconButton,
   Pagination,
@@ -110,7 +109,6 @@ export const TableContainer = <T extends Record<string, unknown>>({
         return {
           bg: "bg.panel",
           borderRadius: "xl",
-          boxShadow: "lg",
           border: "1px solid",
           borderColor: "border.subtle",
           p: 0,
@@ -120,9 +118,8 @@ export const TableContainer = <T extends Record<string, unknown>>({
         return {
           bg: "bg.panel",
           borderRadius: "xl",
-          boxShadow: "sm",
           border: "1px solid",
-          borderColor: "border.muted",
+          borderColor: "border.subtle",
           p: 0,
           overflow: "hidden",
         };
@@ -137,7 +134,6 @@ export const TableContainer = <T extends Record<string, unknown>>({
         return {
           bg: "bg.panel",
           borderRadius: "xl",
-          boxShadow: "lg",
           border: "1px solid",
           borderColor: "border.subtle",
           p: 0,
@@ -205,65 +201,50 @@ export const TableContainer = <T extends Record<string, unknown>>({
   };
 
   return (
-    <VStack gap={6} align="stretch">
+    <VStack gap={5} align="stretch">
       {/* Header Section */}
       {(title || subtitle || description || showAddButton) && (
-        <VStack gap={4} align="stretch">
-          <HStack justify="space-between" align="start">
-            <VStack gap={2} align="start" flex={1}>
-              {title && (
-                <Heading textStyle="headline" color="fg.default">
-                  {title}
-                </Heading>
-              )}
-              {subtitle && (
-                <Text textStyle="body" color="fg.muted" fontWeight="medium">
-                  {subtitle}
-                </Text>
-              )}
-              {description && (
-                <Text
-                  textStyle="caption"
-                  color="fg.subtle"
-                  lineHeight="relaxed"
-                >
-                  {description}
-                </Text>
-              )}
-            </VStack>
-
-            {customAddButton}
-
-            {showAddButton && onAddClick && !customAddButton && (
-              <Button
-                size="sm"
-                colorPalette="brand"
-                variant="solid"
-                onClick={onAddClick}
-                fontWeight="medium"
-                gap={2}
-                px={4}
-                borderRadius="lg"
-                boxShadow="xs"
-                transition="all 0.2s"
-              >
-                <LuPlus size={16} />
-                {addButtonLabel}
-              </Button>
+        <HStack justify="space-between" align="start">
+          <VStack gap={1} align="start" flex={1}>
+            {title && (
+              <Heading size="lg" fontWeight="semibold" color="fg.default">
+                {title}
+              </Heading>
             )}
-          </HStack>
+            {subtitle && (
+              <Text fontSize="sm" color="fg.muted">
+                {subtitle}
+              </Text>
+            )}
+            {description && (
+              <Text fontSize="sm" color="fg.muted">
+                {description}
+              </Text>
+            )}
+          </VStack>
 
-          {(title || subtitle || description) && (
-            <Separator borderColor="border.muted" opacity={0.8} />
+          {customAddButton}
+
+          {showAddButton && onAddClick && !customAddButton && (
+            <Button
+              size="sm"
+              colorPalette="brand"
+              variant="solid"
+              onClick={onAddClick}
+              borderRadius="lg"
+            >
+              <LuPlus size={16} />
+              {addButtonLabel}
+            </Button>
           )}
-        </VStack>
+        </HStack>
       )}
 
       <Box {...containerStyles}>{renderContent()}</Box>
 
       {pagination && (
         <Flex justify="space-between" align="center" pt={2}>
-          <Text textStyle="caption" color="fg.muted">
+          <Text fontSize="xs" color="fg.muted">
             Menampilkan {data.length} dari {pagination.total} data
           </Text>
 

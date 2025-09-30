@@ -73,6 +73,7 @@ export const InstallmentTable = () => {
           <Menu.Root>
             <Menu.Trigger asChild>
               <Button
+                size="sm"
                 variant="solid"
                 colorPalette="brand"
                 fontWeight="semibold"

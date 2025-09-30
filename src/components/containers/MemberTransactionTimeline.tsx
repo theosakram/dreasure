@@ -7,11 +7,11 @@ import {
   HStack,
   Badge,
   Skeleton,
-  Circle,
   Separator,
   Button,
   Group,
   Input,
+  Stack,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { ReactNode, useState, useMemo } from "react";
@@ -21,8 +21,7 @@ import {
   LuReceipt,
   LuChevronDown,
   LuSearch,
-  LuFilter,
-  LuCalendar,
+  LuX,
 } from "react-icons/lu";
 
 type TransactionEvent = {
@@ -61,16 +60,21 @@ const formatCurrency = (amount: number) => {
 const TransactionSkeleton = () => (
   <VStack align="stretch" gap={3}>
     {Array.from({ length: 5 }).map((_, i) => (
-      <HStack key={i} gap={4} p={4} bg="bg.subtle" borderRadius="lg">
-        <Skeleton boxSize="12" borderRadius="full" />
-        <VStack align="start" gap={2} flex="1">
-          <Skeleton height="4" width="70%" borderRadius="md" />
-          <Skeleton height="3" width="50%" borderRadius="md" />
+      <HStack
+        key={i}
+        gap={3}
+        p={4}
+        bg="bg.panel"
+        borderRadius="lg"
+        border="1px solid"
+        borderColor="border.subtle"
+      >
+        <Skeleton boxSize="10" borderRadius="lg" />
+        <VStack align="start" gap={1.5} flex="1">
+          <Skeleton height="4" width="60%" borderRadius="md" />
+          <Skeleton height="3" width="40%" borderRadius="md" />
         </VStack>
-        <VStack align="end" gap={1}>
-          <Skeleton height="5" width="80px" borderRadius="md" />
-          <Skeleton height="3" width="50px" borderRadius="md" />
-        </VStack>
+        <Skeleton height="5" width="80px" borderRadius="full" />
       </HStack>
     ))}
   </VStack>
@@ -160,12 +164,22 @@ export const MemberTransactionTimeline = ({
 
   if (!timelines.length) {
     return (
-      <VStack gap={8} py={12} align="center">
-        <Circle bg="gray.100" size="20" color="gray.400">
-          <LuReceipt size={32} />
-        </Circle>
-        <VStack gap={2} textAlign="center">
-          <Text fontSize="lg" fontWeight="bold" color="fg">
+      <VStack gap={6} py={12} align="center">
+        <Box
+          p={4}
+          borderRadius="xl"
+          bg="bg.subtle"
+          border="1px solid"
+          borderColor="border.subtle"
+        >
+          <LuReceipt
+            size={32}
+            strokeWidth={1.5}
+            color="var(--chakra-colors-fg-muted)"
+          />
+        </Box>
+        <VStack gap={1} textAlign="center">
+          <Text fontSize="md" fontWeight="semibold" color="fg.default">
             Belum ada transaksi
           </Text>
           <Text fontSize="sm" color="fg.muted" maxW="300px">
@@ -177,138 +191,145 @@ export const MemberTransactionTimeline = ({
   }
 
   return (
-    <VStack align="stretch" gap={6} w="full" maxW={maxWidth}>
+    <VStack align="stretch" gap={5} w="full" maxW={maxWidth}>
       {/* Search and Filter Controls */}
       {(enableSearch || enableFiltering) && timelines.length > 5 && (
-        <VStack gap={4} align="stretch">
+        <VStack gap={3} align="stretch">
           {/* Search */}
           {enableSearch && (
             <Box position="relative">
               <Input
-                placeholder="Cari transaksi atau nominal..."
+                placeholder="Cari transaksi..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 pl={10}
+                size="md"
                 bg="bg.subtle"
-                borderColor="border.muted"
+                border="1px solid"
+                borderColor="border.subtle"
+                borderRadius="lg"
+                _hover={{
+                  borderColor: "border.emphasized",
+                }}
                 _focus={{
-                  borderColor: "blue.500",
-                  boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)",
+                  borderColor: "brand.emphasized",
+                  bg: "bg.panel",
                 }}
               />
-              <Circle
+              <Box
                 position="absolute"
                 left="3"
                 top="50%"
                 transform="translateY(-50%)"
-                size="4"
                 color="fg.muted"
               >
-                <LuSearch size={14} />
-              </Circle>
+                <LuSearch size={16} />
+              </Box>
+              {searchTerm && (
+                <Button
+                  position="absolute"
+                  right="2"
+                  top="50%"
+                  transform="translateY(-50%)"
+                  size="xs"
+                  variant="ghost"
+                  onClick={() => setSearchTerm("")}
+                >
+                  <LuX size={14} />
+                </Button>
+              )}
             </Box>
           )}
 
           {/* Filters */}
           {enableFiltering && (
-            <HStack gap={3} wrap="wrap">
-              <Group gap={2}>
-                <Circle bg="blue.100" size="6" color="blue.600">
-                  <LuFilter size={12} />
-                </Circle>
-                <Text fontSize="sm" fontWeight="medium" color="fg">
-                  Filter:
-                </Text>
-              </Group>
-
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              gap={3}
+              align={{ base: "stretch", md: "center" }}
+            >
               {/* Type Filter */}
-              <Group attached>
+              <Group attached flex={{ base: "1", md: "0" }}>
                 <Button
-                  size="sm"
-                  variant={filterType === "all" ? "solid" : "surface"}
-                  colorPalette="gray"
+                  variant={filterType === "all" ? "solid" : "outline"}
+                  colorPalette={filterType === "all" ? "gray" : "gray"}
                   onClick={() => setFilterType("all")}
+                  flex="1"
                 >
                   Semua
                 </Button>
                 <Button
-                  size="sm"
-                  variant={filterType === "deposit" ? "solid" : "surface"}
+                  variant={filterType === "deposit" ? "solid" : "outline"}
                   colorPalette="green"
                   onClick={() => setFilterType("deposit")}
+                  flex="1"
                 >
                   Setoran
                 </Button>
                 <Button
-                  size="sm"
-                  variant={filterType === "withdraw" ? "solid" : "surface"}
+                  variant={filterType === "withdraw" ? "solid" : "outline"}
                   colorPalette="red"
                   onClick={() => setFilterType("withdraw")}
+                  flex="1"
                 >
                   Penarikan
                 </Button>
               </Group>
 
               {/* Date Range Filter */}
-              <Group attached>
+              <Group attached flex={{ base: "1", md: "0" }}>
                 <Button
-                  size="sm"
-                  variant={dateRange === "all" ? "solid" : "surface"}
-                  colorPalette="gray"
+                  variant={dateRange === "all" ? "solid" : "outline"}
+                  colorPalette={dateRange === "all" ? "gray" : "gray"}
                   onClick={() => setDateRange("all")}
+                  flex="1"
                 >
                   Semua
                 </Button>
                 <Button
-                  size="sm"
-                  variant={dateRange === "week" ? "solid" : "surface"}
+                  variant={dateRange === "week" ? "solid" : "outline"}
                   colorPalette="blue"
                   onClick={() => setDateRange("week")}
+                  flex="1"
                 >
                   7 Hari
                 </Button>
                 <Button
-                  size="sm"
-                  variant={dateRange === "month" ? "solid" : "surface"}
+                  variant={dateRange === "month" ? "solid" : "outline"}
                   colorPalette="blue"
                   onClick={() => setDateRange("month")}
+                  flex="1"
                 >
                   1 Bulan
                 </Button>
+              </Group>
+
+              {(searchTerm || filterType !== "all" || dateRange !== "all") && (
                 <Button
                   size="sm"
-                  variant={dateRange === "year" ? "solid" : "surface"}
-                  colorPalette="blue"
-                  onClick={() => setDateRange("year")}
+                  variant="ghost"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setFilterType("all");
+                    setDateRange("all");
+                    setDisplayCount(initialDisplayCount);
+                  }}
+                  flexShrink={0}
                 >
-                  1 Tahun
+                  Reset
                 </Button>
-              </Group>
-            </HStack>
+              )}
+            </Stack>
           )}
 
           {/* Results Summary */}
-          <HStack justify="space-between" align="center" py={2}>
-            <Text fontSize="sm" color="fg.muted">
+          {filteredTransactions.length > 0 && (
+            <Text fontSize="xs" color="fg.muted">
               {totalCount === timelines.length
-                ? `Menampilkan ${showingCount} dari ${totalCount} transaksi`
-                : `Ditemukan ${totalCount} transaksi • Menampilkan ${showingCount}`}
+                ? `${showingCount} transaksi`
+                : `${totalCount} hasil • menampilkan ${showingCount}`}
             </Text>
-            {(searchTerm || filterType !== "all" || dateRange !== "all") && (
-              <Button
-                size="xs"
-                variant="ghost"
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilterType("all");
-                  setDateRange("all");
-                  setDisplayCount(initialDisplayCount);
-                }}
-              >
-                Reset Filter
-              </Button>
-            )}
-          </HStack>
+          )}
         </VStack>
       )}
 
@@ -316,14 +337,24 @@ export const MemberTransactionTimeline = ({
       {filteredTransactions.length === 0 &&
         (searchTerm || filterType !== "all" || dateRange !== "all") && (
           <VStack gap={6} py={12} align="center">
-            <Circle bg="gray.100" size="16" color="gray.400">
-              <LuSearch size={24} />
-            </Circle>
-            <VStack gap={2} textAlign="center">
-              <Text fontSize="md" fontWeight="semibold" color="fg">
+            <Box
+              p={4}
+              borderRadius="xl"
+              bg="bg.subtle"
+              border="1px solid"
+              borderColor="border.subtle"
+            >
+              <LuSearch
+                size={28}
+                strokeWidth={1.5}
+                color="var(--chakra-colors-fg-muted)"
+              />
+            </Box>
+            <VStack gap={1} textAlign="center">
+              <Text fontSize="md" fontWeight="semibold" color="fg.default">
                 Tidak ada transaksi ditemukan
               </Text>
-              <Text fontSize="sm" color="fg.muted" maxW="300px">
+              <Text fontSize="sm" color="fg.muted" maxW="280px">
                 Coba ubah kriteria pencarian atau filter
               </Text>
             </VStack>
@@ -331,7 +362,7 @@ export const MemberTransactionTimeline = ({
         )}
 
       {/* Transaction List */}
-      {sortedDates.map((date) => {
+      {sortedDates.map((date, dateIndex) => {
         const transactions = groupedTransactions[date];
         const isToday = dayjs().isSame(dayjs(date), "day");
         const isYesterday = dayjs()
@@ -345,119 +376,105 @@ export const MemberTransactionTimeline = ({
         return (
           <VStack key={date} align="stretch" gap={3}>
             {/* Date Header */}
-            <HStack gap={3} align="center" py={2}>
-              <HStack gap={2}>
-                <Circle bg="blue.100" size="6" color="blue.600">
-                  <LuCalendar size={12} />
-                </Circle>
-                <Text fontSize="sm" fontWeight="bold" color="fg">
-                  {dateLabel}
-                </Text>
-              </HStack>
-              <Separator flex="1" />
-              <Badge variant="surface" size="xs" borderRadius="full">
-                {transactions.length} transaksi
-              </Badge>
+            {dateIndex > 0 && <Separator />}
+            <HStack gap={2} align="center">
+              <Text
+                fontSize="xs"
+                fontWeight="semibold"
+                color="fg.muted"
+                textTransform="uppercase"
+                letterSpacing="wide"
+              >
+                {dateLabel}
+              </Text>
+              <Box h="1px" flex="1" bg="border.subtle" />
+              <Text fontSize="xs" color="fg.muted">
+                {transactions.length}
+              </Text>
             </HStack>
 
             {/* Transaction Cards */}
             <VStack gap={2} align="stretch">
               {transactions.map((transaction) => (
-                <Box
+                <HStack
                   key={transaction.id}
-                  p={4}
-                  bg="bg.subtle"
-                  borderRadius="xl"
+                  gap={3}
+                  p={3}
+                  bg="bg.panel"
+                  borderRadius="lg"
                   border="1px solid"
-                  borderColor="border.muted"
-                  transition="all 0.2s"
+                  borderColor="border.subtle"
+                  transition="all 0.15s"
+                  _hover={{
+                    borderColor: "border.emphasized",
+                    bg: "bg.subtle",
+                  }}
                   cursor="pointer"
                 >
-                  <HStack gap={4} align="center">
-                    <Circle
-                      bg={
-                        transaction.type === "deposit" ? "green.100" : "red.100"
-                      }
-                      size="12"
+                  <Box
+                    p={2}
+                    borderRadius="lg"
+                    bg={
+                      transaction.type === "deposit"
+                        ? "green.muted"
+                        : "red.muted"
+                    }
+                    color={
+                      transaction.type === "deposit" ? "green.fg" : "red.fg"
+                    }
+                    flexShrink={0}
+                  >
+                    {transaction.type === "deposit" ? (
+                      <LuArrowUpRight size={16} />
+                    ) : (
+                      <LuArrowDownRight size={16} />
+                    )}
+                  </Box>
+
+                  <VStack gap={0.5} align="start" flex="1" minW="0">
+                    <HStack gap={2} align="center">
+                      <Text
+                        fontSize="sm"
+                        fontWeight="medium"
+                        color="fg.default"
+                      >
+                        {transaction.type === "deposit"
+                          ? "Setoran"
+                          : "Penarikan"}
+                      </Text>
+                      <Badge
+                        colorPalette={
+                          transaction.walletType === "transaction"
+                            ? "blue"
+                            : "orange"
+                        }
+                        variant="subtle"
+                        size="xs"
+                        borderRadius="full"
+                      >
+                        {transaction.walletName}
+                      </Badge>
+                    </HStack>
+                    <Text fontSize="xs" color="fg.muted" lineClamp={1}>
+                      {transaction.description || "Tanpa keterangan"} •{" "}
+                      {dayjs(transaction.date).format("HH:mm")}
+                    </Text>
+                  </VStack>
+
+                  {showAmount && (
+                    <Text
+                      fontSize="sm"
+                      fontWeight="semibold"
                       color={
-                        transaction.type === "deposit" ? "green.600" : "red.600"
+                        transaction.type === "deposit" ? "green.fg" : "red.fg"
                       }
                       flexShrink={0}
                     >
-                      {transaction.type === "deposit" ? (
-                        <LuArrowUpRight size={20} />
-                      ) : (
-                        <LuArrowDownRight size={20} />
-                      )}
-                    </Circle>
-
-                    <VStack gap={1} align="start" flex="1" minW="0">
-                      <HStack gap={2} align="center" w="full">
-                        <Text
-                          fontSize="md"
-                          fontWeight="semibold"
-                          color="fg"
-                          truncate
-                        >
-                          {transaction.type === "deposit"
-                            ? "Setoran"
-                            : "Penarikan"}
-                        </Text>
-                        <Badge
-                          colorPalette={
-                            transaction.type === "deposit" ? "green" : "red"
-                          }
-                          variant="surface"
-                          size="sm"
-                          borderRadius="full"
-                        >
-                          {transaction.type === "deposit" ? "Masuk" : "Keluar"}
-                        </Badge>
-                        <Badge
-                          colorPalette={
-                            transaction.walletType === "transaction"
-                              ? "blue"
-                              : "orange"
-                          }
-                          variant="surface"
-                          size="sm"
-                          borderRadius="full"
-                          textTransform="capitalize"
-                        >
-                          {transaction.walletName}
-                        </Badge>
-                      </HStack>
-                      <Text
-                        fontSize="sm"
-                        color="fg.muted"
-                        truncate
-                        maxW="300px"
-                      >
-                        {transaction.description || "Tanpa keterangan"}
-                      </Text>
-                      <Text fontSize="xs" color="fg.muted" opacity={0.8}>
-                        {dayjs(transaction.date).format("HH:mm")}
-                      </Text>
-                    </VStack>
-
-                    {showAmount && (
-                      <VStack gap={1} align="end" flexShrink={0}>
-                        <Text
-                          fontSize="lg"
-                          fontWeight="bold"
-                          color={
-                            transaction.type === "deposit"
-                              ? "green.500"
-                              : "red.500"
-                          }
-                        >
-                          {transaction.type === "deposit" ? "+" : "-"}
-                          {formatCurrency(transaction.amount)}
-                        </Text>
-                      </VStack>
-                    )}
-                  </HStack>
-                </Box>
+                      {transaction.type === "deposit" ? "+" : "-"}
+                      {formatCurrency(transaction.amount)}
+                    </Text>
+                  )}
+                </HStack>
               ))}
             </VStack>
           </VStack>
@@ -466,31 +483,31 @@ export const MemberTransactionTimeline = ({
 
       {/* Load More / Pagination */}
       {hasMore && (
-        <VStack gap={4} py={6}>
+        <VStack gap={3} pt={4}>
           <Separator />
-          <VStack gap={3} align="center">
-            <Text fontSize="sm" color="fg.muted" textAlign="center">
-              Menampilkan {showingCount} dari {totalCount} transaksi
+          <VStack gap={2} align="center" w="full">
+            <Text fontSize="xs" color="fg.muted">
+              {showingCount} dari {totalCount} transaksi
             </Text>
-            <Group gap={2}>
-              <Button
-                variant="surface"
-                size="sm"
-                onClick={() => setDisplayCount((prev) => prev + 20)}
-                borderRadius="full"
-              >
-                <LuChevronDown />
-                Muat 20 Lagi
-              </Button>
+            <HStack gap={2} w="full" justify="center">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setDisplayCount(totalCount)}
-                borderRadius="full"
+                onClick={() => setDisplayCount((prev) => prev + 20)}
+                borderRadius="lg"
               >
-                Tampilkan Semua ({totalCount})
+                <LuChevronDown size={14} />
+                Muat 20 Lagi
               </Button>
-            </Group>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDisplayCount(totalCount)}
+                borderRadius="lg"
+              >
+                Semua
+              </Button>
+            </HStack>
           </VStack>
         </VStack>
       )}

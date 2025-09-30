@@ -61,14 +61,14 @@ export const Table = <T extends Record<string, unknown>>({
               {headerGroup.headers.map((header) => (
                 <ChakraTable.ColumnHeader
                   key={header.id}
-                  textStyle="caption"
-                  fontWeight="bold"
-                  color="fg.default"
+                  fontSize="xs"
+                  fontWeight="semibold"
+                  color="fg.muted"
                   letterSpacing="wide"
                   textTransform="uppercase"
-                  py={4}
-                  px={6}
-                  borderColor="border.muted"
+                  py={3}
+                  px={4}
+                  borderColor="border.subtle"
                   bg="bg.subtle"
                 >
                   {header.isPlaceholder
@@ -87,20 +87,20 @@ export const Table = <T extends Record<string, unknown>>({
           {table.getRowModel().rows.map((row) => (
             <ChakraTable.Row
               key={row.id}
-              transition="all 0.2s"
+              transition="all 0.15s"
               _odd={striped ? { bg: "bg.default" } : {}}
               _even={striped ? { bg: "bg.panel" } : { bg: "bg.panel" }}
               _hover={interactive ? { bg: "bg.subtle" } : {}}
-              borderColor="border.muted"
+              borderColor="border.subtle"
             >
               {row.getVisibleCells().map((cell) => (
                 <ChakraTable.Cell
                   key={cell.id}
-                  py={4}
-                  px={6}
-                  textStyle="body"
+                  py={3}
+                  px={4}
+                  fontSize="sm"
                   color="fg.default"
-                  borderColor="border.muted"
+                  borderColor="border.subtle"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </ChakraTable.Cell>
@@ -119,17 +119,17 @@ export const Table = <T extends Record<string, unknown>>({
               <ChakraTable.Row
                 key={footerGroup.id}
                 bg="bg.subtle"
-                borderTop="2px solid"
+                borderTop="1px solid"
                 borderColor="border.emphasized"
               >
                 {footerGroup.headers.map((header) => (
                   <ChakraTable.ColumnHeader
                     key={header.id}
-                    textStyle="body"
-                    fontWeight="bold"
+                    fontSize="sm"
+                    fontWeight="semibold"
                     color="fg.default"
-                    py={4}
-                    px={6}
+                    py={3}
+                    px={4}
                   >
                     {header.isPlaceholder
                       ? null

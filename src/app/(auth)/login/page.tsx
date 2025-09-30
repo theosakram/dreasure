@@ -55,7 +55,7 @@ interface InputFieldProps {
 const LoadingSpinner = ({ text }: LoadingSpinnerProps) => (
   <Box
     h="100vh"
-    bg="linear-gradient(135deg, brand.50 0%, brand.100 50%, sage.50 100%)"
+    bg="bg.canvas"
     display="flex"
     alignItems="center"
     justifyContent="center"
@@ -66,7 +66,7 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => (
           w={12}
           h={12}
           border="3px solid"
-          borderColor="brand.100"
+          borderColor="border.subtle"
           borderRadius="full"
         />
         <Box
@@ -81,7 +81,7 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => (
           animation="spin 1s linear infinite"
         />
       </Box>
-      <Text color="brand.700" fontSize="lg" fontWeight="medium">
+      <Text color="fg.muted" fontSize="md" fontWeight="medium">
         {text}
       </Text>
     </VStack>
@@ -89,38 +89,19 @@ const LoadingSpinner = ({ text }: LoadingSpinnerProps) => (
 );
 
 const FormHeader = ({ title, subtitle }: FormHeaderProps) => (
-  <VStack gap={3} textAlign="center">
+  <VStack gap={4} textAlign="center">
     {/* Brand Icon */}
-    <Box
-      p={3}
-      borderRadius="xl"
-      bg="linear-gradient(135deg, brand.400, brand.600)"
-      shadow="lg"
-      border="2px solid"
-      borderColor="brand.300"
-    >
-      <Icon size="xl" color="green">
+    <Box p={4} borderRadius="2xl" bg="brand.muted" color="brand.fg">
+      <Icon fontSize="4xl">
         <TbMoneybag />
       </Icon>
     </Box>
 
-    {/* Lock Icon */}
-    <Box
-      p={2}
-      borderRadius="lg"
-      bg="linear-gradient(135deg, brand.500, brand.600)"
-      shadow="md"
-    >
-      <Icon size="md" color="white">
-        <RiLockLine />
-      </Icon>
-    </Box>
-
-    <VStack gap={1}>
-      <Heading size="lg" color="fg.default" fontWeight="bold">
+    <VStack gap={2}>
+      <Heading size="3xl" color="fg.default" fontWeight="bold">
         {title}
       </Heading>
-      <Text color="fg.muted" fontSize="md" maxW="sm" lineHeight="1.4">
+      <Text color="fg.muted" fontSize="sm" maxW="md">
         {subtitle}
       </Text>
     </VStack>
@@ -139,7 +120,7 @@ const CustomInputField = ({
     {({ input }) => (
       <InputGroup
         startElement={
-          <Icon color="fg.subtle" size="lg">
+          <Icon color="fg.subtle" size="sm">
             {icon}
           </Icon>
         }
@@ -148,21 +129,18 @@ const CustomInputField = ({
           {...input}
           type={type}
           placeholder={placeholder}
-          size="xl"
-          bg="bg.subtle"
-          border="2px solid"
+          size="md"
+          bg="bg.canvas"
+          border="1px solid"
           borderColor="border.subtle"
           _hover={{
-            borderColor: "brand.300",
-            bg: "bg.canvas",
+            borderColor: "border.emphasized",
           }}
           _focus={{
-            borderColor: "brand.500",
-            shadow: "0 0 0 1px var(--chakra-colors-brand-500)",
-            bg: "bg.canvas",
+            borderColor: "brand.emphasized",
+            shadow: "0 0 0 1px var(--chakra-colors-brand-emphasized)",
           }}
           fontSize="md"
-          h="48px"
         />
       </InputGroup>
     )}
@@ -177,7 +155,7 @@ const PasswordInputField = () => {
       {({ input }) => (
         <InputGroup
           startElement={
-            <Icon color="fg.subtle" size="lg">
+            <Icon color="fg.subtle" size="sm">
               <RiLockLine />
             </Icon>
           }
@@ -189,7 +167,7 @@ const PasswordInputField = () => {
               color="fg.muted"
               _hover={{ color: "brand.500" }}
             >
-              <Icon size="lg">
+              <Icon size="sm">
                 {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
               </Icon>
             </Button>
@@ -199,21 +177,18 @@ const PasswordInputField = () => {
             {...input}
             type={showPassword ? "text" : "password"}
             placeholder="Masukkan kata sandi Anda"
-            size="xl"
-            bg="bg.subtle"
-            border="2px solid"
+            size="sm"
+            bg="bg.canvas"
+            border="1px solid"
             borderColor="border.subtle"
             _hover={{
-              borderColor: "brand.300",
-              bg: "bg.canvas",
+              borderColor: "border.emphasized",
             }}
             _focus={{
-              borderColor: "brand.500",
-              shadow: "0 0 0 1px var(--chakra-colors-brand-500)",
-              bg: "bg.canvas",
+              borderColor: "brand.emphasized",
+              shadow: "0 0 0 1px var(--chakra-colors-brand-emphasized)",
             }}
             fontSize="md"
-            h="48px"
           />
         </InputGroup>
       )}
@@ -277,26 +252,25 @@ function LoginContent() {
       w="100vw"
       maxH="100vh"
       h="100vh"
-      bg="linear-gradient(135deg, brand.50 0%, brand.100 50%, sage.50 100%)"
+      bg="bg.canvas"
       display="flex"
       alignItems="center"
       justifyContent="center"
     >
       <Card.Root
-        maxW="lg"
+        maxW="md"
         w="full"
         variant="elevated"
-        shadow="2xl"
-        rounded="3xl"
+        rounded="2xl"
         overflow="hidden"
         border="1px solid"
-        borderColor="border.subtle"
-        bg="bg.canvas"
+        borderColor="border.emphasized"
+        bg="bg.panel"
       >
-        <Card.Body p={8}>
-          <Stack gap={6}>
+        <Card.Body p={10}>
+          <Stack gap={8}>
             <FormHeader
-              title="Selamat Datang Kembali"
+              title="Selamat Datang"
               subtitle="Masuk ke akun Dreasury Anda untuk melanjutkan mengelola keuangan"
             />
 
@@ -314,40 +288,32 @@ function LoginContent() {
 
                     <PasswordInputField />
 
-                    <VStack gap={3} pt={1}>
-                      <Link
-                        alignSelf="flex-end"
-                        fontSize="sm"
-                        color="brand.600"
-                        fontWeight="medium"
-                        _hover={{
-                          color: "brand.700",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        Lupa kata sandi?
-                      </Link>
-
+                    <VStack gap={4} pt={2}>
                       <Button
-                        size="xl"
+                        size="lg"
                         colorPalette="brand"
                         onClick={handleSubmit}
                         loading={submitting}
                         loadingText="Sedang masuk..."
                         type="submit"
                         w="full"
-                        h="48px"
-                        fontSize="lg"
+                        fontSize="md"
                         fontWeight="semibold"
-                        shadow="lg"
-                        _hover={{
-                          transform: "translateY(-2px)",
-                          shadow: "xl",
-                        }}
-                        transition="all 0.2s"
+                        transition="all 0.15s"
                       >
                         Masuk
                       </Button>
+
+                      <Link
+                        fontSize="sm"
+                        color="brand.fg"
+                        fontWeight="medium"
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Lupa kata sandi?
+                      </Link>
                     </VStack>
                   </Stack>
                 </form>

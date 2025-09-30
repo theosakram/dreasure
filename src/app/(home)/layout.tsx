@@ -13,7 +13,7 @@ export default async function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Stack gap="1rem" maxH="100vh" minH="100vh" bg="bg.default">
+    <Stack gap={0} maxH="100vh" minH="100vh" bg="bg.default">
       <Header type="org" />
       {children}
     </Stack>

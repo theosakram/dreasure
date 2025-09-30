@@ -14,18 +14,16 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex minH="100vh" bg="bg.default">
+    <Flex minH="100vh" h="100vh" overflow="hidden" bg="bg.default">
       <Sidebar />
 
-      <Flex direction="column" w="100%">
+      <Flex direction="column" flex="1" w="0" minW="0">
         <Header />
 
-        <ScrollArea.Root h="calc(100vh - 5rem)">
+        <ScrollArea.Root flex="1">
           <ScrollArea.Viewport>
             <ScrollArea.Content>
-              <Box flex={1} p={6}>
-                {children}
-              </Box>
+              <Box p={6}>{children}</Box>
             </ScrollArea.Content>
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar>

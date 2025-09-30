@@ -3,27 +3,24 @@
 import {
   HStack,
   Button,
-  Flex,
   Box,
   Text,
-  Group,
   VStack,
   Separator,
   Breadcrumb,
-  Spacer,
-  Heading,
   Skeleton,
 } from "@chakra-ui/react";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { LuWallet, LuUsers } from "react-icons/lu";
 import { logout } from "@/supabase/actions";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { FaHome, FaSyncAlt } from "react-icons/fa";
 import { useGetSelf } from "@/features/profiles/profileHooks";
 import { GoOrganization } from "react-icons/go";
 import { useGetOrgById } from "@/features/orgs/orgHooks";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 
 type HeaderProps = {
   showLogout?: boolean;
@@ -33,7 +30,7 @@ type HeaderProps = {
 export const Header = ({ showLogout = true, type = "main" }: HeaderProps) => {
   const pathname = usePathname();
   const { data: selfData, isLoading } = useGetSelf();
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
   const { data: selfOrg } = useGetOrgById(orgId);
 
   const pageInfo = useMemo(() => {
@@ -44,35 +41,19 @@ export const Header = ({ showLogout = true, type = "main" }: HeaderProps) => {
     const pageConfig = {
       cash: {
         title: "Uang Kas",
-        subtitle: "Kelola setoran dan penarikan kas",
         icon: LuWallet,
-        color: "blue",
-        gradient: "blue.500/10",
-        gradientTo: "green.500/10",
       },
       revolving: {
         title: "Dana Bergulir",
-        subtitle: "Pantau cicilan dan pembayaran",
         icon: FaSyncAlt,
-        color: "orange",
-        gradient: "orange.500/10",
-        gradientTo: "red.500/10",
       },
       members: {
         title: "Anggota",
-        subtitle: "Daftar dan profil anggota",
         icon: LuUsers,
-        color: "purple",
-        gradient: "purple.500/10",
-        gradientTo: "blue.500/10",
       },
       default: {
         title: "Dreasury",
-        subtitle: "Sistem manajemen keuangan",
         icon: FaHome,
-        color: "gray",
-        gradient: "gray.500/10",
-        gradientTo: "blue.500/10",
       },
     };
 
@@ -94,140 +75,88 @@ export const Header = ({ showLogout = true, type = "main" }: HeaderProps) => {
   });
 
   return (
-    <Box
+    <HStack
       bg="bg.panel"
       borderBottomWidth="1px"
-      borderColor="border.muted"
-      position="relative"
-      overflow="hidden"
+      borderColor="border.subtle"
+      px={4}
+      py={3}
+      justify="space-between"
+      align="center"
     >
-      {/* Gradient Background */}
-      <Box
-        bgGradient="to-r"
-        gradientFrom={pageInfo.gradient}
-        gradientTo={pageInfo.gradientTo}
-        position="absolute"
-        inset={0}
-        _dark={{
-          gradientFrom: `${pageInfo.color}.400/15`,
-          gradientTo: "blue.400/15",
-        }}
-      />
-
-      {/* Decorative Elements */}
-      <Box
-        position="absolute"
-        top={0}
-        right={0}
-        w="32"
-        h="32"
-        bg={`${pageInfo.color}.500/5`}
-        borderRadius="full"
-        transform="translate(16px, -16px)"
-      />
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        w="24"
-        h="24"
-        bg={`${pageInfo.color}.500/5`}
-        borderRadius="full"
-        transform="translate(-12px, 12px)"
-      />
-
-      <Flex w="100%" align="center" p="1rem">
-        {type === "org" ? (
-          <HStack gap="0.75rem" align="center">
-            {isLoading ? (
-              <Skeleton height="20px" width="180px" borderRadius="md" />
-            ) : (
-              <>
-                <Box
-                  bg="blue.500"
-                  color="white"
-                  borderRadius="lg"
-                  p={2}
-                  display="flex"
-                  alignItems="center"
-                  boxShadow="sm"
-                  mr={2}
-                >
-                  <GoOrganization size={22} />
-                </Box>
-                <VStack align="start" gap={0}>
-                  <Text fontSize="sm" color="fg.muted" fontWeight="medium">
-                    Organisasi milik
-                  </Text>
-                  <Heading size="md" color="fg.default" fontWeight="bold">
-                    {selfData?.profile.fullname}
-                  </Heading>
-                </VStack>
-              </>
-            )}
-          </HStack>
-        ) : (
-          <Breadcrumb.Root size="lg">
-            <Breadcrumb.List>
-              <Breadcrumb.Item>
-                <Breadcrumb.Link fontWeight="bold">
-                  {selfOrg?.name || "Dashboard"}
-                </Breadcrumb.Link>
-              </Breadcrumb.Item>
-              <Breadcrumb.Separator />
-              <Breadcrumb.Item>
-                <Breadcrumb.Link>
-                  {pageInfo.icon && <pageInfo.icon />}
-                  {pageInfo.title}
-                </Breadcrumb.Link>
-              </Breadcrumb.Item>
-            </Breadcrumb.List>
-          </Breadcrumb.Root>
-        )}
-
-        <Spacer />
-        {/* Right Side - Actions */}
+      {/* Left: Breadcrumb or Title */}
+      {type === "org" ? (
         <HStack gap={3} align="center">
-          {/* User Section */}
-          <HStack gap={3}>
-            <VStack gap={0} align="end">
-              <Text fontSize="sm" fontWeight="medium" color="fg">
-                {currentTime}
-              </Text>
-              <Text fontSize="xs" color="fg.muted">
-                {currentDate}
-              </Text>
-            </VStack>
-          </HStack>
-
-          <Separator orientation="vertical" h="6" borderColor="white" />
-
-          {/* Theme & Logout */}
-          <Group gap={2}>
-            <ColorModeButton variant="surface" size="sm" borderRadius="full" />
-
-            {showLogout && (
-              <form action={logout}>
-                <Button
-                  variant="surface"
-                  colorPalette="red"
-                  size="sm"
-                  type="submit"
-                  borderRadius="full"
-                  px={3}
-                  _hover={{
-                    transform: "translateY(-1px)",
-                    boxShadow: "sm",
-                  }}
-                  transition="all 0.2s"
-                >
-                  <RiLogoutBoxLine size={16} />
-                </Button>
-              </form>
-            )}
-          </Group>
+          {isLoading ? (
+            <Skeleton height="20px" width="180px" borderRadius="md" />
+          ) : (
+            <>
+              <Box p={2} borderRadius="lg" bg="brand.muted" color="brand.fg">
+                <GoOrganization size={20} />
+              </Box>
+              <VStack gap={0} align="start">
+                <Text fontSize="xs" color="fg.muted">
+                  Organisasi milik
+                </Text>
+                <Text fontSize="md" fontWeight="semibold" color="fg.default">
+                  {selfData?.profile.fullname}
+                </Text>
+              </VStack>
+            </>
+          )}
         </HStack>
-      </Flex>
-    </Box>
+      ) : (
+        <Breadcrumb.Root size="sm">
+          <Breadcrumb.List>
+            <Breadcrumb.Item>
+              <Breadcrumb.Link fontWeight="semibold" color="fg.default">
+                {selfOrg?.name || "Dashboard"}
+              </Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+              <Breadcrumb.Link color="fg.muted">
+                {pageInfo.icon && <pageInfo.icon />}
+                {pageInfo.title}
+              </Breadcrumb.Link>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
+      )}
+
+      {/* Right: Time, Theme, Logout */}
+      <HStack gap={3} align="center">
+        {/* Time/Date */}
+        <VStack gap={0} align="end">
+          <Text fontSize="sm" fontWeight="medium" color="fg.default">
+            {currentTime}
+          </Text>
+          <Text fontSize="xs" color="fg.muted">
+            {currentDate}
+          </Text>
+        </VStack>
+
+        <Separator orientation="vertical" h="8" />
+
+        {/* Actions */}
+        <HStack gap={2}>
+          <ColorModeButton variant="ghost" size="sm" borderRadius="lg" />
+
+          {showLogout && (
+            <form action={logout}>
+              <Button
+                variant="ghost"
+                colorPalette="red"
+                size="sm"
+                type="submit"
+                borderRadius="lg"
+              >
+                <RiLogoutBoxLine size={16} />
+              </Button>
+            </form>
+          )}
+        </HStack>
+      </HStack>
+    </HStack>
   );
 };

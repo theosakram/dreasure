@@ -3,8 +3,8 @@ import {
   UseMutationOptions,
   useQuery,
 } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 import { CreateOrgMembershipFromNewProfileRequest } from "./orgTypes";
+import { useGetIdsFromParam } from "@/utils/helpers/hooks/useGetIdsFromParam";
 
 export const useGetOrgById = (id?: string) => {
   return useQuery({
@@ -18,7 +18,7 @@ export const useGetOrgById = (id?: string) => {
 };
 
 export const useGetOrgMembersByOrgId = () => {
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
 
   return useQuery({
     queryKey: ["org_members", orgId],
@@ -61,7 +61,7 @@ export const useCreateOrgMembershipFromNewUser = (
     "mutationFn"
   >,
 ) => {
-  const { orgId } = useParams<{ orgId: string }>();
+  const { orgId } = useGetIdsFromParam();
 
   return useMutation<unknown, Error, CreateOrgMembershipFromNewProfileRequest>({
     mutationKey: ["create-org-membership-from-new-user"],
@@ -74,7 +74,7 @@ export const useCreateOrgMembershipFromNewUser = (
       );
 
       return createOrgMembershipFromNewProfile({
-        org_id: orgId,
+        org_id: orgId || "",
         user_id: profile.id,
         role: payload.role,
       });

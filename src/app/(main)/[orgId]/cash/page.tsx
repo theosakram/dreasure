@@ -8,40 +8,13 @@ import { useGetTransactionWalletTransactions } from "@/features/transactions/tra
 import { Transaction } from "@/features/transactions/transactionTypes";
 import { useGetTransactionWallet } from "@/features/wallets/walletHooks";
 import { moneyFlowMapper } from "@/utils/helpers/moneyFlowMapper";
-import { Stack, Skeleton, VStack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { Suspense, useMemo, useState } from "react";
 import { SearchName } from "@/components/containers/SearchName";
 import { transactionColumns } from "@/components/containers/transactions/TransactionsColumns";
 import { useSearchParams } from "next/navigation";
+import { CashPageSkeleton } from "@/components/containers/transactions/CashPageSkeleton";
 
-// Loading fallback for the entire page
-const CashSkeleton = () => (
-  <Stack gap={6}>
-    {/* MoneyFlow skeleton */}
-    <VStack gap={4}>
-      <Skeleton height="120px" width="full" borderRadius="xl" />
-      <Stack direction="row" gap={4} width="full">
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-      </Stack>
-    </VStack>
-
-    {/* TimeFilter skeleton */}
-    <Skeleton height="40px" width="320px" borderRadius="lg" />
-
-    {/* SearchName skeleton */}
-    <Skeleton height="40px" width="280px" borderRadius="md" />
-
-    {/* Table skeleton */}
-    <VStack gap={3}>
-      <Skeleton height="60px" width="full" borderRadius="lg" />
-      <Skeleton height="300px" width="full" borderRadius="lg" />
-    </VStack>
-  </Stack>
-);
-
-// Component that uses hooks with useSearchParams
 const CashContent = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const { data, isLoading, error, isRefetching } =
@@ -58,9 +31,7 @@ const CashContent = () => {
   return (
     <Stack gap={6}>
       <MoneyFlowContainer {...mappedKas} isLoading={isLoading} />
-
       <TimeFilter />
-
       <SearchName />
 
       <TableContainer<Transaction>
@@ -102,7 +73,7 @@ const CashContent = () => {
 
 export default function CashPage() {
   return (
-    <Suspense fallback={<CashSkeleton />}>
+    <Suspense fallback={<CashPageSkeleton />}>
       <CashContent />
     </Suspense>
   );
