@@ -476,6 +476,7 @@ export const TransactionOverview = () => {
                   date: d.created_at,
                   type: d.type,
                   walletName: d.wallet.name,
+                  walletType: d.wallet.type,
                   title: (
                     <HStack gap={3} align="center">
                       <Circle

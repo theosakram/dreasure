@@ -25,8 +25,8 @@ import {
 } from "react-icons/lu";
 
 export const ProfileHeader = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data: profile, isLoading } = useGetProfileById(id);
+  const { userId } = useParams<{ userId: string }>();
+  const { data: profile, isLoading } = useGetProfileById(userId);
 
   if (isLoading) {
     return (

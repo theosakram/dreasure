@@ -1,4 +1,5 @@
 import { TransactionType } from "@/features/transactions/transactionTypes";
+import { WalletTypes } from "@/features/wallets/walletTypes";
 import {
   VStack,
   Text,
@@ -32,6 +33,7 @@ type TransactionEvent = {
   type: TransactionType;
   description?: string;
   walletName: string;
+  walletType: WalletTypes;
 };
 
 type MemberTransactionListProps = {
@@ -413,7 +415,9 @@ export const MemberTransactionTimeline = ({
                         </Badge>
                         <Badge
                           colorPalette={
-                            transaction.walletName === "kas" ? "blue" : "orange"
+                            transaction.walletType === "transaction"
+                              ? "blue"
+                              : "orange"
                           }
                           variant="surface"
                           size="sm"
