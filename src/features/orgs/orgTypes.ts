@@ -8,7 +8,7 @@ export type Organization = {
   created_at: string;
 };
 
-type OrganizationMembershipRole = "admin" | "member" | "owner";
+export type OrganizationMembershipRole = "admin" | "member" | "owner";
 
 export type OrganizationMembership = {
   id: string;
@@ -25,4 +25,15 @@ export type OrganizationWithWallets = Organization & {
 
 export type OrganizationMembershipWithProfile = OrganizationMembership & {
   user: Profile;
+};
+
+export type CreateOrgMembershipRequest = {
+  user_id: string;
+  org_id: string;
+  role: OrganizationMembershipRole;
+};
+
+export type CreateOrgMembershipFromNewProfileRequest = {
+  fullname: string;
+  role: OrganizationMembershipRole;
 };

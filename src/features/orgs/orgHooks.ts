@@ -1,5 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { CreateOrgMembershipFromNewProfileRequest } from "./orgTypes";
 
 export const useGetOrgById = (id?: string) => {
   return useQuery({
@@ -43,5 +48,37 @@ export const useGetOrgWalletsByOwnerId = (id: string) => {
 
       return getOrgWalletsByOwnerId(id);
     },
+  });
+};
+
+export const useCreateOrgMembershipFromNewUser = (
+  options?: Omit<
+    UseMutationOptions<
+      unknown,
+      Error,
+      CreateOrgMembershipFromNewProfileRequest
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { orgId } = useParams<{ orgId: string }>();
+
+  return useMutation<unknown, Error, CreateOrgMembershipFromNewProfileRequest>({
+    mutationKey: ["create-org-membership-from-new-user"],
+    mutationFn: async (payload) => {
+      const { createProfile } = await import("../profiles/profileServices");
+      const profile = await createProfile({ fullname: payload.fullname });
+
+      const { createOrgMembershipFromNewProfile } = await import(
+        "./orgServices"
+      );
+
+      return createOrgMembershipFromNewProfile({
+        org_id: orgId,
+        user_id: profile.id,
+        role: payload.role,
+      });
+    },
+    ...options,
   });
 };

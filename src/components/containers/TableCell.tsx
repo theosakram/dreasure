@@ -123,6 +123,23 @@ export const TypeBadge = ({ type }: { type: TransactionType }) => {
   );
 };
 
+const OrgRoleBadge = ({ role }: { role: string }) => {
+  return (
+    <Badge
+      colorPalette={
+        role === "owner" ? "blue" : role === "admin" ? "green" : "yellow"
+      }
+      textTransform="uppercase"
+    >
+      {role === "owner"
+        ? "Pemilik"
+        : role === "admin"
+        ? "Administrasi"
+        : "Anggota"}
+    </Badge>
+  );
+};
+
 export const TableCell = () => {
   return <h1>Hehe</h1>;
 };
@@ -132,3 +149,4 @@ TableCell.Description = Description;
 TableCell.TransactionDate = TransactionDate;
 TableCell.Amount = Amount;
 TableCell.TypeBadge = TypeBadge;
+TableCell.OrgRoleBadge = OrgRoleBadge;

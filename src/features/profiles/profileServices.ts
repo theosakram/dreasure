@@ -1,5 +1,9 @@
 import { supabaseClient } from "@/supabase/client";
-import { Profile, ProfileWithTransactions } from "./profileTypes";
+import {
+  CreateProfileRequest,
+  Profile,
+  ProfileWithTransactions,
+} from "./profileTypes";
 import { GetPaginationRequest } from "../shared/sharedTypes";
 
 export const getSelf = async () => {
@@ -45,4 +49,17 @@ export const getProfileById = async (id: string) => {
     .single<ProfileWithTransactions>();
 
   return profiles;
+};
+
+export const createProfile = async (payload: CreateProfileRequest) => {
+  const supabase = supabaseClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert(payload)
+    .select()
+    .single<Profile>();
+
+  if (error) throw error;
+
+  return data;
 };

@@ -1,20 +1,21 @@
 "use client";
 
+import { AddOrgMembershipModal } from "@/components/containers/orgs/AddOrgMembershipModal";
+import { TableCell } from "@/components/containers/TableCell";
 import { TableContainer } from "@/components/containers/TableContainers";
 import { ActionMenu } from "@/components/custom/ActionMenu";
 import { useGetOrgMembersByOrgId } from "@/features/orgs/orgHooks";
 import { Profile } from "@/features/profiles/profileTypes";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 
 const MembersContent = () => {
   const router = useRouter();
   const { orgId } = useParams<{ orgId: string }>();
   const { data, isLoading, error, refetch } = useGetOrgMembersByOrgId();
   const { count, data: members } = data || {};
-
-  const handleAddMember = () => {};
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   // Action handlers
   const handleDetail = (userId: string) => {
@@ -31,7 +32,7 @@ const MembersContent = () => {
     // TODO: Show confirmation dialog and delete user
   };
 
-  const columnHelper = createColumnHelper<Profile>();
+  const columnHelper = createColumnHelper<Profile & { role: string }>();
   const columns = [
     columnHelper.accessor("fullname", {
       header: "Nama Lengkap",
@@ -44,6 +45,10 @@ const MembersContent = () => {
     columnHelper.accessor("phone", {
       header: "No. Handphone",
       cell: (info) => info.getValue() || "-",
+    }),
+    columnHelper.accessor("role", {
+      header: "Peran",
+      cell: (info) => <TableCell.OrgRoleBadge role={info.getValue()} />,
     }),
     columnHelper.display({
       id: "actions",
@@ -59,29 +64,33 @@ const MembersContent = () => {
   ];
 
   return (
-    <TableContainer
-      title="Daftar Anggota"
-      subtitle="Kelola data anggota organisasi"
-      data={members?.map((m) => m.user) || []}
-      columns={columns}
-      isLoading={isLoading}
-      isError={!!error}
-      error={error ? "Gagal memuat data anggota" : undefined}
-      emptyTitle="Belum ada data anggota"
-      emptyDescription="Tambahkan anggota baru untuk melihat data di sini"
-      emptyActionLabel="Tambah Anggota"
-      addButtonLabel="Tambah Anggota"
-      onRetry={refetch}
-      interactive
-      showAddButton
-      onAddClick={handleAddMember}
-      pagination={{
-        total: count || 0,
-        pageSize: 10,
-        currentPage: 1,
-        onPageChange: console.log,
-      }}
-    />
+    <>
+      <TableContainer
+        title="Daftar Anggota"
+        subtitle="Kelola data anggota organisasi"
+        data={members?.map((m) => ({ ...m.user, role: m.role })) || []}
+        columns={columns}
+        isLoading={isLoading}
+        isError={!!error}
+        error={error ? "Gagal memuat data anggota" : undefined}
+        emptyTitle="Belum ada data anggota"
+        emptyDescription="Tambahkan anggota baru untuk melihat data di sini"
+        emptyActionLabel="Tambah Anggota"
+        addButtonLabel="Tambah Anggota"
+        onRetry={refetch}
+        interactive
+        showAddButton
+        onAddClick={() => setAddModalOpen(true)}
+        pagination={{
+          total: count || 0,
+          pageSize: 10,
+          currentPage: 1,
+          onPageChange: console.log,
+        }}
+      />
+
+      <AddOrgMembershipModal open={addModalOpen} setOpen={setAddModalOpen} />
+    </>
   );
 };
 

@@ -1,41 +1,32 @@
 import { FormField } from "@/components/custom/FormFIeld";
 import { Select } from "@/components/custom/Select";
-import { useGetProfiles } from "@/features/profiles/profileHooks";
 import { useMemo } from "react";
 import { LuUsers } from "react-icons/lu";
 import { FormCard, FormCardHeader } from "./FormCard";
+import { useGetOrgsByOwnerId } from "@/features/orgs/orgHooks";
 
-type UserSectFormProps = {
-  title?: string;
-  description?: string;
-};
-
-export const UserSelectForm = ({
-  title = "Pilih Anggota",
-  description = "Pilih anggota yang akan melakukan transaksi",
-}: UserSectFormProps) => {
-  const { data, isLoading } = useGetProfiles();
-  const { profiles } = data || {};
+export const OrgSelectForm = () => {
+  const { data, isLoading } = useGetOrgsByOwnerId();
   const mappedData = useMemo(() => {
-    if (profiles) {
-      return profiles.map((user) => ({
-        value: user.id,
-        label: user.fullname,
+    if (data) {
+      return data.data.map((org) => ({
+        value: org.id,
+        label: org.name,
       }));
     }
 
     return [];
-  }, [profiles]);
+  }, [data]);
 
   return (
     <FormCard>
       <FormCardHeader
         icon={<LuUsers />}
-        title={title}
-        description={description}
+        title="Pilih Organisasi"
+        description="Pilih organisasi yang akan ditambahkan anggotanya"
         isRequired
       />
-      <FormField name="user_id" label="" isRequired>
+      <FormField name="org_id" label="" isRequired>
         {({ input }) => (
           <Select
             options={mappedData}

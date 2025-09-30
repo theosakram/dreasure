@@ -33,8 +33,8 @@ type HeaderProps = {
 export const Header = ({ showLogout = true, type = "main" }: HeaderProps) => {
   const pathname = usePathname();
   const { data: selfData, isLoading } = useGetSelf();
-  const { id } = useParams<{ id: string }>();
-  const { data: selfOrg } = useGetOrgById(id);
+  const { orgId } = useParams<{ orgId: string }>();
+  const { data: selfOrg } = useGetOrgById(orgId);
 
   const pageInfo = useMemo(() => {
     const segments = pathname.split("/").filter(Boolean);

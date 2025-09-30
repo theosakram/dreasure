@@ -13,3 +13,7 @@ export type ProfileWithTransactions = Profile & {
   transactions: Array<TransactionWithWallet>;
   installments?: Array<InstallmentWithPayments>;
 };
+
+export type CreateProfileRequest = {
+  fullname: string;
+};

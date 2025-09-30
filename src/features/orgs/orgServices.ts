@@ -1,5 +1,6 @@
 import { supabaseClient } from "@/supabase/client";
 import {
+  CreateOrgMembershipRequest,
   Organization,
   OrganizationMembershipWithProfile,
   OrganizationWithWallets,
@@ -67,4 +68,19 @@ export const getOrgWalletsByOwnerId = async (owner_id: string) => {
   }
 
   return { data, count };
+};
+
+export const createOrgMembershipFromNewProfile = async (
+  payload: CreateOrgMembershipRequest,
+) => {
+  const supabase = supabaseClient();
+
+  const { error } = await supabase
+    .from("org_memberships")
+    .insert(payload)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
 };
