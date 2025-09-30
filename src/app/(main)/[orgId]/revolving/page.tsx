@@ -7,41 +7,18 @@ import { SearchName } from "@/components/containers/SearchName";
 import { TimeFilter } from "@/components/custom";
 import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
 import { useGetInstallmentWallet } from "@/features/wallets/walletHooks";
+import { useFinancialPercentages } from "@/utils/helpers/hooks/useFinancialPercentages";
 import { useShallowPush } from "@/utils/helpers/hooks/useShallowPush";
-import { moneyFlowMapper } from "@/utils/helpers/moneyFlowMapper";
-import { Stack, Skeleton, VStack, Tabs } from "@chakra-ui/react";
+import { Stack, Tabs, Spinner } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
-import { useMemo, Suspense } from "react";
+import { Suspense } from "react";
 import { TbCreditCard, TbMoneybag } from "react-icons/tb";
-
-const RevolvingSkeleton = () => (
-  <Stack gap={6}>
-    <VStack gap={4}>
-      <Skeleton height="120px" width="full" borderRadius="xl" />
-      <Stack direction="row" gap={4} width="full">
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-        <Skeleton height="80px" flex="1" borderRadius="lg" />
-      </Stack>
-    </VStack>
-
-    <Skeleton height="40px" width="320px" borderRadius="lg" />
-
-    <Skeleton height="40px" width="280px" borderRadius="md" />
-
-    <VStack gap={3}>
-      <Skeleton height="60px" width="full" borderRadius="lg" />
-      <Skeleton height="300px" width="full" borderRadius="lg" />
-    </VStack>
-  </Stack>
-);
 
 const RevolvingContent = () => {
   const { isLoading } = useGetInstallmentWalletTransactions();
   const { data: bergulir } = useGetInstallmentWallet();
-  const mappedBergulir = useMemo(
-    () => moneyFlowMapper(bergulir?.transactions || []),
-    [bergulir?.transactions],
+  const financialPercentages = useFinancialPercentages(
+    bergulir?.transactions || [],
   );
 
   const searchParams = useSearchParams();
@@ -50,7 +27,7 @@ const RevolvingContent = () => {
 
   return (
     <Stack gap={6}>
-      <MoneyFlowContainer {...mappedBergulir} isLoading={isLoading} />
+      <MoneyFlowContainer {...financialPercentages} isLoading={isLoading} />
       <TimeFilter />
       <SearchName />
 
@@ -81,7 +58,7 @@ const RevolvingContent = () => {
 
 const RevolvingPage = () => {
   return (
-    <Suspense fallback={<RevolvingSkeleton />}>
+    <Suspense fallback={<Spinner />}>
       <RevolvingContent />
     </Suspense>
   );

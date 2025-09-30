@@ -7,13 +7,13 @@ import { TimeFilter } from "@/components/custom/TimeFilter";
 import { useGetTransactionWalletTransactions } from "@/features/transactions/transactionHooks";
 import { Transaction } from "@/features/transactions/transactionTypes";
 import { useGetTransactionWallet } from "@/features/wallets/walletHooks";
-import { moneyFlowMapper } from "@/utils/helpers/moneyFlowMapper";
 import { Stack } from "@chakra-ui/react";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 import { SearchName } from "@/components/containers/SearchName";
 import { transactionColumns } from "@/components/containers/transactions/TransactionsColumns";
 import { useSearchParams } from "next/navigation";
-import { CashPageSkeleton } from "@/components/containers/transactions/CashPageSkeleton";
+import { useFinancialPercentages } from "@/utils/helpers/hooks/useFinancialPercentages";
+import { Loader } from "@/components/custom/Loader";
 
 const CashContent = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -21,16 +21,14 @@ const CashContent = () => {
     useGetTransactionWalletTransactions();
   const { count, data: transactions } = data || {};
   const { data: kas } = useGetTransactionWallet();
-  const mappedKas = useMemo(
-    () => moneyFlowMapper(kas?.transactions || []),
-    [kas?.transactions],
-  );
+  const financialPercentages = useFinancialPercentages(kas?.transactions || []);
+
   const searchParams = useSearchParams();
   const page = +(searchParams.get("page") ?? "1");
 
   return (
     <Stack gap={6}>
-      <MoneyFlowContainer {...mappedKas} isLoading={isLoading} />
+      <MoneyFlowContainer {...financialPercentages} isLoading={isLoading} />
       <TimeFilter />
       <SearchName />
 
@@ -73,7 +71,7 @@ const CashContent = () => {
 
 export default function CashPage() {
   return (
-    <Suspense fallback={<CashPageSkeleton />}>
+    <Suspense fallback={<Loader />}>
       <CashContent />
     </Suspense>
   );
