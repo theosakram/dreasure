@@ -12,7 +12,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Box maxH="100vh" bg="bg.muted">
+    <Box maxH="100vh" bg="bg.default">
       {children}
     </Box>
   );

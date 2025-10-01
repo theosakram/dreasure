@@ -252,7 +252,7 @@ function LoginContent() {
       w="100vw"
       maxH="100vh"
       h="100vh"
-      bg="bg.canvas"
+      bg="bg.default"
       display="flex"
       alignItems="center"
       justifyContent="center"
