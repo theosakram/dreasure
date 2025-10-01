@@ -1,9 +1,18 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { TableCell } from "../TableCell";
-import { InstallmentWithUser } from "@/features/installments/installmentTypes";
+import { Profile } from "@/features/profiles/profileTypes";
+import { TransactionType } from "@/features/transactions/transactionTypes";
+
+export type InstallmentColumnType = {
+  user: Profile;
+  created_at: string;
+  description: string;
+  total_to_be_paid: number;
+  type: TransactionType;
+};
 
 export const installmentColumnHelper =
-  createColumnHelper<InstallmentWithUser>();
+  createColumnHelper<InstallmentColumnType>();
 
 export const installmentColumns = [
   installmentColumnHelper.accessor("user", {
@@ -27,13 +36,20 @@ export const installmentColumns = [
     header: "Jumlah",
     size: 120,
     cell: (info) => (
-      <TableCell.Amount amount={info.getValue()} type="withdraw" />
+      <TableCell.Amount
+        amount={info.getValue()}
+        type={info.row.original.type}
+      />
     ),
   }),
-  installmentColumnHelper.display({
-    id: "type",
+  installmentColumnHelper.accessor("type", {
     header: "Jenis",
     size: 100,
-    cell: () => <TableCell.TypeBadge type="withdraw" />,
+    cell: (info) => (
+      <TableCell.TypeBadge
+        variant="installment"
+        type={info.getValue() as TransactionType}
+      />
+    ),
   }),
 ];

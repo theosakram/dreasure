@@ -6,6 +6,8 @@ import { transactionColumns } from "../transactions/TransactionsColumns";
 import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
 import { AddTransactionModal } from "../transactions/AddTransactionModal";
 import { useState } from "react";
+import { TimeFilter } from "@/components/custom";
+import { SearchName } from "../SearchName";
 
 export const DonationTable = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -35,6 +37,12 @@ export const DonationTable = () => {
         onRetry={() => window.location.reload()}
         loadingMessage="Memuat data transaksi..."
         scrollMaxH="47.5vh"
+        filterSlot={
+          <>
+            <TimeFilter />
+            <SearchName />
+          </>
+        }
         pagination={{
           total: count || 0,
           pageSize: 10,

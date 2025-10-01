@@ -1,12 +1,12 @@
 import { Box, VStack } from "@chakra-ui/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "@/components/custom/Table";
-import { Loading } from "@/components/custom/Loading";
 import { Empty } from "@/components/custom/Empty";
 import { Error } from "@/components/custom/Error";
 import { Scroll } from "../../custom/Scroll";
 import { TablePagination } from "./TablePagination";
 import { TableHeader } from "./TableHeader";
+import { Loader } from "@/components/custom/Loader";
 
 export type TableContainerProps<T extends Record<string, unknown>> = {
   // Table props
@@ -54,6 +54,7 @@ export type TableContainerProps<T extends Record<string, unknown>> = {
   containerVariant?: "elevated" | "outlined" | "ghost";
 
   customAddButton?: React.ReactNode;
+  filterSlot?: React.ReactNode;
 
   pagination?: {
     total: number;
@@ -86,10 +87,10 @@ export const TableContainer = <T extends Record<string, unknown>>({
   errorTitle,
   errorDescription,
   onRetry,
-  loadingMessage,
   scrollMaxH = "600px",
   containerVariant = "elevated",
   customAddButton,
+  filterSlot,
   pagination,
 }: TableContainerProps<T>) => {
   const getContainerStyles = () => {
@@ -137,7 +138,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
     if (isLoading) {
       return (
         <Box p={8}>
-          <Loading message={loadingMessage} />
+          <Loader />
         </Box>
       );
     }
@@ -183,7 +184,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
 
   return (
     <VStack gap={5} align="stretch">
-      {(title || subtitle || description || showAddButton) && (
+      {(title || subtitle || description || showAddButton || filterSlot) && (
         <TableHeader
           title={title}
           subtitle={subtitle}
@@ -192,6 +193,7 @@ export const TableContainer = <T extends Record<string, unknown>>({
           showAddButton={showAddButton}
           onAddClick={onAddClick}
           addButtonLabel={addButtonLabel}
+          filterSlot={filterSlot}
         />
       )}
 

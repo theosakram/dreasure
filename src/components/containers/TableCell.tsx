@@ -1,4 +1,5 @@
 import { TransactionType } from "@/features/transactions/transactionTypes";
+import { WalletTypes } from "@/features/wallets/walletTypes";
 import {
   Stack,
   Box,
@@ -112,13 +113,30 @@ const Amount = ({
   );
 };
 
-export const TypeBadge = ({ type }: { type: TransactionType }) => {
+const badgeLabels: Record<WalletTypes, Record<TransactionType, string>> = {
+  transaction: {
+    deposit: "Masuk",
+    withdraw: "Keluar",
+  },
+  installment: {
+    deposit: "Bayar",
+    withdraw: "Ambil",
+  },
+};
+
+export const TypeBadge = ({
+  type,
+  variant,
+}: {
+  type: TransactionType;
+  variant: WalletTypes;
+}) => {
   return (
     <Badge
       colorPalette={type === "deposit" ? "green" : "red"}
       textTransform="uppercase"
     >
-      {type === "deposit" ? "masuk" : "keluar"}
+      {badgeLabels[variant][type]}
     </Badge>
   );
 };

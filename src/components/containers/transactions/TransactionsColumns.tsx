@@ -34,6 +34,8 @@ export const transactionColumns = [
   columnHelper.accessor("type", {
     header: "Jenis",
     size: 100,
-    cell: (info) => <TableCell.TypeBadge type={info.getValue()} />,
+    cell: (info) => (
+      <TableCell.TypeBadge variant="transaction" type={info.getValue()} />
+    ),
   }),
 ];

@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { InstallmentModal } from "../transactions/InstallmentModal";
-import { useGetInstallments } from "@/features/installments/installmentHooks";
+import {
+  useGetInstallmentPayments,
+  useGetInstallments,
+} from "@/features/installments/installmentHooks";
 import { Menu, Button, Portal } from "@chakra-ui/react";
 import {
   TbCreditCard,
@@ -9,16 +12,14 @@ import {
   TbReceipt,
 } from "react-icons/tb";
 import { TableContainer } from "../table/TableContainers";
-import { InstallmentWithUser } from "@/features/installments/installmentTypes";
 import {
-  installmentColumnHelper,
   installmentColumns,
+  InstallmentColumnType,
 } from "./InstallmentColumns";
-import { ActionMenu } from "@/components/custom/ActionMenu";
-import { useRouter } from "next/navigation";
+import { TimeFilter } from "@/components/custom";
+import { SearchName } from "../SearchName";
 
 export const InstallmentTable = () => {
-  const router = useRouter();
   const [installmentModalOpen, setInstallmentModalOpen] = useState(false);
   const [installmentType, setInstallmentType] = useState<"take" | "pay">(
     "take",
@@ -27,27 +28,45 @@ export const InstallmentTable = () => {
   const { data, isLoading, isRefetching, error } = useGetInstallments();
   const { count, data: installments } = data || {};
 
-  const columns = [
-    ...installmentColumns,
-    installmentColumnHelper.display({
-      id: "actions",
-      header: "",
-      size: 120,
-      cell: (info) => (
-        <ActionMenu
-          onDetail={() => router.push(`/revolving/${info.row.original.id}`)}
-        />
-      ),
-    }),
-  ];
+  const {
+    data: installmentPayments,
+    isLoading: isLoadingPayments,
+    isRefetching: isRefetchingPayments,
+    error: errorPayments,
+  } = useGetInstallmentPayments();
+
+  const allData = useMemo((): Array<InstallmentColumnType> => {
+    if (installmentPayments && installments) {
+      return [
+        ...installments.map((i) => ({
+          user: i.user,
+          created_at: i.created_at,
+          description: i.description ?? "",
+          total_to_be_paid: i.total_to_be_paid,
+          type: "withdraw" as const,
+        })),
+        ...installmentPayments.data.map((p) => ({
+          user: p.user,
+          created_at: p.created_at,
+          description: p.description ?? "",
+          total_to_be_paid: p.amount,
+          type: "deposit" as const,
+        })),
+      ];
+    }
+
+    return [];
+  }, [installmentPayments, installments]);
 
   return (
     <>
-      <TableContainer<InstallmentWithUser>
-        data={installments}
-        columns={columns}
-        isLoading={isLoading || isRefetching}
-        isError={!!error}
+      <TableContainer
+        data={allData}
+        columns={installmentColumns}
+        isLoading={
+          isLoading || isRefetching || isLoadingPayments || isRefetchingPayments
+        }
+        isError={!!error || !!errorPayments}
         title="Hutang Terbaru"
         subtitle={`${installments?.length || 0} hutang`}
         addButtonLabel="Tambah Hutang"
@@ -63,6 +82,12 @@ export const InstallmentTable = () => {
         onRetry={() => window.location.reload()}
         loadingMessage="Memuat data transaksi..."
         scrollMaxH="47.5vh"
+        filterSlot={
+          <>
+            <TimeFilter />
+            <SearchName />
+          </>
+        }
         pagination={{
           total: count || 0,
           pageSize: 10,

@@ -29,8 +29,6 @@ const CashContent = () => {
   return (
     <Stack gap={6}>
       <MoneyFlowContainer {...financialPercentages} isLoading={isLoading} />
-      <TimeFilter />
-      <SearchName />
 
       <TableContainer<Transaction>
         data={transactions}
@@ -47,11 +45,17 @@ const CashContent = () => {
         emptyTitle="No transactions found"
         emptyDescription="Tidak ada transaksi"
         emptyActionLabel="Tambah Transaksi Pertama"
-        errorTitle="Failed to load transactions"
+        errorTitle="Gagal Memuat Transaksi"
         errorDescription="We couldn't load your transaction data. Please check your connection and try again."
         onRetry={() => window.location.reload()}
         loadingMessage="Memuat data transaksi..."
         scrollMaxH="47.5vh"
+        filterSlot={
+          <>
+            <TimeFilter />
+            <SearchName />
+          </>
+        }
         pagination={{
           total: count || 0,
           pageSize: 10,
