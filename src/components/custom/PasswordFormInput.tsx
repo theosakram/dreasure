@@ -42,8 +42,8 @@ export const PasswordFormInput = ({
           <Input
             {...input}
             type={open ? "text" : "password"}
-            placeholder="Enter your password"
-            size="lg"
+            placeholder="Masukkan kata sandi..."
+            size="md"
           />
         </InputGroup>
       )}

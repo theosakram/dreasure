@@ -48,7 +48,7 @@ export const FormField = <T,>({
               </Field.Label>
             )}
             {children({ input, meta })}
-            {helperText && !showError && (
+            {helperText && showError && (
               <Field.HelperText>{helperText}</Field.HelperText>
             )}
             {showError && <Field.ErrorText>{meta.error}</Field.ErrorText>}

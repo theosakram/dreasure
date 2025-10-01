@@ -2,7 +2,7 @@
 
 import { AddTransactionModal } from "@/components/containers/transactions/AddTransactionModal";
 import { MoneyFlowContainer } from "@/components/containers/MoneyFlowContainer";
-import { TableContainer } from "@/components/containers/TableContainers";
+import { TableContainer } from "@/components/containers/table/TableContainers";
 import { TimeFilter } from "@/components/custom/TimeFilter";
 import { useGetTransactionWalletTransactions } from "@/features/transactions/transactionHooks";
 import { Transaction } from "@/features/transactions/transactionTypes";

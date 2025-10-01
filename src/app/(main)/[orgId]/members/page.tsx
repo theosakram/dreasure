@@ -5,7 +5,7 @@ import {
   profileColumnHelper,
   profileColumns,
 } from "@/components/containers/profiles/ProfilesColumn";
-import { TableContainer } from "@/components/containers/TableContainers";
+import { TableContainer } from "@/components/containers/table/TableContainers";
 import { ActionMenu } from "@/components/custom/ActionMenu";
 import { useGetOrgMembersByOrgId } from "@/features/orgs/orgHooks";
 import { Profile } from "@/features/profiles/profileTypes";

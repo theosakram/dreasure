@@ -1,22 +1,12 @@
-import {
-  Box,
-  HStack,
-  Text,
-  Button,
-  ScrollArea,
-  IconButton,
-  Pagination,
-  Flex,
-  VStack,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "@/components/custom/Table";
 import { Loading } from "@/components/custom/Loading";
 import { Empty } from "@/components/custom/Empty";
 import { Error } from "@/components/custom/Error";
-import { LuPlus } from "react-icons/lu";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { Scroll } from "../../custom/Scroll";
+import { TablePagination } from "./TablePagination";
+import { TableHeader } from "./TableHeader";
 
 export type TableContainerProps<T extends Record<string, unknown>> = {
   // Table props
@@ -102,7 +92,6 @@ export const TableContainer = <T extends Record<string, unknown>>({
   customAddButton,
   pagination,
 }: TableContainerProps<T>) => {
-  // Get container styles based on variant
   const getContainerStyles = () => {
     switch (containerVariant) {
       case "elevated":
@@ -179,126 +168,43 @@ export const TableContainer = <T extends Record<string, unknown>>({
     }
 
     return (
-      <ScrollArea.Root maxH={scrollMaxH}>
-        <ScrollArea.Viewport>
-          <ScrollArea.Content>
-            <Table<T>
-              data={data}
-              columns={columns}
-              variant={variant}
-              size={size}
-              striped={striped}
-              interactive={interactive}
-            />
-          </ScrollArea.Content>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar orientation="vertical">
-          <ScrollArea.Thumb bg="border.emphasized" borderRadius="sm" />
-        </ScrollArea.Scrollbar>
-        <ScrollArea.Corner />
-      </ScrollArea.Root>
+      <Scroll scrollMaxH={scrollMaxH}>
+        <Table<T>
+          data={data}
+          columns={columns}
+          variant={variant}
+          size={size}
+          striped={striped}
+          interactive={interactive}
+        />
+      </Scroll>
     );
   };
 
   return (
     <VStack gap={5} align="stretch">
-      {/* Header Section */}
       {(title || subtitle || description || showAddButton) && (
-        <HStack justify="space-between" align="start">
-          <VStack gap={1} align="start" flex={1}>
-            {title && (
-              <Heading size="lg" fontWeight="semibold" color="fg.default">
-                {title}
-              </Heading>
-            )}
-            {subtitle && (
-              <Text fontSize="sm" color="fg.muted">
-                {subtitle}
-              </Text>
-            )}
-            {description && (
-              <Text fontSize="sm" color="fg.muted">
-                {description}
-              </Text>
-            )}
-          </VStack>
-
-          {customAddButton}
-
-          {showAddButton && onAddClick && !customAddButton && (
-            <Button
-              size="sm"
-              colorPalette="brand"
-              variant="solid"
-              onClick={onAddClick}
-              borderRadius="lg"
-            >
-              <LuPlus size={16} />
-              {addButtonLabel}
-            </Button>
-          )}
-        </HStack>
+        <TableHeader
+          title={title}
+          subtitle={subtitle}
+          description={description}
+          customAddButton={customAddButton}
+          showAddButton={showAddButton}
+          onAddClick={onAddClick}
+          addButtonLabel={addButtonLabel}
+        />
       )}
 
       <Box {...containerStyles}>{renderContent()}</Box>
 
       {pagination && (
-        <Flex justify="space-between" align="center" pt={2}>
-          <Text fontSize="xs" color="fg.muted">
-            Menampilkan {data.length} dari {pagination.total} data
-          </Text>
-
-          <Pagination.Root
-            count={pagination.total}
-            pageSize={10}
-            defaultPage={1}
-          >
-            <HStack gap={2}>
-              <Pagination.PrevTrigger asChild>
-                <IconButton
-                  variant="ghost"
-                  size="sm"
-                  borderRadius="lg"
-                  _hover={{
-                    bg: "bg.muted",
-                    borderColor: "border.emphasized",
-                  }}
-                >
-                  <HiChevronLeft />
-                </IconButton>
-              </Pagination.PrevTrigger>
-
-              <Box
-                px={3}
-                py={2}
-                bg="bg.subtle"
-                borderRadius="lg"
-                border="1px solid"
-                borderColor="border.muted"
-              >
-                <Pagination.PageText
-                  textStyle="caption"
-                  fontWeight="medium"
-                  color="fg.default"
-                />
-              </Box>
-
-              <Pagination.NextTrigger asChild>
-                <IconButton
-                  variant="ghost"
-                  size="sm"
-                  borderRadius="lg"
-                  _hover={{
-                    bg: "bg.muted",
-                    borderColor: "border.emphasized",
-                  }}
-                >
-                  <HiChevronRight />
-                </IconButton>
-              </Pagination.NextTrigger>
-            </HStack>
-          </Pagination.Root>
-        </Flex>
+        <TablePagination
+          total={pagination.total}
+          currentPage={pagination.currentPage}
+          onPageChange={pagination.onPageChange}
+          pageSize={pagination.pageSize}
+          totalData={data.length}
+        />
       )}
     </VStack>
   );

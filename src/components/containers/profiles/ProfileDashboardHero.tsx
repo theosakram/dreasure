@@ -48,8 +48,10 @@ export const ProfileDashboardHero = () => {
                 cursor="pointer"
                 transition="all 0.15s"
                 _hover={{
-                  borderColor: "border.emphasized",
-                  shadow: "sm",
+                  borderColor: "border.muted",
+                  shadow: "lg",
+                  boxShadow: "lg",
+                  transform: "translateY(-2px)",
                 }}
                 w="100%"
               >

@@ -10,11 +10,11 @@ import {
   Icon,
   Flex,
   Separator,
-  Skeleton,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { LuCalendarDays, LuFilter } from "react-icons/lu";
+import { Loader } from "./Loader";
 
 export type TimeFilterOption = {
   value: "today" | "week" | "month" | "all";
@@ -60,55 +60,6 @@ const defaultOptions: TimeFilterOption[] = [
     description: "Seluruh riwayat transaksi",
   },
 ];
-
-// Loading fallback component
-const TimeFilterSkeleton = ({
-  variant = "default",
-}: {
-  variant?: TimeFilterProps["variant"];
-}) => {
-  if (variant === "card") {
-    return (
-      <Box
-        p={5}
-        bg="bg.panel"
-        borderRadius="xl"
-        border="1px solid"
-        borderColor="border.subtle"
-      >
-        <VStack align="stretch" gap={3}>
-          <HStack gap={2.5} align="center">
-            <Skeleton height="32px" width="32px" borderRadius="lg" />
-            <VStack align="start" gap={1}>
-              <Skeleton height="16px" width="80px" borderRadius="md" />
-              <Skeleton height="12px" width="120px" borderRadius="md" />
-            </VStack>
-          </HStack>
-          <Skeleton height="40px" width="full" borderRadius="lg" />
-        </VStack>
-      </Box>
-    );
-  }
-
-  if (variant === "compact") {
-    return (
-      <HStack gap={2.5} align="center">
-        <Skeleton height="20px" width="20px" borderRadius="md" />
-        <Skeleton height="32px" width="280px" borderRadius="lg" />
-      </HStack>
-    );
-  }
-
-  return (
-    <HStack gap={4} align="center">
-      <HStack gap={2.5} align="center">
-        <Skeleton height="32px" width="32px" borderRadius="lg" />
-        <Skeleton height="16px" width="100px" borderRadius="md" />
-      </HStack>
-      <Skeleton height="40px" width="320px" borderRadius="lg" />
-    </HStack>
-  );
-};
 
 // Main TimeFilter component that uses useSearchParams
 const TimeFilterContent = ({
@@ -250,10 +201,9 @@ const TimeFilterContent = ({
   );
 };
 
-// Main export component with Suspense boundary
 export const TimeFilter = (props: TimeFilterProps) => {
   return (
-    <Suspense fallback={<TimeFilterSkeleton variant={props.variant} />}>
+    <Suspense fallback={<Loader />}>
       <TimeFilterContent {...props} />
     </Suspense>
   );

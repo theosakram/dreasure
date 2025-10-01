@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cloc": "cloc . --exclude-dir=node_modules,.next,dist,build,out,.vscode,.claude --include-lang=TypeScript,JavaScript,JSON,Markdown,YAML --by-file --report-file=cloc-report.txt"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.27.0",

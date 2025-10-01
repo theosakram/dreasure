@@ -75,14 +75,18 @@ export const StatCard = ({
               {badge}
             </Badge>
           )}
-          <Icon color={colorPalette} boxSize={3.5}>
+          <Icon color={`${colorPalette}.600`} boxSize={3.5}>
             <IconComponent />
           </Icon>
         </HStack>
       </HStack>
 
       <HStack gap={1.5} align="baseline" mt={1}>
-        <Stat.ValueText fontSize="lg" fontWeight="bold" color={colorPalette}>
+        <Stat.ValueText
+          fontSize="lg"
+          fontWeight="bold"
+          color={`${colorPalette}.600`}
+        >
           <FormatNumber
             value={value}
             style="currency"

@@ -8,7 +8,7 @@ import {
   TbDownload,
   TbReceipt,
 } from "react-icons/tb";
-import { TableContainer } from "../TableContainers";
+import { TableContainer } from "../table/TableContainers";
 import { InstallmentWithUser } from "@/features/installments/installmentTypes";
 import {
   installmentColumnHelper,
@@ -120,8 +120,8 @@ export const InstallmentTable = () => {
                     p={3}
                     borderRadius="lg"
                     _hover={{
-                      bg: "success.muted",
-                      color: "success.fg",
+                      bg: "brand.muted",
+                      color: "brand.fg",
                     }}
                     fontWeight="medium"
                     onClick={() => {

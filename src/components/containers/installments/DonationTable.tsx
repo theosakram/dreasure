@@ -1,7 +1,7 @@
 import { Transaction } from "@/features/transactions/transactionTypes";
 import { Button } from "@chakra-ui/react";
 import { TbMoneybag } from "react-icons/tb";
-import { TableContainer } from "../TableContainers";
+import { TableContainer } from "../table/TableContainers";
 import { transactionColumns } from "../transactions/TransactionsColumns";
 import { useGetInstallmentWalletTransactions } from "@/features/transactions/transactionHooks";
 import { AddTransactionModal } from "../transactions/AddTransactionModal";

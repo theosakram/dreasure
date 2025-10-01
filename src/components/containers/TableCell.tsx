@@ -30,7 +30,7 @@ const User = ({ fullname, email, phone }: UserTableCellProps) => {
       <Text fontWeight="medium" fontSize="sm" lineClamp={1}>
         {fullname || "-"}
       </Text>
-      <Text fontSize="xs" color="fg.muted" lineClamp={1}>
+      <Text fontFamily="mono" fontSize="xs" color="fg.muted" lineClamp={1}>
         {email}
       </Text>
     </Stack>
@@ -101,7 +101,7 @@ const Amount = ({
   const isPositive = type === "deposit";
 
   return (
-    <Text fontWeight="semibold" color={isPositive ? "brand.solid" : "red.600"}>
+    <Text fontWeight="semibold" color={isPositive ? "green.600" : "red.600"}>
       <FormatNumber
         value={amount}
         style="currency"
@@ -115,7 +115,7 @@ const Amount = ({
 export const TypeBadge = ({ type }: { type: TransactionType }) => {
   return (
     <Badge
-      colorPalette={type === "deposit" ? "brand" : "red"}
+      colorPalette={type === "deposit" ? "green" : "red"}
       textTransform="uppercase"
     >
       {type === "deposit" ? "masuk" : "keluar"}

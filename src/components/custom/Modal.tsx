@@ -17,6 +17,8 @@ export const Modal = (props: ModalProps) => {
       onOpenChange={(e) => props.setOpen(e.open)}
       placement="center"
       size="lg"
+      closeOnInteractOutside={false}
+      closeOnEscape
     >
       <Portal>
         <Dialog.Backdrop />
