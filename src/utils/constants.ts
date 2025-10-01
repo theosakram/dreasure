@@ -7,3 +7,5 @@ export const walletTypes: Record<string, WalletTypes> = {
   transaction: "transaction",
   installment: "installment",
 };
+
+export const indonesianPhoneRegex = /^(?:\+62|0)8\d{7,11}$/;

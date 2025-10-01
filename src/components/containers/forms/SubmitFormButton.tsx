@@ -18,7 +18,7 @@ export const SubmitFormButton = (props: SubmitFormButtonProps) => {
       <HStack gap={3}>
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
           onClick={props.onCancel}
           disabled={submitting || props.isLoading}
         >
@@ -27,7 +27,7 @@ export const SubmitFormButton = (props: SubmitFormButtonProps) => {
         <Button
           type="submit"
           colorPalette="brand"
-          size="md"
+          size="sm"
           minW="32"
           loading={submitting || props.isLoading}
           loadingText="Menyimpan..."

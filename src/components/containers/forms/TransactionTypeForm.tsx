@@ -9,8 +9,7 @@ export const TransactionTypeForm = () => {
       <FormCardHeader
         icon={<LuArrowUpDown />}
         title="Jenis Transaksi"
-        description="Pilih apakah ini transaksi setor atau tarik dana"
-        isRequired
+        required
       />
       <FormField name="type" label="" isRequired>
         {({ input }) => (

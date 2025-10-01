@@ -32,8 +32,8 @@ export const StartDueDateForm = () => {
       <FormCardHeader
         icon={<LuCalendar />}
         title="Tanggal Mulai Cicilan"
-        description="Pilih tanggal mulai cicilan (jatuh tempo otomatis 1 tahun kemudian)"
-        isRequired
+        description="Jatuh tempo otomatis 1 tahun kemudian"
+        required
       />
 
       <VStack align="stretch" gap={4} w="100%">

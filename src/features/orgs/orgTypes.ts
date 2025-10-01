@@ -36,4 +36,6 @@ export type CreateOrgMembershipRequest = {
 export type CreateOrgMembershipFromNewProfileRequest = {
   fullname: string;
   role: OrganizationMembershipRole;
+  email?: string;
+  phone?: string;
 };

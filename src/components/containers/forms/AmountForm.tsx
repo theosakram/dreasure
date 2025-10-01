@@ -13,8 +13,7 @@ export const AmountForm = ({ name = "amount" }: AmountFormProps) => {
       <FormCardHeader
         icon={<LuDollarSign />}
         title="Jumlah Transaksi"
-        description="Masukkan nominal dalam Rupiah"
-        isRequired
+        required
       />
       <FormField<string> name={name} label="" isRequired>
         {({ input }) => (

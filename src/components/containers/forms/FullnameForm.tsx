@@ -10,14 +10,11 @@ type FullnameFormProps = {
 export const FullnameForm = ({ name = "fullname" }: FullnameFormProps) => {
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<LuUser />}
-        title="Nama Lengkap"
-        description="Masukkan nama lengkap "
-        isRequired
-      />
+      <FormCardHeader icon={<LuUser />} title="Nama Lengkap" required />
       <FormField<string> name={name} label="" isRequired>
-        {({ input }) => <Input placeholder="" {...input} />}
+        {({ input }) => (
+          <Input placeholder="Masukkan nama lengkap..." {...input} />
+        )}
       </FormField>
     </FormCard>
   );

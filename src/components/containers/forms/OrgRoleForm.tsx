@@ -12,12 +12,7 @@ const roleOptions = [
 export const OrgRoleForm = () => {
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<LuUsers />}
-        title="Pilih Peran Organisasi"
-        description="Pilih peran yang akan diberikan kepada anggota"
-        isRequired
-      />
+      <FormCardHeader icon={<LuUsers />} title="Peran Organisasi" required />
       <FormField name="role" label="" isRequired>
         {({ input }) => (
           <Select

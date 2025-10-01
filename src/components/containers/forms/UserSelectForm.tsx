@@ -7,12 +7,10 @@ import { FormCard, FormCardHeader } from "./FormCard";
 
 type UserSectFormProps = {
   title?: string;
-  description?: string;
 };
 
 export const UserSelectForm = ({
   title = "Pilih Anggota",
-  description = "Pilih anggota yang akan melakukan transaksi",
 }: UserSectFormProps) => {
   const { data, isLoading } = useGetProfiles();
   const { profiles } = data || {};
@@ -29,12 +27,7 @@ export const UserSelectForm = ({
 
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<LuUsers />}
-        title={title}
-        description={description}
-        isRequired
-      />
+      <FormCardHeader icon={<LuUsers />} title={title} required />
       <FormField name="user_id" label="" isRequired>
         {({ input }) => (
           <Select

@@ -20,12 +20,7 @@ export const OrgSelectForm = () => {
 
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<LuUsers />}
-        title="Pilih Organisasi"
-        description="Pilih organisasi yang akan ditambahkan anggotanya"
-        isRequired
-      />
+      <FormCardHeader icon={<LuUsers />} title="Pilih Organisasi" required />
       <FormField name="org_id" label="" isRequired>
         {({ input }) => (
           <Select

@@ -55,6 +55,7 @@ export const Select = ({
         !isLoading && onChange?.(details.value?.[0] || "")
       }
       disabled={isLoading}
+      placeholder="Pilih opsi..."
     >
       {title && <Combobox.Label>{title}</Combobox.Label>}
       <Combobox.Control>

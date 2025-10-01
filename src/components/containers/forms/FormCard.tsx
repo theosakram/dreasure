@@ -4,11 +4,8 @@ import { ReactNode } from "react";
 type FormCardHeaderProps = {
   icon: ReactNode;
   title: string;
-  description: string;
-  isRequired?: boolean;
-  badgeText?: string;
-  badgeColorPalette?: string;
-  badgeVariant?: "solid" | "outline";
+  description?: string;
+  required?: boolean;
   iconBg?: string;
   iconColor?: string;
 };
@@ -17,10 +14,7 @@ export const FormCardHeader = ({
   icon,
   title,
   description,
-  isRequired = false,
-  badgeText = "Wajib",
-  badgeColorPalette = "red",
-  badgeVariant = "solid",
+  required = false,
   iconBg = "brand.subtle",
   iconColor = "brand.solid",
 }: FormCardHeaderProps) => (
@@ -29,23 +23,25 @@ export const FormCardHeader = ({
       <Icon size="sm">{icon}</Icon>
     </Box>
     <VStack align="start" gap={0}>
-      <HStack gap={1}>
+      <HStack gap={2}>
         <Text fontSize="sm" fontWeight="semibold" color="fg.default">
           {title}
         </Text>
-        {(isRequired || badgeText === "Opsional") && (
-          <Badge
-            size="xs"
-            colorPalette={badgeColorPalette}
-            variant={badgeVariant}
-          >
-            {badgeText}
+        {required ? (
+          <Badge size="xs" colorPalette="red" variant="solid">
+            Wajib
+          </Badge>
+        ) : (
+          <Badge size="xs" colorPalette="gray" variant="outline">
+            Opsional
           </Badge>
         )}
       </HStack>
-      <Text fontSize="xs" color="fg.muted">
-        {description}
-      </Text>
+      {description && (
+        <Text fontSize="xs" color="fg.muted">
+          {description}
+        </Text>
+      )}
     </VStack>
   </HStack>
 );

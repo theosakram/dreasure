@@ -26,12 +26,7 @@ export const InstallmentForm = () => {
 
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<FaCreditCard />}
-        title="Pilih Cicilan"
-        description="Pilih cicilan yang akan dibayar"
-        isRequired
-      />
+      <FormCardHeader icon={<FaCreditCard />} title="Pilih Cicilan" required />
       <FormField name="installment_id" label="" isRequired>
         {({ input }) => (
           <Select

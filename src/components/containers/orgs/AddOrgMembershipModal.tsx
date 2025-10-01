@@ -9,6 +9,8 @@ import {
 import { orgMembershipSchema } from "@/utils/forms/schemas/orgMembershipSchema";
 import { FullnameForm } from "../forms/FullnameForm";
 import { OrgRoleForm } from "../forms/OrgRoleForm";
+import { EmailForm } from "../forms/EmailForm";
+import { PhoneNumberForm } from "../forms/PhoneNumberForm";
 
 type AddOrgMembershipModalProps = {
   open: boolean;
@@ -31,12 +33,17 @@ export const AddOrgMembershipModal = (props: AddOrgMembershipModalProps) => {
       title="Tambah Anggota Organisasi"
       body={
         <Box p="1rem">
-          <Form onSubmit={(e) => mutateAsync(e)} schema={orgMembershipSchema}>
+          <Form
+            onSubmit={(e) => mutateAsync({ ...e, phone: `+62${e.phone}` })}
+            schema={orgMembershipSchema}
+          >
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
                 <VStack gap={5} align="stretch">
                   <FullnameForm />
                   <OrgRoleForm />
+                  <EmailForm />
+                  <PhoneNumberForm />
 
                   <Separator my={2} />
 

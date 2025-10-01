@@ -6,17 +6,7 @@ import { FormCard, FormCardHeader } from "./FormCard";
 export const DescriptionForm = () => {
   return (
     <FormCard>
-      <FormCardHeader
-        icon={<LuFileText />}
-        title="Catatan Transaksi"
-        description="Tambahkan keterangan untuk transaksi ini"
-        isRequired={false}
-        badgeText="Opsional"
-        badgeColorPalette="gray"
-        badgeVariant="outline"
-        iconBg="sage.100"
-        iconColor="sage.700"
-      />
+      <FormCardHeader icon={<LuFileText />} title="Catatan Transaksi" />
       <FormField<string> name="description" label="">
         {({ input }) => (
           <Textarea
